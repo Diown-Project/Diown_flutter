@@ -19,6 +19,7 @@ class EditAct extends StatefulWidget {
 class _EditActState extends State<EditAct> {
   dynamic activity;
   dynamic base_activity;
+  
   loadActivity() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');

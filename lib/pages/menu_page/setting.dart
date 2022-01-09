@@ -1,5 +1,4 @@
 import 'package:diown/pages/mainpage/home.dart';
-import 'package:diown/pages/menu_page/pinpasswordpage.dart';
 import 'package:diown/pages/menu_page/privacy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_lock/flutter_screen_lock.dart';
@@ -38,7 +37,7 @@ class _SettingPageState extends State<SettingPage> {
               return ListView(
                 children: [
                   ListTile(
-                    leading: const Icon(Icons.lock),
+                    leading: const Icon(Icons.change_circle_outlined),
                     title: const Text("Change pin password"),
                     trailing: const Icon(Icons.navigate_next_rounded),
                     onTap: () async {
@@ -49,7 +48,7 @@ class _SettingPageState extends State<SettingPage> {
                           context: context,
                           correctString: passcode,
                           title: const Text(
-                            'Plase enter passcode',
+                            'Please enter passcode',
                             style: TextStyle(
                               color: Colors.black,
                             ),
@@ -79,8 +78,14 @@ class _SettingPageState extends State<SettingPage> {
                             ),
                           ),
                           didUnlocked: () {
-                            final inputController = InputController();
+                            // final inputController = InputController();
                             screenLock<void>(
+                                title: const Text(
+                                  'Please enter new passcode',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                ),
                                 context: context,
                                 correctString: '',
                                 confirmation: true,
@@ -109,21 +114,18 @@ class _SettingPageState extends State<SettingPage> {
                                     backgroundColor: Colors.grey[300],
                                   ),
                                 ),
-                                inputController: inputController,
+                                // inputController: inputController,
                                 didConfirmed: (matchedText) {
                                   _setPasscode(matchedText);
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => const Home()));
+                                  Navigator.popAndPushNamed(context, Home.id);
                                 },
-                                footer: TextButton(
-                                  onPressed: () {
-                                    // Release the confirmation state and return to the initial input state.
-                                    inputController.unsetConfirmed();
-                                  },
-                                  child: const Text('Return enter mode.'),
-                                ),
+                                // footer: TextButton(
+                                //   onPressed: () {
+                                //     // Release the confirmation state and return to the initial input state.
+                                //     inputController.unsetConfirmed();
+                                //   },
+                                //   child: const Text('Return enter mode.'),
+                                // ),
                                 cancelButton: const Icon(Icons.close,
                                     color: Colors.black),
                                 deleteButton: const Icon(Icons.backspace,
@@ -137,7 +139,7 @@ class _SettingPageState extends State<SettingPage> {
                     },
                   ),
                   ListTile(
-                    leading: const Icon(Icons.lock),
+                    leading: const Icon(Icons.lock_open_outlined),
                     title: const Text("Delete pin password"),
                     trailing: const Icon(Icons.navigate_next_rounded),
                     onTap: () async {
@@ -148,7 +150,7 @@ class _SettingPageState extends State<SettingPage> {
                           context: context,
                           correctString: passcode,
                           title: const Text(
-                            'Plase enter passcode',
+                            'Please enter passcode',
                             style: TextStyle(
                               color: Colors.black,
                             ),
@@ -182,10 +184,7 @@ class _SettingPageState extends State<SettingPage> {
                                 await SharedPreferences.getInstance();
                             await prefs.remove('passcode');
                             print('Delete');
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Home()));
+                            Navigator.popAndPushNamed(context, Home.id);
                           },
                           cancelButton:
                               const Icon(Icons.close, color: Colors.black),
@@ -213,7 +212,7 @@ class _SettingPageState extends State<SettingPage> {
                       title: const Text("Set pin password"),
                       trailing: const Icon(Icons.navigate_next_rounded),
                       onTap: () {
-                        final inputController = InputController();
+                        // final inputController = InputController();
                         screenLock<void>(
                             context: context,
                             correctString: '',
@@ -254,21 +253,19 @@ class _SettingPageState extends State<SettingPage> {
                                 backgroundColor: Colors.grey[300],
                               ),
                             ),
-                            inputController: inputController,
+                            // inputController: inputController,
                             didConfirmed: (matchedText) {
                               _setPasscode(matchedText);
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const Home()));
+
+                              Navigator.popAndPushNamed(context, Home.id);
                             },
-                            footer: TextButton(
-                              onPressed: () {
-                                // Release the confirmation state and return to the initial input state.
-                                inputController.unsetConfirmed();
-                              },
-                              child: const Text(' Return enter mode.'),
-                            ),
+                            // footer: TextButton(
+                            //   onPressed: () {
+                            //     // Release the confirmation state and return to the initial input state.
+                            //     inputController.unsetConfirmed();
+                            //   },
+                            //   child: const Text(' Return enter mode.'),
+                            // ),
                             cancelButton:
                                 const Icon(Icons.close, color: Colors.black),
                             deleteButton: const Icon(Icons.backspace,

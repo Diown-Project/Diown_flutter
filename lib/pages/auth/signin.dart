@@ -17,6 +17,7 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   final _formkey = GlobalKey<FormState>();
+  final  textEditingController = TextEditingController(); 
   String? email;
   String? password;
   bool see = true;
@@ -55,6 +56,7 @@ class _SignInState extends State<SignIn> {
                   child: Column(
                     children: [
                       TextFormField(
+                        controller: textEditingController,
                         keyboardType: TextInputType.emailAddress,
                         decoration: const InputDecoration(
                           labelText: 'email',
@@ -79,6 +81,7 @@ class _SignInState extends State<SignIn> {
                         height: 25.0,
                       ),
                       TextFormField(
+                        controller: textEditingController,
                         decoration: InputDecoration(
                           labelText: 'password',
                           border: const OutlineInputBorder(

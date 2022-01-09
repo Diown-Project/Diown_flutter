@@ -15,6 +15,7 @@ class LoaddingPage extends StatefulWidget {
 
 class _LoaddingPageState extends State<LoaddingPage> {
   dynamic user;
+  // final inputController = InputController();
   checkUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? c = prefs.getString('token');
@@ -30,14 +31,20 @@ class _LoaddingPageState extends State<LoaddingPage> {
             context, MaterialPageRoute(builder: (context) => const SignIn()));
       } else {
         dynamic passcode = prefs.getString('passcode');
+        dynamic result = await rememberMe(c);
+        if (result == null) {
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => const SignIn()));
+        }
         if (passcode == null) {
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => const Home()));
         } else {
-          screenLock<void>(
+          screenLock(
               context: context,
+              correctString: passcode,
               title: const Text(
-                'Plase enter passcode',
+                'Please enter passcode',
                 style: TextStyle(
                   color: Colors.black,
                 ),
@@ -56,20 +63,9 @@ class _LoaddingPageState extends State<LoaddingPage> {
                     height: 15,
                     width: 15,
                   )),
-              inputButtonConfig: InputButtonConfig(
-                textStyle:
-                    InputButtonConfig.getDefaultTextStyle(context).copyWith(
-                  color: Colors.black,
-                ),
-                buttonStyle: OutlinedButton.styleFrom(
-                  backgroundColor: Colors.grey[300],
-                ),
-              ),
-              correctString: passcode,
               didUnlocked: () {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => const Home()));
-                // NextPage.show(context);
+                print('object');
+                Navigator.pushReplacementNamed(context, Home.id);
               },
               cancelButton: const Icon(Icons.close, color: Colors.black),
               deleteButton: const Icon(Icons.backspace, color: Colors.black));
@@ -80,17 +76,8 @@ class _LoaddingPageState extends State<LoaddingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: checkUser(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return const Scaffold(
-                body: Center(child: CircularProgressIndicator()));
-          } else {
-            return const Scaffold(
-                body: Center(child: CircularProgressIndicator()));
-          }
-        });
+    checkUser();
+    return const Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 }
 

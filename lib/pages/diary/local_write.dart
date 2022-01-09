@@ -15,6 +15,7 @@ class LocalDiary extends StatefulWidget {
 
 class _LocalDiaryState extends State<LocalDiary> {
   final _formkey = GlobalKey<FormState>();
+  final textEditingController = TextEditingController();
   String? resultMood;
   String? resultAct;
   Iterable<File>? _image;
@@ -167,6 +168,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                 child: Column(
                   children: [
                     TextFormField(
+                      controller: textEditingController,
                       decoration: const InputDecoration(
                         labelText: 'Topic',
                         border: OutlineInputBorder(
@@ -183,6 +185,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                     LayoutBuilder(builder: (context, constraints) {
                       return SizedBox(
                         child: TextFormField(
+                          controller: textEditingController,
                           decoration: const InputDecoration(
                             hintText: 'Tell your story here ^^',
                             border: OutlineInputBorder(
