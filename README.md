@@ -1,6 +1,7 @@
 # diown
 
-A new Flutter project.
+A new Flutter project. 
+# NOT complete right now.
 
 ## Getting Started
 
