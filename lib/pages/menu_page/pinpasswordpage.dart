@@ -171,7 +171,7 @@ class _PinState extends State<Pin> {
                     didUnlocked: () async {
                       SharedPreferences prefs =
                           await SharedPreferences.getInstance();
-                      await prefs.clear();
+                      await prefs.remove('passcode');
                       print('Delete');
                       Navigator.pushReplacement(
                           context,

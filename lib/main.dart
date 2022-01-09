@@ -6,8 +6,7 @@ import 'package:diown/pages/mainpage/home_page.dart';
 import 'package:diown/pages/mainpage/map.dart';
 import 'package:flutter/material.dart';
 import 'package:diown/pages/auth/signup.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+
 
 void main(){
   runApp(MaterialApp(
