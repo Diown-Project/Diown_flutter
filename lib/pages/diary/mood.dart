@@ -24,7 +24,7 @@ class _MoodSelectedState extends State<MoodSelected> {
     {'emoji': '😳', 'mood': 'Shy'},
     {'emoji': '🥰', 'mood': 'Lovely'},
     {'emoji': '😒', 'mood': 'Annoyed'},
-    {'emoji': '☺', 'mood': 'Thankful'},
+    {'emoji': '☺', 'mood': ' Thankful'},
   ];
 
   @override
@@ -64,7 +64,7 @@ class _MoodSelectedState extends State<MoodSelected> {
                           {'emoji': '😳', 'mood': 'Shy'},
                           {'emoji': '🥰', 'mood': 'Lovely'},
                           {'emoji': '😒', 'mood': 'Annoyed'},
-                          {'emoji': '☺', 'mood': 'Thankful'},
+                          {'emoji': '☺', 'mood': ' Thankful'},
                         ];
                       });
                     } else {
@@ -84,7 +84,7 @@ class _MoodSelectedState extends State<MoodSelected> {
                           {'emoji': '😳', 'mood': 'Shy'},
                           {'emoji': '🥰', 'mood': 'Lovely'},
                           {'emoji': '😒', 'mood': 'Annoyed'},
-                          {'emoji': '☺', 'mood': 'Thankful'},
+                          {'emoji': '☺', 'mood': ' Thankful'},
                         ];
                         moodList = moodList
                             .where((e) => e['mood']!

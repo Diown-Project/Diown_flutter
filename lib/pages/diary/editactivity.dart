@@ -19,7 +19,7 @@ class EditAct extends StatefulWidget {
 class _EditActState extends State<EditAct> {
   dynamic activity;
   dynamic base_activity;
-  
+
   loadActivity() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
@@ -127,9 +127,19 @@ class _EditActState extends State<EditAct> {
                                       var act_detail = e['activity_detail'];
                                       var result = await removeYourAct(
                                           token, act_emo, act_detail);
-                                      await loadActivity();
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
+                                      if (result['message'] == 'success') {
+                                        await loadActivity();
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                      } else {
+                                        prefs.remove('token');
+                                        prefs.remove('passcode');
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const SignIn()));
+                                      }
                                     },
                                   );
                                 },

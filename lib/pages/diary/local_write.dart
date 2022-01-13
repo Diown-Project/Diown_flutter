@@ -1,10 +1,16 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:diown/pages/diary/activity.dart';
 import 'package:diown/pages/diary/mood.dart';
+import 'package:diown/pages/extraPage/apigcloud.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class LocalDiary extends StatefulWidget {
   const LocalDiary({Key? key}) : super(key: key);
@@ -14,10 +20,22 @@ class LocalDiary extends StatefulWidget {
 }
 
 class _LocalDiaryState extends State<LocalDiary> {
+  CloudApi? api;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    rootBundle.loadString('assets/credentials.json').then((value) {
+      api = CloudApi(value);
+    });
+  }
+
   final _formkey = GlobalKey<FormState>();
   final textEditingController = TextEditingController();
   String? resultMood;
   String? resultAct;
+  String? topic;
+  String? write_detail;
   Iterable<File>? _image;
   Iterable<Uint8List>? _imageByte;
   var _imageByteList;
@@ -48,6 +66,11 @@ class _LocalDiaryState extends State<LocalDiary> {
     });
   }
 
+  _saveImage() async {
+    final response = await api!.save(_imageNameList!, _imageByteList!);
+    print(response);
+  }
+
   // var d = '🏀asd';
   DateTime now = DateTime.now();
   @override
@@ -74,7 +97,61 @@ class _LocalDiaryState extends State<LocalDiary> {
                         ))),
                 const Spacer(),
                 OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    CoolAlert.show(
+                        context: context,
+                        type: CoolAlertType.confirm,
+                        onConfirmBtnTap: () async {
+                          CoolAlert.show(
+                              context: context, type: CoolAlertType.loading);
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          var token = prefs.getString('token');
+                          if (_imageByteList != null &&
+                              _imageNameList != null &&
+                              resultMood != null) {
+                            await _saveImage();
+                            var mood_emoji = resultMood!.substring(0, 2);
+                            var mood_detail = resultMood!.substring(3);
+                            addDiaryWithOutText(
+                                token,
+                                topic,
+                                write_detail,
+                                mood_emoji,
+                                mood_detail,
+                                _imageNameList,
+                                resultAct,
+                                now);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          } else if (resultMood != null) {
+                            var mood_emoji = resultMood!.substring(0, 2);
+                            var mood_detail = resultMood!.substring(3);
+                            addDiaryWithOutText(
+                                token,
+                                topic,
+                                write_detail,
+                                mood_emoji,
+                                mood_detail,
+                                _imageNameList,
+                                resultAct,
+                                now);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          } else {
+                            CoolAlert.show(
+                                context: context,
+                                type: CoolAlertType.error,
+                                onConfirmBtnTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                });
+                          }
+                        });
+                  },
                   child: const Text('save'),
                   style: ButtonStyle(
                       foregroundColor:
@@ -168,7 +245,6 @@ class _LocalDiaryState extends State<LocalDiary> {
                 child: Column(
                   children: [
                     TextFormField(
-                      controller: textEditingController,
                       decoration: const InputDecoration(
                         labelText: 'Topic',
                         border: OutlineInputBorder(
@@ -178,6 +254,11 @@ class _LocalDiaryState extends State<LocalDiary> {
                           Icons.book_outlined,
                         ),
                       ),
+                      onChanged: (value) {
+                        setState(() {
+                          topic = value;
+                        });
+                      },
                     ),
                     const SizedBox(
                       height: 15,
@@ -185,7 +266,6 @@ class _LocalDiaryState extends State<LocalDiary> {
                     LayoutBuilder(builder: (context, constraints) {
                       return SizedBox(
                         child: TextFormField(
-                          controller: textEditingController,
                           decoration: const InputDecoration(
                             hintText: 'Tell your story here ^^',
                             border: OutlineInputBorder(
@@ -194,6 +274,11 @@ class _LocalDiaryState extends State<LocalDiary> {
                           ),
                           maxLines: null,
                           minLines: 12,
+                          onChanged: (value) {
+                            setState(() {
+                              write_detail = value;
+                            });
+                          },
                         ),
                       );
                     })
@@ -209,4 +294,27 @@ class _LocalDiaryState extends State<LocalDiary> {
       ),
     );
   }
+}
+
+addDiaryWithOutText(token, topic, write_detail, mood_emoji, mood_detail,
+    _imageNameList, resultAct, now) async {
+  var url = 'http://10.0.2.2:3000/localDiary/saveDiary';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'token': token,
+          'mood_emoji': mood_emoji,
+          'mood_detail': mood_detail,
+          'activity': resultAct,
+          'date': now.toIso8601String(),
+          'imageLocation': _imageNameList,
+          'topic': topic,
+          'detail': write_detail
+        },
+      ));
+  var result = jsonDecode(response.body);
+  return result;
 }
