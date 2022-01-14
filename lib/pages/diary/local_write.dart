@@ -73,6 +73,7 @@ class _LocalDiaryState extends State<LocalDiary> {
 
   // var d = '🏀asd';
   DateTime now = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -312,7 +313,8 @@ addDiaryWithOutText(token, topic, write_detail, mood_emoji, mood_detail,
           'date': now.toIso8601String(),
           'imageLocation': _imageNameList,
           'topic': topic,
-          'detail': write_detail
+          'detail': write_detail,
+          'favorite': false,
         },
       ));
   var result = jsonDecode(response.body);

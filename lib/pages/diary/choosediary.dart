@@ -50,7 +50,7 @@ class _ChooseDiaryState extends State<ChooseDiary> {
                   Navigator.push(
                       context,
                       PageTransition(
-                          child: const DiaryDetail(),
+                          child:  DiaryDetail(id:e['_id']),
                           type: PageTransitionType.rightToLeft));
                 },
               );
