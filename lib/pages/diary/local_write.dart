@@ -114,7 +114,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                             await _saveImage();
                             var mood_emoji = resultMood!.substring(0, 2);
                             var mood_detail = resultMood!.substring(3);
-                            addDiaryWithOutText(
+                            await addDiaryWithOutText(
                                 token,
                                 topic,
                                 write_detail,
@@ -129,7 +129,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                           } else if (resultMood != null) {
                             var mood_emoji = resultMood!.substring(0, 2);
                             var mood_detail = resultMood!.substring(3);
-                            addDiaryWithOutText(
+                            await addDiaryWithOutText(
                                 token,
                                 topic,
                                 write_detail,

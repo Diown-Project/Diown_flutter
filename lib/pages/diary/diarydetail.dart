@@ -1,10 +1,14 @@
 import 'dart:convert';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cool_alert/cool_alert.dart';
+import 'package:diown/pages/diary/choosediary.dart';
+import 'package:diown/pages/diary/editlocaldiary.dart';
 import 'package:ink_widget/ink_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:badges/badges.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:favorite_button/favorite_button.dart';
 
@@ -69,27 +73,82 @@ class _DiaryDetailState extends State<DiaryDetail> {
                   : const Center(
                       child: CircularProgressIndicator(),
                     )),
-          PopupMenuButton(
-              itemBuilder: (context) => [
-                    PopupMenuItem(
-                        padding: EdgeInsets.all(2),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(
-                              Icons.delete_forever_rounded,
-                              size: 20,
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              'remove',
-                              style: TextStyle(fontSize: 14),
-                            )
-                          ],
-                        ))
-                  ])
+          diary != null
+              ? PopupMenuButton(
+                  itemBuilder: (context) => [
+                        PopupMenuItem(
+                            onTap: () {
+                              Future.delayed(
+                                  const Duration(seconds: 0),
+                                  () => Navigator.push(
+                                      context,
+                                      PageTransition(
+                                          child: EditLocalDiary(
+                                              id: widget.id, diary: diary),
+                                          type:
+                                              PageTransitionType.rightToLeft)));
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Icon(
+                                  Icons.edit,
+                                  size: 20,
+                                ),
+                                SizedBox(
+                                  width: 25,
+                                ),
+                                Text(
+                                  'edit',
+                                  style: TextStyle(fontSize: 14),
+                                )
+                              ],
+                            )),
+                        PopupMenuItem(
+                            onTap: () {
+                              Future.delayed(
+                                  const Duration(seconds: 0),
+                                  () => CoolAlert.show(
+                                      context: context,
+                                      type: CoolAlertType.confirm,
+                                      onConfirmBtnTap: () async {
+                                        CoolAlert.show(
+                                            context: context,
+                                            type: CoolAlertType.loading);
+                                        var re = await deleteLocaldiary(diary);
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                child: const ChooseDiary(),
+                                                type: PageTransitionType
+                                                    .rightToLeft));
+                                      }));
+                            },
+                            padding: EdgeInsets.all(2),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Icon(
+                                  Icons.delete_forever_rounded,
+                                  size: 20,
+                                  color: Colors.red,
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  'remove',
+                                  style: TextStyle(
+                                      fontSize: 14, color: Colors.red),
+                                )
+                              ],
+                            ))
+                      ])
+              : Container()
         ],
       ),
       body: SingleChildScrollView(
@@ -206,6 +265,19 @@ favorite(id, isFav) async {
       },
       body: jsonEncode(
         <String, dynamic>{'id': id, 'fav': isFav!},
+      ));
+  var result = jsonDecode(response.body);
+  return result;
+}
+
+deleteLocaldiary(diary) async {
+  var url = 'http://10.0.2.2:3000/localDiary/deleteLocalDiary';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{'diary': diary},
       ));
   var result = jsonDecode(response.body);
   return result;
