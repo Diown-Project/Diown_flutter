@@ -17,12 +17,12 @@ class PrivacypolicyWidget extends StatelessWidget {
       ),
       body: SingleChildScrollView(
           child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(17.0),
         child: Column(
           children: [
             Container(
               alignment: Alignment.topLeft,
-              child:const Text(
+              child: const Text(
                 'Privacy policy of Diown',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
@@ -39,7 +39,7 @@ class PrivacypolicyWidget extends StatelessWidget {
             ),
             Container(
               alignment: Alignment.topLeft,
-              child:const Text(
+              child: const Text(
                 'Introduction',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),

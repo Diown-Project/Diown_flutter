@@ -102,6 +102,8 @@ class _LocalDiaryState extends State<LocalDiary> {
                     CoolAlert.show(
                         context: context,
                         type: CoolAlertType.confirm,
+                        title: 'Please confirm',
+                        text: 'If you want to save this diary.',
                         onConfirmBtnTap: () async {
                           CoolAlert.show(
                               context: context, type: CoolAlertType.loading);
@@ -145,6 +147,8 @@ class _LocalDiaryState extends State<LocalDiary> {
                             CoolAlert.show(
                                 context: context,
                                 type: CoolAlertType.error,
+                                title: 'error Alert!',
+                                text: 'You must to fill at less mood.',
                                 onConfirmBtnTap: () {
                                   Navigator.pop(context);
                                   Navigator.pop(context);
@@ -289,6 +293,16 @@ class _LocalDiaryState extends State<LocalDiary> {
                 onPressed: () {
                   selectImage();
                 },
+                style: ButtonStyle(
+                    foregroundColor:
+                        MaterialStateProperty.all<Color>(Colors.white),
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        const Color.fromRGBO(148, 92, 254, 1)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(80.0),
+                            side: const BorderSide(
+                                color: Color.fromRGBO(148, 92, 254, 1))))),
                 child: const Text('add image')),
           ],
         ),

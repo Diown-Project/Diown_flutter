@@ -64,7 +64,6 @@ class _LoaddingPageState extends State<LoaddingPage> {
                     width: 15,
                   )),
               didUnlocked: () {
-                print('object');
                 Navigator.pushReplacementNamed(context, Home.id);
               },
               cancelButton: const Icon(Icons.close, color: Colors.black),

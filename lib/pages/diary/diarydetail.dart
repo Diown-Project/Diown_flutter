@@ -111,6 +111,9 @@ class _DiaryDetailState extends State<DiaryDetail> {
                                   () => CoolAlert.show(
                                       context: context,
                                       type: CoolAlertType.confirm,
+                                      title: 'Are you sure?',
+                                      text: 'Do you want to delete this diary.',
+                                      confirmBtnColor: Colors.red,
                                       onConfirmBtnTap: () async {
                                         CoolAlert.show(
                                             context: context,

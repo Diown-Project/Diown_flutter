@@ -114,18 +114,12 @@ class _SettingPageState extends State<SettingPage> {
                                     backgroundColor: Colors.grey[300],
                                   ),
                                 ),
+                                confirmTitle:const Text('please enter your passcode again.'),
                                 // inputController: inputController,
                                 didConfirmed: (matchedText) {
                                   _setPasscode(matchedText);
                                   Navigator.popAndPushNamed(context, Home.id);
                                 },
-                                // footer: TextButton(
-                                //   onPressed: () {
-                                //     // Release the confirmation state and return to the initial input state.
-                                //     inputController.unsetConfirmed();
-                                //   },
-                                //   child: const Text('Return enter mode.'),
-                                // ),
                                 cancelButton: const Icon(Icons.close,
                                     color: Colors.black),
                                 deleteButton: const Icon(Icons.backspace,

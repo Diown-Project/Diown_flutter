@@ -117,6 +117,9 @@ class _EditLocalDiaryState extends State<EditLocalDiary> {
                       CoolAlert.show(
                           context: context,
                           type: CoolAlertType.confirm,
+                          title: 'Are you sure?',
+                          text:
+                              'touch ok button if you want to save this edit.',
                           onConfirmBtnTap: () async {
                             CoolAlert.show(
                                 context: context, type: CoolAlertType.loading);

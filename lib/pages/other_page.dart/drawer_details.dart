@@ -1,6 +1,7 @@
 import 'package:cool_alert/cool_alert.dart';
 import 'package:diown/pages/auth/signin.dart';
 import 'package:diown/pages/extraPage/loadding.dart';
+import 'package:diown/pages/menu_page/favpage.dart';
 import 'package:diown/pages/menu_page/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
@@ -62,7 +63,13 @@ class _DrawerDetailsState extends State<DrawerDetails> {
               leading: const Icon(Icons.star_border),
               title: const Text('Favorite'),
               visualDensity: VisualDensity.compact,
-              onTap: () {}),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        child: const FavPage(),
+                        type: PageTransitionType.rightToLeft));
+              }),
           ListTile(
               leading: const Icon(Icons.photo_camera_back),
               title: const Text('Picture diary'),
@@ -129,6 +136,7 @@ class _DrawerDetailsState extends State<DrawerDetails> {
                   context: context,
                   type: CoolAlertType.confirm,
                   title: 'Do you sure to logout.',
+                  confirmBtnColor: Colors.red,
                   onConfirmBtnTap: () async {
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
