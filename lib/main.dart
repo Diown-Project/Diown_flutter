@@ -7,11 +7,11 @@ import 'package:diown/pages/mainpage/map.dart';
 import 'package:flutter/material.dart';
 import 'package:diown/pages/auth/signup.dart';
 
-
-void main(){
+void main() {
   runApp(MaterialApp(
     theme: ThemeData(fontFamily: 'readex'),
     initialRoute: LoaddingPage.id,
+    debugShowCheckedModeBanner: false,
     routes: {
       SignIn.id: (context) => const SignIn(),
       SignUp.id: (context) => const SignUp(),

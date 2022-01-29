@@ -25,10 +25,7 @@ class _EditActState extends State<EditAct> {
     var token = prefs.getString('token');
     activity = await findOnlyYouAct(token);
     base_activity = activity;
-    if (activity[0]['message'] == 'error') {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const SignIn()));
-    }
+
     setState(() {});
   }
 
@@ -100,7 +97,9 @@ class _EditActState extends State<EditAct> {
                 },
               ),
               Column(
-                children: activity != null && activity[0]['message'] != 'error'
+                children: activity != null &&
+                        activity != '' &&
+                        activity[0]['message'] != 'error'
                     ? activity
                         .map<Widget>((e) => ListTile(
                               leading: Text(

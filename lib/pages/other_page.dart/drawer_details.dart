@@ -2,6 +2,7 @@ import 'package:cool_alert/cool_alert.dart';
 import 'package:diown/pages/auth/signin.dart';
 import 'package:diown/pages/extraPage/loadding.dart';
 import 'package:diown/pages/menu_page/favpage.dart';
+import 'package:diown/pages/menu_page/picdiarypage.dart';
 import 'package:diown/pages/menu_page/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
@@ -74,7 +75,13 @@ class _DrawerDetailsState extends State<DrawerDetails> {
               leading: const Icon(Icons.photo_camera_back),
               title: const Text('Picture diary'),
               visualDensity: VisualDensity.compact,
-              onTap: () {}),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        child: const PictureDiary(),
+                        type: PageTransitionType.rightToLeft));
+              }),
           ListTile(
               leading: const Icon(Icons.person_add_alt_1_outlined),
               title: const Text('Follow request'),

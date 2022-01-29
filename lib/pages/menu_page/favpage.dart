@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:convert';
 
 import 'package:diown/pages/diary/diarydetail.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -68,6 +69,12 @@ class _FavPageState extends State<FavPage> {
               padding: const EdgeInsets.all(18.0),
               child: Column(
                 children: [
+                  CupertinoSearchTextField(
+                    onChanged: (value) async {
+                      listDiary = await favSearch(value);
+                      setState(() {});
+                    },
+                  ),
                   Row(
                     children: [
                       Container(
@@ -165,6 +172,24 @@ findAllFav() async {
       body: jsonEncode(
         <String, dynamic>{
           'token': token,
+        },
+      ));
+  var result = jsonDecode(response.body);
+  return result;
+}
+
+favSearch(value) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var token = prefs.getString('token');
+  var url = 'http://10.0.2.2:3000/localDiary/favSearch';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'token': token,
+          'value': value,
         },
       ));
   var result = jsonDecode(response.body);

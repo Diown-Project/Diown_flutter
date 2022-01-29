@@ -397,6 +397,9 @@ class _EditLocalDiaryState extends State<EditLocalDiary> {
 updateDiary(id, mood_emoji, mood_detail, resultAct, _imageNameList, topic,
     detail) async {
   var url = 'http://10.0.2.2:3000/localDiary/update';
+  if (topic == '') {
+    topic = null;
+  }
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

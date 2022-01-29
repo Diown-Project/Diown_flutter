@@ -63,10 +63,18 @@ class _LoaddingPageState extends State<LoaddingPage> {
                     height: 15,
                     width: 15,
                   )),
+              inputButtonConfig: InputButtonConfig(
+                textStyle: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold),
+                buttonStyle: OutlinedButton.styleFrom(
+                  backgroundColor: Colors.grey[300],
+                ),
+              ),
               didUnlocked: () {
                 Navigator.pushReplacementNamed(context, Home.id);
               },
-              cancelButton: const Icon(Icons.close, color: Colors.black),
               deleteButton: const Icon(Icons.backspace, color: Colors.black));
         }
       }

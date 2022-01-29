@@ -4,8 +4,10 @@ import 'dart:typed_data';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:diown/pages/diary/activity.dart';
+import 'package:diown/pages/diary/choiceimagepage.dart';
 import 'package:diown/pages/diary/mood.dart';
 import 'package:diown/pages/extraPage/apigcloud.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -59,6 +61,30 @@ class _LocalDiaryState extends State<LocalDiary> {
         });
         _imageByteList = _imageByte!.toList();
         _imageName = _image!.map((e) {
+          return e.path.split('/').last;
+        });
+        _imageNameList = _imageName!.toList();
+      } else {}
+    });
+  }
+
+  void cameraImage() async {
+    final XFile? selected =
+        await imagePicker.pickImage(source: ImageSource.camera);
+    setState(() {
+      _imageByteList = null;
+      _image = null;
+      _imageByte = null;
+      _imageName = null;
+      _imageNameList = null;
+      if (selected != null) {
+        List<File> _image = [File(selected.path)];
+
+        _imageByte = _image.map((e) {
+          return e.readAsBytesSync();
+        });
+        _imageByteList = _imageByte!.toList();
+        _imageName = _image.map((e) {
           return e.path.split('/').last;
         });
         _imageNameList = _imageName!.toList();
@@ -291,7 +317,13 @@ class _LocalDiaryState extends State<LocalDiary> {
                 )),
             ElevatedButton(
                 onPressed: () {
+                  // cameraImage();
                   selectImage();
+                  // showModalBottomSheet(
+                  //     context: context,
+                  //     builder: (context) {
+                  //       return const ChoiceImage();
+                  //     });
                 },
                 style: ButtonStyle(
                     foregroundColor:

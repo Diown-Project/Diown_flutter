@@ -86,6 +86,10 @@ class _SettingPageState extends State<SettingPage> {
                                     color: Colors.black,
                                   ),
                                 ),
+                                confirmTitle: const Text(
+                                  'Please enter new passcode again',
+                                  style: TextStyle(color: Colors.black),
+                                ),
                                 context: context,
                                 correctString: '',
                                 confirmation: true,
@@ -114,7 +118,7 @@ class _SettingPageState extends State<SettingPage> {
                                     backgroundColor: Colors.grey[300],
                                   ),
                                 ),
-                                confirmTitle:const Text('please enter your passcode again.'),
+
                                 // inputController: inputController,
                                 didConfirmed: (matchedText) {
                                   _setPasscode(matchedText);
