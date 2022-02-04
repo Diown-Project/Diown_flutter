@@ -24,6 +24,7 @@ class _DrawerDetailsState extends State<DrawerDetails> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? c = prefs.getString('token');
     user = await rememberMe(c!);
+
     setState(() {
       d = 'hello';
     });
@@ -46,10 +47,11 @@ class _DrawerDetailsState extends State<DrawerDetails> {
         children: [
           user != null
               ? ListTile(
-                  leading: const CircleAvatar(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.white,
                     radius: 30,
                     backgroundImage: NetworkImage(
-                        'https://storage.googleapis.com/noseason/nonja'),
+                        'https://storage.googleapis.com/noseason/${user['profile_image']}'),
                   ),
                   title: Text('${user['username']}'),
                   subtitle: const Text('edit profile.'),
@@ -109,11 +111,6 @@ class _DrawerDetailsState extends State<DrawerDetails> {
                   });
                 }),
           ),
-          ListTile(
-              leading: const Icon(Icons.backup_outlined),
-              title: const Text('Backup and Restore data'),
-              visualDensity: VisualDensity.compact,
-              onTap: () {}),
           ListTile(
               leading: const Icon(Icons.help_outline),
               title: const Text('Help Center'),

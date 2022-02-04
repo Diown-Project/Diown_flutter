@@ -23,160 +23,167 @@ class _SignInState extends State<SignIn> {
   bool see = true;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              const Center(
-                child: Image(
-                  image: AssetImage('images/diownlogo.png'),
-                  width: 220,
+    return GestureDetector(
+      onTap: FocusScope.of(context).unfocus,
+      child: Scaffold(
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                const Center(
+                  child: Image(
+                    image: AssetImage('images/diownlogo.png'),
+                    width: 220,
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Container(
-                alignment: Alignment.topLeft,
-                child: const Text(
-                  'Sign In',
-                  style: TextStyle(
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.normal,
-                      fontFamily: 'readex'),
+                const SizedBox(
+                  height: 20,
                 ),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              Form(
-                  key: _formkey,
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: const InputDecoration(
-                          labelText: 'email',
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15))),
-                          prefixIcon: Icon(
-                            Icons.email_outlined,
+                Container(
+                  alignment: Alignment.topLeft,
+                  child: const Text(
+                    'Sign In',
+                    style: TextStyle(
+                        fontSize: 25.0,
+                        fontWeight: FontWeight.normal,
+                        fontFamily: 'readex'),
+                  ),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Form(
+                    key: _formkey,
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: const InputDecoration(
+                            labelText: 'email',
+                            border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15))),
+                            prefixIcon: Icon(
+                              Icons.email_outlined,
+                            ),
                           ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'You must to fill this field.';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) {
+                            email = value;
+                          },
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'You must to fill this field.';
-                          }
-                          return null;
-                        },
-                        onSaved: (value) {
-                          email = value;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'password',
-                          border: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15))),
-                          prefixIcon: const Icon(Icons.lock),
-                          suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  see = !see;
-                                });
-                              },
-                              icon: Icon(see
-                                  ? Icons.visibility
-                                  : Icons.visibility_off)),
+                        const SizedBox(
+                          height: 25.0,
                         ),
-                        obscureText: see,
-                        onSaved: (value) {
-                          password = value;
-                        },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'You must to fill this field.';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      ElevatedButton(
-                          onPressed: () async {
-                            setState(() {
-                              if (_formkey.currentState!.validate()) {
-                                _formkey.currentState!.save();
-                              }
-                            });
+                        TextFormField(
+                          decoration: InputDecoration(
+                            labelText: 'password',
+                            border: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15))),
+                            prefixIcon: const Icon(Icons.lock),
+                            suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    see = !see;
+                                  });
+                                },
+                                icon: Icon(see
+                                    ? Icons.visibility
+                                    : Icons.visibility_off)),
+                          ),
+                          obscureText: see,
+                          onSaved: (value) {
+                            password = value;
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'You must to fill this field.';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        ElevatedButton(
+                            onPressed: () async {
+                              setState(() {
+                                if (_formkey.currentState!.validate()) {
+                                  _formkey.currentState!.save();
+                                }
+                              });
 
-                            if (email == null || password == null) {
-                            } else {
-                              CoolAlert.show(
-                                context: context,
-                                type: CoolAlertType.loading,
-                              );
-                              await signin(email, password);
-                              SharedPreferences prefs =
-                                  await SharedPreferences.getInstance();
-                              String? msg = prefs.getString('msg');
-                              if (msg == 'success') {
-                                Navigator.of(context)
-                                    .pushReplacement(PageTransition(
-                                  child: const Home(),
-                                  type: PageTransitionType.rightToLeft,
-                                ));
+                              if (email == null || password == null) {
                               } else {
                                 CoolAlert.show(
-                                    context: context,
-                                    type: CoolAlertType.error,
-                                    title: 'Error warning!',
-                                    text: msg,
-                                    onConfirmBtnTap: () {
-                                      Navigator.of(context).pop();
-                                      Navigator.of(context).pop();
-                                    });
+                                  barrierDismissible: false,
+                                  context: context,
+                                  type: CoolAlertType.loading,
+                                );
+                                await signin(email, password);
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                String? msg = prefs.getString('msg');
+                                if (msg == 'success') {
+                                  Navigator.of(context)
+                                      .pushReplacement(PageTransition(
+                                    child: const Home(),
+                                    type: PageTransitionType.rightToLeft,
+                                  ));
+                                } else {
+                                  CoolAlert.show(
+                                      barrierDismissible: false,
+                                      context: context,
+                                      type: CoolAlertType.error,
+                                      title: 'Error warning!',
+                                      text: msg,
+                                      onConfirmBtnTap: () {
+                                        Navigator.of(context).pop();
+                                        Navigator.of(context).pop();
+                                      });
+                                }
                               }
-                            }
-                          },
-                          child: const Text(
-                            'Sign In',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          style: ButtonStyle(
-                              minimumSize: MaterialStateProperty.all<Size>(
-                                  const Size(304, 65)),
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.black),
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  const Color.fromRGBO(229, 221, 255, 1)),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(80.0),
-                                      side: const BorderSide(
-                                          color: Color.fromRGBO(
-                                              229, 221, 255, 1)))))),
-                    ],
-                  )),
-              const SizedBox(
-                height: 15,
-              ),
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).push(PageTransition(
-                        type: PageTransitionType.rightToLeft,
-                        child: const SignUp()));
-                  },
-                  child: const Text('Dont have an account?'))
-            ],
+                            },
+                            child: const Text(
+                              'Sign In',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            style: ButtonStyle(
+                                minimumSize: MaterialStateProperty.all<Size>(
+                                    const Size(304, 65)),
+                                foregroundColor: MaterialStateProperty.all<Color>(
+                                    Colors.black),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        const Color.fromRGBO(229, 221, 255, 1)),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(80.0),
+                                        side: const BorderSide(
+                                            color:
+                                                Color.fromRGBO(229, 221, 255, 1)))))),
+                      ],
+                    )),
+                const SizedBox(
+                  height: 15,
+                ),
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(PageTransition(
+                          type: PageTransitionType.rightToLeft,
+                          child: const SignUp()));
+                    },
+                    child: const Text('Dont have an account?'))
+              ],
+            ),
           ),
         ),
       ),

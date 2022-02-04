@@ -105,199 +105,208 @@ class _AddActivityState extends State<AddActivity> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text('Add Activity'),
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          foregroundColor: Colors.black,
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-              padding: const EdgeInsets.all(40.0),
-              child: Form(
-                  key: _formkey,
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 45,
-                      ),
-                      const Text('button activity preview.'),
-                      OutlinedButton(
-                          onPressed: () {},
-                          child: selectedValue != null && valueInput != null
-                              ? Text(
-                                  '${selectedValue!} ${valueInput!}',
-                                  style: const TextStyle(fontSize: 18),
-                                )
-                              : const Text('')),
-                      const SizedBox(
-                        height: 55,
-                      ),
-                      TextFormField(
-                        controller: textEditingController,
-                        textAlignVertical: TextAlignVertical.center,
-                        decoration: const InputDecoration(
-                          labelText: 'Name your activity',
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15))),
+    return GestureDetector(
+      onTap: FocusScope.of(context).unfocus,
+      child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: const Text('Add Activity'),
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            foregroundColor: Colors.black,
+          ),
+          body: SingleChildScrollView(
+            child: Padding(
+                padding: const EdgeInsets.all(40.0),
+                child: Form(
+                    key: _formkey,
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 45,
                         ),
-                        onChanged: (value) {
-                          setState(() {
-                            valueInput = value;
-                          });
-                        },
-                        onSaved: (value) {
-                          valueInput = value;
-                        },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'You must to fill this field.';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        alignment: Alignment.topLeft,
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton2(
-                            isExpanded: true,
-                            hint: Row(
-                              children: const [
-                                Expanded(
-                                  child: Text(
-                                    'select',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            items: items
-                                .map((item) => DropdownMenuItem<String>(
-                                      value: item,
-                                      child: Text(
-                                        item,
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                          fontSize: 24,
-                                          color: Colors.white,
-                                        ),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ))
-                                .toList(),
-                            value: selectedValue,
-                            onChanged: (value) {
-                              setState(() {
-                                selectedValue = value as String;
-                              });
-                            },
-                            icon: const Icon(
-                              Icons.arrow_drop_down,
-                            ),
-                            iconSize: 24,
-                            iconEnabledColor: Colors.black,
-                            iconDisabledColor: Colors.grey,
-                            buttonHeight: 40,
-                            buttonWidth: 90,
-                            buttonPadding:
-                                const EdgeInsets.only(left: 20, right: 14),
-                            buttonDecoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(14),
-                              border: Border.all(
-                                color: Colors.black26,
-                              ),
-                            ),
-                            buttonElevation: 2,
-                            itemHeight: 40,
-                            itemWidth: 90,
-                            itemPadding:
-                                const EdgeInsets.only(left: 30, right: 14),
-                            dropdownMaxHeight: 250,
-                            dropdownPadding: null,
-                            dropdownDecoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                            dropdownElevation: 8,
-                            scrollbarRadius: const Radius.circular(40),
-                            scrollbarThickness: 6,
-                            scrollbarAlwaysShow: true,
-                            offset: const Offset(0, 0),
+                        const Text('button activity preview.'),
+                        OutlinedButton(
+                            onPressed: () {},
+                            child: selectedValue != null && valueInput != null
+                                ? Text(
+                                    '${selectedValue!} ${valueInput!}',
+                                    style: const TextStyle(fontSize: 18),
+                                  )
+                                : const Text('')),
+                        const SizedBox(
+                          height: 55,
+                        ),
+                        TextFormField(
+                          controller: textEditingController,
+                          textAlignVertical: TextAlignVertical.center,
+                          decoration: const InputDecoration(
+                            labelText: 'Name your activity',
+                            border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15))),
                           ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 25,
-                      ),
-                      ElevatedButton(
-                          onPressed: () async {
+                          onChanged: (value) {
                             setState(() {
-                              if (_formkey.currentState!.validate()) {
-                                _formkey.currentState!.save();
-                              }
+                              valueInput = value;
                             });
-                            if (valueInput == null || selectedValue == null) {
-                              CoolAlert.show(
-                                  context: context, type: CoolAlertType.error);
-                            } else {
-                              CoolAlert.show(
-                                  context: context,
-                                  type: CoolAlertType.confirm,
-                                  onConfirmBtnTap: () async {
-                                    SharedPreferences prefs =
-                                        await SharedPreferences.getInstance();
-                                    var token = prefs.getString('token');
-                                    var result = await addAct(
-                                        token, selectedValue, valueInput);
-                                    if (result['message'] == 'success') {
-                                      Navigator.pop(context);
-                                      CoolAlert.show(
-                                          context: context,
-                                          type: CoolAlertType.success);
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                    } else {
-                                      prefs.remove('token');
-                                      prefs.remove('passcode');
-                                      Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const SignIn()));
-                                    }
-                                  });
-                            }
                           },
-                          child: const Text(
-                            'add',
-                            style: TextStyle(fontSize: 18),
+                          onSaved: (value) {
+                            valueInput = value;
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'You must to fill this field.';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          alignment: Alignment.topLeft,
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton2(
+                              isExpanded: true,
+                              hint: Row(
+                                children: const [
+                                  Expanded(
+                                    child: Text(
+                                      'select',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              items: items
+                                  .map((item) => DropdownMenuItem<String>(
+                                        value: item,
+                                        child: Text(
+                                          item,
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                            fontSize: 24,
+                                            color: Colors.white,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ))
+                                  .toList(),
+                              value: selectedValue,
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedValue = value as String;
+                                });
+                              },
+                              icon: const Icon(
+                                Icons.arrow_drop_down,
+                              ),
+                              iconSize: 24,
+                              iconEnabledColor: Colors.black,
+                              iconDisabledColor: Colors.grey,
+                              buttonHeight: 40,
+                              buttonWidth: 90,
+                              buttonPadding:
+                                  const EdgeInsets.only(left: 20, right: 14),
+                              buttonDecoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(
+                                  color: Colors.black26,
+                                ),
+                              ),
+                              buttonElevation: 2,
+                              itemHeight: 40,
+                              itemWidth: 90,
+                              itemPadding:
+                                  const EdgeInsets.only(left: 30, right: 14),
+                              dropdownMaxHeight: 250,
+                              dropdownPadding: null,
+                              dropdownDecoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                              dropdownElevation: 8,
+                              scrollbarRadius: const Radius.circular(40),
+                              scrollbarThickness: 6,
+                              scrollbarAlwaysShow: true,
+                              offset: const Offset(0, 0),
+                            ),
                           ),
-                          style: ButtonStyle(
-                              minimumSize: MaterialStateProperty.all<Size>(
-                                  const Size(304, 45)),
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.black),
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  const Color.fromRGBO(229, 221, 255, 1)),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(80.0),
-                                      side: const BorderSide(
-                                          color: Color.fromRGBO(229, 221, 255, 1))))))
-                    ],
-                  ))),
-        ));
+                        ),
+                        const SizedBox(
+                          height: 25,
+                        ),
+                        ElevatedButton(
+                            onPressed: () async {
+                              setState(() {
+                                if (_formkey.currentState!.validate()) {
+                                  _formkey.currentState!.save();
+                                }
+                              });
+                              if (valueInput == null || selectedValue == null) {
+                                CoolAlert.show(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    type: CoolAlertType.error);
+                              } else {
+                                CoolAlert.show(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    type: CoolAlertType.confirm,
+                                    onConfirmBtnTap: () async {
+                                      SharedPreferences prefs =
+                                          await SharedPreferences.getInstance();
+                                      var token = prefs.getString('token');
+                                      var result = await addAct(
+                                          token, selectedValue, valueInput);
+                                      if (result['message'] == 'success') {
+                                        Navigator.pop(context);
+                                        CoolAlert.show(
+                                            barrierDismissible: false,
+                                            context: context,
+                                            type: CoolAlertType.success);
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                      } else {
+                                        prefs.remove('token');
+                                        prefs.remove('passcode');
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const SignIn()));
+                                      }
+                                    });
+                              }
+                            },
+                            child: const Text(
+                              'add',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            style: ButtonStyle(
+                                minimumSize: MaterialStateProperty.all<Size>(
+                                    const Size(304, 45)),
+                                foregroundColor: MaterialStateProperty.all<Color>(
+                                    Colors.black),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        const Color.fromRGBO(229, 221, 255, 1)),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(80.0),
+                                        side: const BorderSide(
+                                            color:
+                                                Color.fromRGBO(229, 221, 255, 1))))))
+                      ],
+                    ))),
+          )),
+    );
   }
 }

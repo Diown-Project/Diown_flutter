@@ -35,24 +35,45 @@ class _ChooseDiaryState extends State<ChooseDiary> {
           if (snapshot.connectionState == ConnectionState.done) {
             return ListView(
                 children: allDiary.map<Widget>((e) {
-              return ListTile(
-                leading: Text(
-                  '${e['mood_emoji']}',
-                  style: TextStyle(fontSize: 24),
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  leading: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '${e['mood_emoji']}',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    ],
+                  ),
+                  title: e['topic'] == null
+                      ? Text(
+                        '${e['mood_detail']}',
+                        style: TextStyle(fontSize: 16)
+                        )
+                      : RichText(
+                          overflow: TextOverflow.ellipsis,
+                          text: TextSpan(
+                            text: '${e['topic']}',
+                            style: const TextStyle(color: Colors.black, fontSize: 16)
+                          ),
+                        ),
+                  subtitle:
+                      e['activity'] == null ? null : Text('${e['activity']}'),
+                  trailing: Text('${e['date'].toString().substring(0, 10)}'),
+                  tileColor: Color(0xfff1f3f4),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        PageTransition(
+                            child:  DiaryDetail(id:e['_id']),
+                            type: PageTransitionType.rightToLeft));
+                  },
                 ),
-                title: e['topic'] == null
-                    ? Text('${e['mood_detail']}')
-                    : Text('${e['topic']}'),
-                subtitle:
-                    e['activity'] == null ? null : Text('${e['activity']}'),
-                trailing: Text('${e['date'].toString().substring(0, 10)}'),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          child:  DiaryDetail(id:e['_id']),
-                          type: PageTransitionType.rightToLeft));
-                },
               );
             }).toList());
           } else {

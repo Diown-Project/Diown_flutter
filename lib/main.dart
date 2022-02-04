@@ -1,4 +1,5 @@
 import 'package:diown/pages/auth/signin.dart';
+import 'package:diown/pages/diary/local_write.dart';
 import 'package:diown/pages/extraPage/loadding.dart';
 import 'package:diown/pages/mainpage/calendar.dart';
 import 'package:diown/pages/mainpage/home.dart';
@@ -13,6 +14,7 @@ void main() {
     initialRoute: LoaddingPage.id,
     debugShowCheckedModeBanner: false,
     routes: {
+      LocalDiary.id: (context) => const LocalDiary(),
       SignIn.id: (context) => const SignIn(),
       SignUp.id: (context) => const SignUp(),
       Home.id: (context) => const Home(),

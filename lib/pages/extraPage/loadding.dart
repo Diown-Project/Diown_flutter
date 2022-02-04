@@ -1,6 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:diown/pages/auth/signin.dart';
 import 'package:diown/pages/mainpage/home.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 import 'package:http/http.dart' as http;
@@ -19,63 +23,133 @@ class _LoaddingPageState extends State<LoaddingPage> {
   checkUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? c = prefs.getString('token');
-    if (c == null) {
-      prefs.remove('token');
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const SignIn()));
+    bool? checkfail = prefs.getBool('checkfail');
+    String? date_checkfail = prefs.getString('date_checkfail');
+    if (checkfail != null && checkfail == true) {
+      // await prefs.setBool('checkfail', false);
+      var date = DateTime.now();
+      var date_checkfail2 = DateTime.parse(date_checkfail!);
+      if (date.compareTo(date_checkfail2) == 1 &&
+          ((date.second - date_checkfail2.second).abs() >= 30 ||
+              (date.minute - date_checkfail2.minute).abs() >= 1 ||
+              (date.hour - date_checkfail2.hour).abs() >= 1)) {
+        prefs.remove('checkfail');
+        prefs.remove('date_checkfail');
+        Navigator.pushReplacementNamed(context, LoaddingPage.id);
+      } else {
+        showDialog(
+            barrierDismissible: false,
+            useRootNavigator: true,
+            context: context,
+            builder: (BuildContext context) {
+              return CupertinoAlertDialog(
+                title: const Text(
+                  'password incorrect.',
+                  style: TextStyle(color: Colors.red, fontSize: 20),
+                ),
+                content: const Text(
+                  'You enter password incorrect more than 5 times. Please wait 30 seconds to try again.',
+                  style: TextStyle(fontSize: 14),
+                ),
+                actions: [
+                  CupertinoDialogAction(
+                    child: const Text('ok'),
+                    onPressed: () {
+                      exit(1);
+                    },
+                  )
+                ],
+              );
+            });
+      }
     } else {
-      user = await rememberMe(c);
-      if (user == null) {
+      if (c == null) {
         prefs.remove('token');
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => const SignIn()));
       } else {
-        dynamic passcode = prefs.getString('passcode');
-        dynamic result = await rememberMe(c);
-        if (result == null) {
+        user = await rememberMe(c);
+        if (user == null) {
+          prefs.remove('token');
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => const SignIn()));
-        }
-        if (passcode == null) {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => const Home()));
         } else {
-          screenLock(
-              context: context,
-              correctString: passcode,
-              title: const Text(
-                'Please enter passcode',
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-              screenLockConfig: const ScreenLockConfig(
-                backgroundColor: Colors.white,
-              ),
-              secretsConfig: const SecretsConfig(
-                  spacing: 15, // or spacingRatio
-                  padding: EdgeInsets.all(40),
-                  secretConfig: SecretConfig(
-                    borderColor: Colors.black,
-                    borderSize: 2.0,
-                    disabledColor: Colors.white,
-                    enabledColor: Colors.black,
-                    height: 15,
-                    width: 15,
-                  )),
-              inputButtonConfig: InputButtonConfig(
-                textStyle: const TextStyle(
+          dynamic passcode = prefs.getString('passcode');
+          dynamic result = await rememberMe(c);
+          if (result == null) {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const SignIn()));
+          }
+          if (passcode == null) {
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => const Home()));
+          } else {
+            screenLock(
+                maxRetries: 5,
+                didMaxRetries: (retries) {
+                  prefs.setBool('checkfail', true);
+                  prefs.setString('date_checkfail', DateTime.now().toString());
+                  showDialog(
+                      barrierDismissible: false,
+                      useRootNavigator: true,
+                      context: context,
+                      builder: (BuildContext context) {
+                        return CupertinoAlertDialog(
+                          title: const Text(
+                            'password incorrect.',
+                            style: TextStyle(color: Colors.red, fontSize: 20),
+                          ),
+                          content: const Text(
+                            'You enter password incorrect more than 5 times. Please wait 30 seconds to try again.',
+                            style: TextStyle(fontSize: 14),
+                          ),
+                          actions: [
+                            CupertinoDialogAction(
+                              child: const Text('ok'),
+                              onPressed: () {
+                                exit(1);
+                              },
+                            )
+                          ],
+                        );
+                      });
+                },
+                context: context,
+                correctString: passcode,
+                title: const Text(
+                  'Please enter passcode',
+                  style: TextStyle(
                     color: Colors.black,
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold),
-                buttonStyle: OutlinedButton.styleFrom(
-                  backgroundColor: Colors.grey[300],
+                  ),
                 ),
-              ),
-              didUnlocked: () {
-                Navigator.pushReplacementNamed(context, Home.id);
-              },
-              deleteButton: const Icon(Icons.backspace, color: Colors.black));
+                screenLockConfig: const ScreenLockConfig(
+                  backgroundColor: Colors.white,
+                ),
+                secretsConfig: const SecretsConfig(
+                    spacing: 15, // or spacingRatio
+                    padding: EdgeInsets.all(40),
+                    secretConfig: SecretConfig(
+                      borderColor: Colors.black,
+                      borderSize: 2.0,
+                      disabledColor: Colors.white,
+                      enabledColor: Colors.black,
+                      height: 15,
+                      width: 15,
+                    )),
+                inputButtonConfig: InputButtonConfig(
+                  textStyle: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold),
+                  buttonStyle: OutlinedButton.styleFrom(
+                    backgroundColor: Colors.grey[300],
+                  ),
+                ),
+                didUnlocked: () {
+                  Navigator.pushReplacementNamed(context, Home.id);
+                },
+                deleteButton: const Icon(Icons.backspace, color: Colors.black));
+          }
         }
       }
     }
