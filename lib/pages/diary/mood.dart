@@ -48,6 +48,7 @@ class _MoodSelectedState extends State<MoodSelected> {
               centerTitle: true,
             ),
             body: Container(
+              height: double.maxFinite,
               color: Colors.white,
               child: SingleChildScrollView(
                 child: Padding(
@@ -104,25 +105,29 @@ class _MoodSelectedState extends State<MoodSelected> {
                           }
                         },
                       ),
-                      Column(
-                        children: moodList.map((e) {
-                          return ListTile(
-                            leading: Text(
-                              '${e['emoji']}',
-                              style: const TextStyle(fontSize: 24),
-                            ),
-                            title: Text('${e['mood']}'),
-                            onTap: () {
-                              setState(() {
-                                MoodSelected.resultMood =
-                                    '${e['emoji']} ${e['mood']}';
-                              });
+                      moodList.isEmpty
+                          ? Container()
+                          : Container(
+                              child: Column(
+                                children: moodList.map((e) {
+                                  return ListTile(
+                                    leading: Text(
+                                      '${e['emoji']}',
+                                      style: const TextStyle(fontSize: 24),
+                                    ),
+                                    title: Text('${e['mood']}'),
+                                    onTap: () {
+                                      setState(() {
+                                        MoodSelected.resultMood =
+                                            '${e['emoji']} ${e['mood']}';
+                                      });
 
-                              Navigator.pop(context);
-                            },
-                          );
-                        }).toList(),
-                      )
+                                      Navigator.pop(context);
+                                    },
+                                  );
+                                }).toList(),
+                              ),
+                            )
                     ],
                   ),
                 ),

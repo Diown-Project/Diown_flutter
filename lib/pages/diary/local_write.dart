@@ -197,6 +197,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                       now);
                                   Navigator.pop(context);
                                   Navigator.pop(context);
+                                  Navigator.pop(context, "yeah");
                                   Navigator.pop(context);
                                 } else if (resultMood != null) {
                                   var mood_emoji = resultMood!.substring(0, 2);
@@ -212,6 +213,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                       now);
                                   Navigator.pop(context);
                                   Navigator.pop(context);
+                                  Navigator.pop(context, "yeah");
                                   Navigator.pop(context);
                                 } else {
                                   CoolAlert.show(
@@ -307,24 +309,10 @@ class _LocalDiaryState extends State<LocalDiary> {
                               side: BorderSide.none,
                             ),
                             onPressed: () {
-                              // showModalBottomSheet(
-                              //     context: context,
-                              //     shape: const RoundedRectangleBorder(
-                              //       borderRadius: BorderRadius.vertical(
-                              //           top: Radius.circular(25)),
-                              //     ),
-                              //     useRootNavigator: false,
-                              //     builder: (context) {
-                              //       return const MoodSelected();
-                              //     }).whenComplete(() {
-                              //   setState(() {
-                              //     if (MoodSelected.resultMood == '') {
-                              //     } else {
-                              //       resultMood = MoodSelected.resultMood;
-                              //       MoodSelected.resultMood = '';
-                              //     }
-                              //   });
-                              // });
+                              setState(() {
+                                isVisibleMood = false;
+                                resultMood = null;
+                              });
                             },
                             child: resultMood != null
                                 ? Text(
@@ -348,19 +336,10 @@ class _LocalDiaryState extends State<LocalDiary> {
                             side: BorderSide.none,
                           ),
                           onPressed: () {
-                            // showModalBottomSheet(
-                            //     context: context,
-                            //     builder: (context) {
-                            //       return const ActivityPage();
-                            //     }).whenComplete(() {
-                            //   setState(() {
-                            //     if (ActivityPage.resultAct == '') {
-                            //     } else {
-                            //       resultAct = ActivityPage.resultAct;
-                            //       ActivityPage.resultAct = '';
-                            //     }
-                            //   });
-                            // });
+                            setState(() {
+                              resultAct = null;
+                              isVisibleActivity = false;
+                            });
                           },
                           child: resultAct != null
                               ? Text(
@@ -494,7 +473,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                     setState(() {
                                       if (MoodSelected.resultMood == '') {
                                       } else {
-                                        isVisibleMood = !isVisibleMood;
+                                        isVisibleMood = isVisibleMood;
                                         resultMood = MoodSelected.resultMood;
                                         MoodSelected.resultMood = '';
                                       }
@@ -536,7 +515,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                     setState(() {
                                       if (ActivityPage.resultAct == '') {
                                       } else {
-                                        isVisibleActivity = !isVisibleActivity;
+                                        isVisibleActivity = true;
                                         resultAct = ActivityPage.resultAct;
                                         ActivityPage.resultAct = '';
                                       }
@@ -692,7 +671,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                       setState(() {
                         if (MoodSelected.resultMood == '') {
                         } else {
-                          isVisibleMood = !isVisibleMood;
+                          isVisibleMood = true;
                           resultMood = MoodSelected.resultMood;
                           MoodSelected.resultMood = '';
                         }
@@ -723,7 +702,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                       setState(() {
                         if (ActivityPage.resultAct == '') {
                         } else {
-                          isVisibleActivity = !isVisibleActivity;
+                          isVisibleActivity = true;
                           resultAct = ActivityPage.resultAct;
                           ActivityPage.resultAct = '';
                         }

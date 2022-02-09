@@ -15,6 +15,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  var c;
+  var pagepop;
   var _bottomNavIndex = 0;
   var _saveindex = 0;
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
@@ -24,7 +26,7 @@ class _HomeState extends State<Home> {
     Icons.calendar_today_rounded,
     Icons.menu_rounded,
   ];
-  final pageList = [
+  var pageList = [
     const HomePage(),
     const MapPage(),
     const CalendarPage(),
@@ -92,10 +94,17 @@ class _HomeState extends State<Home> {
                                 title: const Text('Write your diary.'),
                                 trailing:
                                     const Icon(Icons.navigate_next_rounded),
-                                onTap: () {
-                                  Navigator.of(context).push(PageTransition(
-                                      child: const LocalDiary(),
-                                      type: PageTransitionType.rightToLeft));
+                                onTap: () async {
+                                  var sult = await Navigator.of(context).push(
+                                      PageTransition(
+                                          child: const LocalDiary(),
+                                          type:
+                                              PageTransitionType.rightToLeft));
+                                  if (sult != null) {
+                                    setState(() {
+                                      _bottomNavIndex = 0;
+                                    });
+                                  }
                                 },
                               ),
                               ListTile(
@@ -125,9 +134,7 @@ class _HomeState extends State<Home> {
             onTap: (index) {
               if (index == 3) {
                 _drawerKey.currentState!.openEndDrawer();
-                setState(() {
-                  _bottomNavIndex = index;
-                });
+                setState(() {});
               } else {
                 setState(() {
                   _bottomNavIndex = index;

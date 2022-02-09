@@ -68,12 +68,17 @@ class _PictureDiaryState extends State<PictureDiary> {
                                 InkWidget(
                                     onTap: () {
                                       Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              child: DiaryDetail(
-                                                  id: allDiary[index]['_id']),
-                                              type: PageTransitionType
-                                                  .rightToLeft));
+                                              context,
+                                              PageTransition(
+                                                  child: DiaryDetail(
+                                                      id: allDiary[index]
+                                                          ['_id']),
+                                                  type: PageTransitionType
+                                                      .rightToLeft))
+                                          .then((_) async {
+                                        await findAllYourDiary2();
+                                        setState(() {});
+                                      });
                                     },
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(8.0),

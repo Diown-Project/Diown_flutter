@@ -156,11 +156,16 @@ class _FavPageState extends State<FavPage> {
                                               BorderRadius.circular(15)),
                                       onTap: () {
                                         Navigator.push(
-                                            context,
-                                            PageTransition(
-                                                child: DiaryDetail(id: e['_id']),
-                                                type: PageTransitionType
-                                                    .rightToLeft));
+                                                context,
+                                                PageTransition(
+                                                    child: DiaryDetail(
+                                                        id: e['_id']),
+                                                    type: PageTransitionType
+                                                        .rightToLeft))
+                                            .then((_) async {
+                                          await useFuncFindAllFav();
+                                          setState(() {});
+                                        });
                                       },
                                     ),
                                   );

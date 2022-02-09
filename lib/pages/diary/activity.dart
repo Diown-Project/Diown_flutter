@@ -81,6 +81,7 @@ class _ActivityPageState extends State<ActivityPage> {
               ],
             ),
             body: Container(
+              height: double.maxFinite,
               color: Colors.white,
               child: SingleChildScrollView(
                 child: Padding(
@@ -97,7 +98,7 @@ class _ActivityPageState extends State<ActivityPage> {
                               });
                             } else {
                               setState(() {
-                                activity = activity
+                                activity = base_activity
                                     .where((e) => e['activity_detail']!
                                         .toLowerCase()
                                         .contains(value.toLowerCase()) as bool)
@@ -107,33 +108,42 @@ class _ActivityPageState extends State<ActivityPage> {
                           }
                         },
                       ),
-                      Column(
-                        children: activity != null &&
-                                activity[0]['message'] != 'error'
-                            ? activity
-                                .map<Widget>((e) => ListTile(
-                                      leading: Text(
-                                        e['activity_emoji'],
-                                        style: const TextStyle(fontSize: 24),
+                      Container(
+                        child: Column(
+                          children: activity != null
+                              ? activity.isNotEmpty
+                                  ? activity[0]['message'] != 'error'
+                                      ? activity
+                                          .map<Widget>((e) => ListTile(
+                                                leading: Text(
+                                                  e['activity_emoji'],
+                                                  style: const TextStyle(
+                                                      fontSize: 24),
+                                                ),
+                                                title:
+                                                    Text(e['activity_detail']),
+                                                onTap: () {
+                                                  setState(() {
+                                                    ActivityPage.resultAct =
+                                                        '${e['activity_emoji']} ${e['activity_detail']}';
+                                                  });
+                                                  Navigator.pop(context);
+                                                },
+                                              ))
+                                          .toList()
+                                      : [Container()]
+                                  : [Container()]
+                              : [
+                                  Container(
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(100.0),
+                                      child: Center(
+                                        child: CircularProgressIndicator(),
                                       ),
-                                      title: Text(e['activity_detail']),
-                                      onTap: () {
-                                        setState(() {
-                                          ActivityPage.resultAct =
-                                              '${e['activity_emoji']} ${e['activity_detail']}';
-                                        });
-                                        Navigator.pop(context);
-                                      },
-                                    ))
-                                .toList()
-                            : const [
-                                Padding(
-                                  padding: EdgeInsets.all(100.0),
-                                  child: Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                )
-                              ],
+                                    ),
+                                  )
+                                ],
+                        ),
                       )
                     ],
                   ),

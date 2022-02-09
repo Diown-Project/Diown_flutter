@@ -88,7 +88,7 @@ class _EditActState extends State<EditAct> {
                         });
                       } else {
                         setState(() {
-                          activity = activity
+                          activity = base_activity
                               .where((e) => e['activity_detail']!
                                   .toLowerCase()
                                   .contains(value.toLowerCase()) as bool)
@@ -99,57 +99,77 @@ class _EditActState extends State<EditAct> {
                   },
                 ),
                 Column(
-                  children: activity != null &&
-                          activity != '' &&
-                          activity[0]['message'] != 'error'
-                      ? activity
-                          .map<Widget>((e) => ListTile(
-                                leading: Text(
-                                  e['activity_emoji'],
-                                  style: const TextStyle(fontSize: 24),
-                                ),
-                                title: Text(e['activity_detail']),
-                                trailing: IconButton(
-                                  icon: const Icon(Icons.delete_rounded),
-                                  onPressed: () async {
-                                    CoolAlert.show(
-                                      context: context,
-                                      type: CoolAlertType.confirm,
-                                      title: 'Do you sure ?',
-                                      text: 'Do you sure to delete this activity',
-                                      onConfirmBtnTap: () async {
-                                        CoolAlert.show(
-                                            context: context,
-                                            type: CoolAlertType.loading);
-                                        SharedPreferences prefs =
-                                            await SharedPreferences.getInstance();
-                                        var token = prefs.getString('token');
-                                        var act_emo = e['activity_emoji'];
-                                        var act_detail = e['activity_detail'];
-                                        var result = await removeYourAct(
-                                            token, act_emo, act_detail);
-                                        if (result['message'] == 'success') {
-                                          await loadActivity();
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                        } else {
-                                          prefs.remove('token');
-                                          prefs.remove('passcode');
-                                          Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const SignIn()));
-                                        }
-                                      },
-                                    );
-                                  },
-                                ),
-                              ))
-                          .toList()
+                  children: activity != null
+                      ? activity.isNotEmpty
+                          ? activity[0]['message'] != 'error'
+                              ? activity
+                                  .map<Widget>((e) => ListTile(
+                                        leading: Text(
+                                          e['activity_emoji'],
+                                          style: const TextStyle(fontSize: 24),
+                                        ),
+                                        title: Text(e['activity_detail']),
+                                        trailing: IconButton(
+                                          icon:
+                                              const Icon(Icons.delete_rounded),
+                                          onPressed: () async {
+                                            CoolAlert.show(
+                                              context: context,
+                                              type: CoolAlertType.confirm,
+                                              title: 'Do you sure ?',
+                                              text:
+                                                  'Do you sure to delete this activity',
+                                              onConfirmBtnTap: () async {
+                                                CoolAlert.show(
+                                                    context: context,
+                                                    type:
+                                                        CoolAlertType.loading);
+                                                SharedPreferences prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+                                                var token =
+                                                    prefs.getString('token');
+                                                var act_emo =
+                                                    e['activity_emoji'];
+                                                var act_detail =
+                                                    e['activity_detail'];
+                                                var result =
+                                                    await removeYourAct(token,
+                                                        act_emo, act_detail);
+                                                if (result['message'] ==
+                                                    'success') {
+                                                  await loadActivity();
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                } else {
+                                                  prefs.remove('token');
+                                                  prefs.remove('passcode');
+                                                  Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              const SignIn()));
+                                                }
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      ))
+                                  .toList()
+                              : [
+                                  const Center(
+                                      child: Text(
+                                          'You don\'t have any custom activity.'))
+                                ]
+                          : [
+                              const Center(
+                                  child: Text(
+                                      'You don\'t have any custom activity.'))
+                            ]
                       : [
                           const Center(
-                              child: Text('You don\'t have any custom activity.'))
+                              child:
+                                  Text('You don\'t have any custom activity.'))
                         ],
                 ),
               ],

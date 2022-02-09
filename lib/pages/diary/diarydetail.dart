@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:diown/pages/diary/choosediary.dart';
 import 'package:diown/pages/diary/editlocaldiary.dart';
+import 'package:diown/pages/mainpage/calendar.dart';
 import 'package:ink_widget/ink_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -33,12 +34,19 @@ class _DiaryDetailState extends State<DiaryDetail> {
           <String, String>{'id': id},
         ));
     var result = jsonDecode(response.body);
-    setState(() {
-      diary = result;
-      time =
-          DateFormat('EEE. MMM d / yyyy').format(DateTime.parse(diary['date']));
-      isFav = diary['favorite'];
-    });
+    if (result == null) {
+      diary = {};
+      diary['message'] = 'This diary was deleted.';
+      isFav = false;
+      setState(() {});
+    } else {
+      setState(() {
+        diary = result;
+        time = DateFormat('EEE. MMM d / yyyy')
+            .format(DateTime.parse(diary['date']));
+        isFav = diary['favorite'];
+      });
+    }
   }
 
   @override
@@ -53,7 +61,11 @@ class _DiaryDetailState extends State<DiaryDetail> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: diary != null ? Text('${time}') : Text('wait. . .'),
+        title: diary != null
+            ? diary.containsKey('message')
+                ? Text('This diary was deleted.')
+                : Text('${time}')
+            : Text('wait. . .'),
         elevation: 0,
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.black,
@@ -61,96 +73,100 @@ class _DiaryDetailState extends State<DiaryDetail> {
           Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: isFav != null
-                  ? StarButton(
-                      iconSize: 40,
-                      isStarred: isFav,
-                      valueChanged: (value) async {
-                        setState(() {
-                          isFav = value;
-                        });
-                        var d = await favorite(widget.id, isFav);
-                      })
+                  ? diary.containsKey('message')
+                      ? Container()
+                      : StarButton(
+                          iconSize: 40,
+                          isStarred: isFav,
+                          valueChanged: (value) async {
+                            setState(() {
+                              isFav = value;
+                            });
+                            var d = await favorite(widget.id, isFav);
+                          })
                   : const Center(
                       child: CircularProgressIndicator(),
                     )),
           diary != null
-              ? PopupMenuButton(
-                  itemBuilder: (context) => [
-                        PopupMenuItem(
-                            onTap: () {
-                              Future.delayed(
-                                  const Duration(seconds: 0),
-                                  () => Navigator.push(
-                                      context,
-                                      PageTransition(
-                                          child: EditLocalDiary(
-                                              id: widget.id, diary: diary),
-                                          type:
-                                              PageTransitionType.rightToLeft)));
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                Icon(
-                                  Icons.edit,
-                                  size: 20,
-                                ),
-                                SizedBox(
-                                  width: 25,
-                                ),
-                                Text(
-                                  'edit',
-                                  style: TextStyle(fontSize: 14),
-                                )
-                              ],
-                            )),
-                        PopupMenuItem(
-                            onTap: () {
-                              Future.delayed(
-                                  const Duration(seconds: 0),
-                                  () => CoolAlert.show(
-                                      context: context,
-                                      type: CoolAlertType.confirm,
-                                      title: 'Are you sure?',
-                                      text: 'Do you want to delete this diary.',
-                                      confirmBtnColor: Colors.red,
-                                      onConfirmBtnTap: () async {
-                                        CoolAlert.show(
-                                            context: context,
-                                            type: CoolAlertType.loading);
-                                        var re = await deleteLocaldiary(diary);
-                                        Navigator.pop(context);
-                                        Navigator.pop(context);
-                                        Navigator.pop(context);
-                                        Navigator.pop(context);
-                                        Navigator.push(
-                                            context,
-                                            PageTransition(
-                                                child: const ChooseDiary(),
-                                                type: PageTransitionType
-                                                    .rightToLeft));
-                                      }));
-                            },
-                            padding: EdgeInsets.all(2),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                Icon(
-                                  Icons.delete_forever_rounded,
-                                  size: 20,
-                                  color: Colors.red,
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  'remove',
-                                  style: TextStyle(
-                                      fontSize: 14, color: Colors.red),
-                                )
-                              ],
-                            ))
-                      ])
+              ? diary.containsKey('message')
+                  ? Container()
+                  : PopupMenuButton(
+                      itemBuilder: (context) => [
+                            PopupMenuItem(
+                                onTap: () {
+                                  Future.delayed(
+                                      const Duration(seconds: 0),
+                                      () => Navigator.push(
+                                                  context,
+                                                  PageTransition(
+                                                      child: EditLocalDiary(
+                                                          id: widget.id,
+                                                          diary: diary),
+                                                      type: PageTransitionType
+                                                          .rightToLeft))
+                                              .then((_) async {
+                                            findDetail(widget.id);
+                                            setState(() {});
+                                          }));
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Icon(
+                                      Icons.edit,
+                                      size: 20,
+                                    ),
+                                    SizedBox(
+                                      width: 25,
+                                    ),
+                                    Text(
+                                      'edit',
+                                      style: TextStyle(fontSize: 14),
+                                    )
+                                  ],
+                                )),
+                            PopupMenuItem(
+                                onTap: () {
+                                  Future.delayed(
+                                      const Duration(seconds: 0),
+                                      () => CoolAlert.show(
+                                          context: context,
+                                          type: CoolAlertType.confirm,
+                                          title: 'Are you sure?',
+                                          text:
+                                              'Do you want to delete this diary.',
+                                          confirmBtnColor: Colors.red,
+                                          onConfirmBtnTap: () async {
+                                            CoolAlert.show(
+                                                context: context,
+                                                type: CoolAlertType.loading);
+                                            var re =
+                                                await deleteLocaldiary(diary);
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                          }));
+                                },
+                                padding: EdgeInsets.all(2),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Icon(
+                                      Icons.delete_forever_rounded,
+                                      size: 20,
+                                      color: Colors.red,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      'remove',
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.red),
+                                    )
+                                  ],
+                                ))
+                          ])
               : Container()
         ],
       ),
