@@ -194,7 +194,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                       mood_detail,
                                       _imageNameList,
                                       resultAct,
-                                      now);
+                                      );
                                   Navigator.pop(context);
                                   Navigator.pop(context);
                                   Navigator.pop(context, "yeah");
@@ -210,7 +210,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                       mood_detail,
                                       _imageNameList,
                                       resultAct,
-                                      now);
+                                      );
                                   Navigator.pop(context);
                                   Navigator.pop(context);
                                   Navigator.pop(context, "yeah");
@@ -809,7 +809,7 @@ class _LocalDiaryState extends State<LocalDiary> {
 }
 
 addDiaryWithOutText(token, topic, write_detail, mood_emoji, mood_detail,
-    _imageNameList, resultAct, now) async {
+    _imageNameList, resultAct) async {
   var url = 'http://10.0.2.2:3000/localDiary/saveDiary';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
@@ -821,7 +821,6 @@ addDiaryWithOutText(token, topic, write_detail, mood_emoji, mood_detail,
           'mood_emoji': mood_emoji,
           'mood_detail': mood_detail,
           'activity': resultAct,
-          'date': now.toIso8601String(),
           'imageLocation': _imageNameList,
           'topic': topic,
           'detail': write_detail,

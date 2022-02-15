@@ -58,6 +58,7 @@ class _CalendarPageState extends State<CalendarPage> {
         for (int i = 0; i < diary.length; i++) {
           if (diary[i]['date'].toString().substring(0, 10) ==
               _selectedDay.toString().substring(0, 10)) {
+            // print(diary[i]['date'].toString());
             diary2.add(diary[i]);
           }
         }
@@ -77,6 +78,7 @@ class _CalendarPageState extends State<CalendarPage> {
         for (int i = 0; i < diary.length; i++) {
           if (diary[i]['date'].toString().substring(0, 10) ==
               _selectedDay.toString().substring(0, 10)) {
+            // print(diary[i]['date'].toString());
             diary2.add(diary[i]);
           }
         }

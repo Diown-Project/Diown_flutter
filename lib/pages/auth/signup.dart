@@ -52,6 +52,7 @@ class _SignUpState extends State<SignUp> {
                       child: Column(
                         children: [
                           TextFormField(
+                            maxLength: 20,
                             keyboardType: TextInputType.text,
                             decoration: const InputDecoration(
                               labelText: 'username',
@@ -73,7 +74,7 @@ class _SignUpState extends State<SignUp> {
                             },
                           ),
                           const SizedBox(
-                            height: 25.0,
+                            height: 15.0,
                           ),
                           TextFormField(
                             keyboardType: TextInputType.emailAddress,

@@ -1,9 +1,13 @@
 import 'package:cool_alert/cool_alert.dart';
 import 'package:diown/pages/auth/signin.dart';
 import 'package:diown/pages/extraPage/loadding.dart';
+import 'package:diown/pages/menu_page/FAQsScreen.dart';
 import 'package:diown/pages/menu_page/favpage.dart';
 import 'package:diown/pages/menu_page/picdiarypage.dart';
 import 'package:diown/pages/menu_page/setting.dart';
+import 'package:diown/pages/menu_page/support.dart';
+import 'package:diown/pages/model/profile.dart';
+import 'package:diown/pages/screens/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -56,7 +60,17 @@ class _DrawerDetailsState extends State<DrawerDetails> {
                   title: Text('${user['username']}'),
                   subtitle: const Text('edit profile.'),
                   trailing: const Icon(Icons.navigate_next_rounded),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                            context,
+                            PageTransition(
+                                child: ProfilePage(),
+                                type: PageTransitionType.rightToLeft))
+                        .then((_) {
+                      loaddingUserData();
+                      setState(() {});
+                    });
+                  },
                 )
               : const Center(child: CircularProgressIndicator()),
           const Divider(
@@ -115,7 +129,13 @@ class _DrawerDetailsState extends State<DrawerDetails> {
               leading: const Icon(Icons.help_outline),
               title: const Text('Help Center'),
               visualDensity: VisualDensity.compact,
-              onTap: () {}),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        child: SupportPage(),
+                        type: PageTransitionType.rightToLeft));
+              }),
           ListTile(
               leading: const Icon(Icons.settings_outlined),
               title: const Text('Settings'),
