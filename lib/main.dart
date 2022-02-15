@@ -10,7 +10,7 @@ import 'package:diown/pages/auth/signup.dart';
 
 void main() {
   runApp(MaterialApp(
-    theme: ThemeData(fontFamily: 'readex'),
+    theme: ThemeData(fontFamily: 'readex2'),
     initialRoute: LoaddingPage.id,
     debugShowCheckedModeBanner: false,
     routes: {
