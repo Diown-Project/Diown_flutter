@@ -1,24 +1,38 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:diown/pages/model/achievement.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class Achieve extends StatefulWidget {
   final String scrollKey;
-  final List<Achievement> list;
-  const Achieve(this.scrollKey, this.list, {Key? key}) : super(key: key);
+
+  const Achieve(this.scrollKey, {Key? key}) : super(key: key);
 
   @override
   State<Achieve> createState() => _AchieveState();
 }
 
 class _AchieveState extends State<Achieve> {
-  var ach_data;
-  var len;
+  var ach_data, successAch, resultAch;
+  List numForAch = [];
   asd() async {
+    numForAch = [];
     ach_data = await findAch();
-    len = ach_data.length;
+    ach_data.sort((a, b) => a['ach_id'].compareTo(b['ach_id']) as int);
+    successAch = await findSuccessAch();
+    for (int i = 0; i < ach_data.length; i++) {
+      for (int j = 0; j < successAch.length; j++) {
+        if (successAch[j]['ach_id'] == ach_data[i]['ach_id']) {
+          numForAch.add(1);
+          break;
+        }
+      }
+      if (numForAch.length != i + 1) {
+        numForAch.add(0);
+      }
+    }
     setState(() {});
   }
 
@@ -46,6 +60,7 @@ class _AchieveState extends State<Achieve> {
               ),
               itemBuilder: (context, index) => GestureDetector(
                 onTap: () {
+                  // print(numForAch[index]);
                   AwesomeDialog(
                     context: context,
                     animType: AnimType.SCALE,
@@ -53,15 +68,18 @@ class _AchieveState extends State<Achieve> {
                     customHeader: Container(
                         height: 100,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: Image.asset(
-                            'images/${ach_data![index]['ach_grey_image']}',
-                          ),
-                        )),
+                            borderRadius: BorderRadius.circular(50),
+                            child: numForAch[index] == 1
+                                ? Image.asset(
+                                    'images/${ach_data![index]['ach_color_image']}',
+                                  )
+                                : Image.asset(
+                                    'images/${ach_data![index]['ach_grey_image']}',
+                                  ))),
                     showCloseIcon: true,
                     title: ach_data![index]['ach_name'],
                     body: Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 10, 20),
+                        padding: const EdgeInsets.fromLTRB(15, 0, 10, 20),
                         child: Column(
                           children: [
                             Text(
@@ -87,10 +105,14 @@ class _AchieveState extends State<Achieve> {
                       height: 70,
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(50),
-                          child: Image.asset(
-                            'images/${ach_data![index]['ach_grey_image']}',
-                            fit: BoxFit.cover,
-                          )),
+                          child: numForAch[index] == 1
+                              ? Image.asset(
+                                  'images/${ach_data![index]['ach_color_image']}',
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset(
+                                  'images/${ach_data![index]['ach_grey_image']}',
+                                )),
                     ),
                     SizedBox(height: 5),
                     RichText(
@@ -121,6 +143,19 @@ findAch() async {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
       });
+  var result = jsonDecode(response.body);
+  return result;
+}
+
+findSuccessAch() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var token = prefs.getString('token');
+  var url = 'http://10.0.2.2:3000/achievement/allSuccess';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(<String, dynamic>{'token': token}));
   var result = jsonDecode(response.body);
   return result;
 }

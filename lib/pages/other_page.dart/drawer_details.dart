@@ -6,6 +6,7 @@ import 'package:diown/pages/menu_page/favpage.dart';
 import 'package:diown/pages/menu_page/picdiarypage.dart';
 import 'package:diown/pages/menu_page/setting.dart';
 import 'package:diown/pages/menu_page/support.dart';
+import 'package:diown/pages/menu_page/testpage.dart';
 import 'package:diown/pages/model/profile.dart';
 import 'package:diown/pages/screens/profile.dart';
 import 'package:flutter/material.dart';
@@ -102,7 +103,13 @@ class _DrawerDetailsState extends State<DrawerDetails> {
               leading: const Icon(Icons.person_add_alt_1_outlined),
               title: const Text('Follow request'),
               visualDensity: VisualDensity.compact,
-              onTap: () {}),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        child: TestPage(),
+                        type: PageTransitionType.rightToLeft));
+              }),
           ListTile(
               leading: const Icon(Icons.person_outline),
               title: const Text('Following'),

@@ -51,7 +51,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   '${pro['username']}',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 )
-              : Text(
+              : const Text(
                   'Please wait . . .',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
@@ -229,7 +229,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       slivers: [_builderList(30)],
                     ),
                     BarChartOne(),
-                    Achieve('achieve', profile.achieve!)
+                    Achieve('achieve')
                   ]),
                 )
               : const Center(

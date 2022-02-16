@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cool_alert/cool_alert.dart';
@@ -187,14 +188,18 @@ class _LocalDiaryState extends State<LocalDiary> {
                                   var mood_emoji = resultMood!.substring(0, 2);
                                   var mood_detail = resultMood!.substring(3);
                                   await addDiaryWithOutText(
-                                      token,
-                                      topic,
-                                      write_detail,
-                                      mood_emoji,
-                                      mood_detail,
-                                      _imageNameList,
-                                      resultAct,
-                                      );
+                                    token,
+                                    topic,
+                                    write_detail,
+                                    mood_emoji,
+                                    mood_detail,
+                                    _imageNameList,
+                                    resultAct,
+                                  );
+                                  var check = await checkAchievement(3);
+                                  if (check['message'] == 'already have') {
+                                    AwesomeDialog(context: context,dialogType: DialogType.SUCCES);
+                                  }
                                   Navigator.pop(context);
                                   Navigator.pop(context);
                                   Navigator.pop(context, "yeah");
@@ -203,14 +208,14 @@ class _LocalDiaryState extends State<LocalDiary> {
                                   var mood_emoji = resultMood!.substring(0, 2);
                                   var mood_detail = resultMood!.substring(3);
                                   await addDiaryWithOutText(
-                                      token,
-                                      topic,
-                                      write_detail,
-                                      mood_emoji,
-                                      mood_detail,
-                                      _imageNameList,
-                                      resultAct,
-                                      );
+                                    token,
+                                    topic,
+                                    write_detail,
+                                    mood_emoji,
+                                    mood_detail,
+                                    _imageNameList,
+                                    resultAct,
+                                  );
                                   Navigator.pop(context);
                                   Navigator.pop(context);
                                   Navigator.pop(context, "yeah");
@@ -831,81 +836,17 @@ addDiaryWithOutText(token, topic, write_detail, mood_emoji, mood_detail,
   return result;
 }
 
-//  ElevatedButton(
-//                   onPressed: () {
-//                     showModalBottomSheet(
-//                         shape: const RoundedRectangleBorder(
-//                           borderRadius: BorderRadius.only(
-//                               topLeft: Radius.circular(30),
-//                               topRight: Radius.circular(30)),
-//                         ),
-//                         context: context,
-//                         builder: (context) {
-//                           return Padding(
-//                             padding: const EdgeInsets.all(8.0),
-//                             child: Container(
-//                                 color: Colors.transparent,
-//                                 height: 200,
-//                                 child: ListView(
-//                                   children: [
-//                                     Padding(
-//                                       padding: const EdgeInsets.all(8.0),
-//                                       child: ListTile(
-//                                           title: const Text(
-//                                             'Select to add images.',
-//                                             style: TextStyle(fontSize: 20),
-//                                           ),
-//                                           trailing: IconButton(
-//                                             icon: const Icon(
-//                                                 Icons.highlight_remove_rounded),
-//                                             onPressed: () {
-//                                               Navigator.pop(context);
-//                                             },
-//                                           )),
-//                                     ),
-//                                     const Divider(
-//                                       thickness: 0.8,
-//                                     ),
-//                                     ListTile(
-//                                       leading: const Icon(
-//                                         Icons.photo,
-//                                         color: Color.fromRGBO(148, 92, 254, 1),
-//                                       ),
-//                                       title:
-//                                           const Text('Pick images in gallery.'),
-//                                       trailing: const Icon(
-//                                           Icons.navigate_next_rounded),
-//                                       onTap: () {
-//                                         selectImage();
-//                                         Navigator.pop(context);
-//                                       },
-//                                     ),
-//                                     ListTile(
-//                                       leading: const Icon(
-//                                         Icons.camera_alt,
-//                                         color: Color.fromRGBO(148, 92, 254, 1),
-//                                       ),
-//                                       title: const Text('Take a picture.'),
-//                                       trailing: const Icon(
-//                                           Icons.navigate_next_rounded),
-//                                       onTap: () {
-//                                         cameraImage();
-//                                         Navigator.pop(context);
-//                                       },
-//                                     )
-//                                   ],
-//                                 )),
-//                           );
-//                         });
-//                   },
-//                   style: ButtonStyle(
-//                       foregroundColor:
-//                           MaterialStateProperty.all<Color>(Colors.white),
-//                       backgroundColor: MaterialStateProperty.all<Color>(
-//                           const Color.fromRGBO(148, 92, 254, 1)),
-//                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-//                           RoundedRectangleBorder(
-//                               borderRadius: BorderRadius.circular(80.0),
-//                               side: const BorderSide(
-//                                   color: Color.fromRGBO(148, 92, 254, 1))))),
-//                   child: const Text('add image')),
+checkAchievement(index) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var token = prefs.getString('token');
+  var url = 'http://10.0.2.2:3000/achievement/checkSuccess';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{'token': token, 'index': index},
+      ));
+  var result = jsonDecode(response.body);
+  return result;
+}
