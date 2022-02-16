@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:diown/pages/extraPage/apigcloud.dart';
 import 'package:flutter/services.dart';
@@ -115,16 +116,85 @@ class _EditProfileState extends State<EditProfile> {
                         context: context,
                         type: CoolAlertType.confirm,
                         onConfirmBtnTap: () async {
+                          var check;
                           CoolAlert.show(
                               context: context,
                               type: CoolAlertType.loading,
                               barrierDismissible: false);
                           if (_imageByte != null) {
                             await _saveImage();
+                            check = await checkAchievement(8);
                           }
                           var checkResult = await updateUser(
                               token, username, bio, _imageName);
-                          if (checkResult['message'] == 'success') {
+                          if (checkResult['message'] == 'success' &&
+                              check != null) {
+                            if (check['message'] == 'success') {
+                              CoolAlert.show(
+                                  context: context,
+                                  type: CoolAlertType.success,
+                                  barrierDismissible: false,
+                                  onConfirmBtnTap: () {
+                                    AwesomeDialog(
+                                            context: context,
+                                            dismissOnTouchOutside: false,
+                                            dialogType: DialogType.SUCCES,
+                                            customHeader: Container(
+                                              height: 100,
+                                              child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(50),
+                                                  child: Image.asset(
+                                                      'images/profile.png')),
+                                            ),
+                                            title: 'congratulations',
+                                            body: Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        15, 0, 10, 10),
+                                                child: Column(
+                                                  children: const [
+                                                    Text(
+                                                      'congratulations',
+                                                      style: TextStyle(
+                                                        fontSize: 20,
+                                                        height: 1.5,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 10),
+                                                    Text(
+                                                      'Congratulations to unlock this achievement (Identify yourself).',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                    ),
+                                                  ],
+                                                )),
+                                            btnOk: ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text('ok')))
+                                        .show();
+                                  });
+                            } else {
+                              CoolAlert.show(
+                                  context: context,
+                                  type: CoolAlertType.success,
+                                  barrierDismissible: false,
+                                  onConfirmBtnTap: () {
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  });
+                            }
+                          } else if (checkResult['message'] == 'success') {
                             CoolAlert.show(
                                 context: context,
                                 type: CoolAlertType.success,
@@ -374,6 +444,21 @@ updateUser(token, username, bio, _imageName) async {
           'bio': bio,
           'profile_image': _imageName
         },
+      ));
+  var result = jsonDecode(response.body);
+  return result;
+}
+
+checkAchievement(index) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var token = prefs.getString('token');
+  var url = 'http://10.0.2.2:3000/achievement/checkSuccess';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{'token': token, 'index': index},
       ));
   var result = jsonDecode(response.body);
   return result;
