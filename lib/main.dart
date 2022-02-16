@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:diown/pages/auth/signup.dart';
 
 void main() {
-  print("object");
+  print("donut donut");
   runApp(MaterialApp(
     theme: ThemeData(fontFamily: 'readex2'),
     initialRoute: LoaddingPage.id,
