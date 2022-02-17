@@ -1,9 +1,13 @@
+import 'dart:convert';
+
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:diown/pages/mainpage/home.dart';
 import 'package:diown/pages/menu_page/privacy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class SettingPage extends StatefulWidget {
   const SettingPage({Key? key}) : super(key: key);
@@ -252,18 +256,54 @@ class _SettingPageState extends State<SettingPage> {
                               ),
                             ),
                             // inputController: inputController,
-                            didConfirmed: (matchedText) {
+                            didConfirmed: (matchedText) async {
                               _setPasscode(matchedText);
-
-                              Navigator.popAndPushNamed(context, Home.id);
+                              var check = await checkAchievement(2);
+                              if (check['message'] == 'success') {
+                                AwesomeDialog(
+                                        context: context,
+                                        dialogType: DialogType.SUCCES,
+                                        customHeader: Container(
+                                          height: 100,
+                                          child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(50),
+                                              child: Image.asset(
+                                                  'images/Make_A_Secret.png')),
+                                        ),
+                                        title: 'congratulations',
+                                        body: Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                15, 0, 10, 10),
+                                            child: Column(
+                                              children: const [
+                                                Text(
+                                                  'congratulations',
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    height: 1.5,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 10),
+                                                Text(
+                                                  'Congratulations to unlock this achievement (Make a secret).',
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ],
+                                            )),
+                                        btnOk: ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                              Navigator.popAndPushNamed(
+                                                  context, Home.id);
+                                            },
+                                            child: Text('ok')))
+                                    .show();
+                              } else {
+                                Navigator.popAndPushNamed(context, Home.id);
+                              }
                             },
-                            // footer: TextButton(
-                            //   onPressed: () {
-                            //     // Release the confirmation state and return to the initial input state.
-                            //     inputController.unsetConfirmed();
-                            //   },
-                            //   child: const Text(' Return enter mode.'),
-                            // ),
                             cancelButton:
                                 const Icon(Icons.close, color: Colors.black),
                             deleteButton: const Icon(Icons.backspace,
@@ -297,4 +337,19 @@ Future<void> _setPasscode(String matchedText) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString('passcode', matchedText);
   print(matchedText);
+}
+
+checkAchievement(index) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var token = prefs.getString('token');
+  var url = 'http://10.0.2.2:3000/achievement/checkSuccess';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{'token': token, 'index': index},
+      ));
+  var result = jsonDecode(response.body);
+  return result;
 }
