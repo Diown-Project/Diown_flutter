@@ -409,8 +409,8 @@ class _EditProfileState extends State<EditProfile> {
                                         borderSide: BorderSide.none,
                                       ),
                                     ),
-                                    maxLines: null,
-                                    minLines: 7,
+                                    maxLines: 7,
+                                    minLines: 4,
                                     onSaved: (value) {
                                       setState(() {
                                         bio = value;
