@@ -7,7 +7,6 @@ import 'package:diown/pages/menu_page/picdiarypage.dart';
 import 'package:diown/pages/menu_page/setting.dart';
 import 'package:diown/pages/menu_page/support.dart';
 import 'package:diown/pages/menu_page/testpage.dart';
-import 'package:diown/pages/model/profile.dart';
 import 'package:diown/pages/screens/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
