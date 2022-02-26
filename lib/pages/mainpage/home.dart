@@ -5,6 +5,7 @@ import 'package:diown/pages/mainpage/home_page.dart';
 import 'package:diown/pages/mainpage/map.dart';
 import 'package:diown/pages/other_page.dart/drawer_details.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 
 class Home extends StatefulWidget {
@@ -21,11 +22,18 @@ class _HomeState extends State<Home> {
   var _saveindex = 0;
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
   final iconList = <IconData>[
-    Icons.home,
-    Icons.map_rounded,
-    Icons.calendar_today_rounded,
-    Icons.menu_rounded,
+    MdiIcons.home,
+    MdiIcons.earth,
+    MdiIcons.calendarBlank,
+    MdiIcons.menu,
   ];
+  final textList = <String>[
+    'Home',
+    'Map',
+    'Calendar',
+    'Menu'
+  ];
+
   var pageList = [
     const HomePage(),
     const MapPage(),
@@ -124,13 +132,36 @@ class _HomeState extends State<Home> {
                   });
             },
           ),
-          bottomNavigationBar: AnimatedBottomNavigationBar(
-            icons: iconList,
+          bottomNavigationBar: AnimatedBottomNavigationBar.builder(
+            height: 50,
+            itemCount: iconList.length,
+            tabBuilder: (int index, bool isActive) {
+              final color = isActive ? const Color.fromRGBO(148, 92, 254, 1) : Colors.black;
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                   iconList[index],
+                   size: 24,
+                   color: color,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(
+                      textList[index],
+                      style: TextStyle(
+                        color: color,
+                        fontSize: 11
+                      ),
+                    ),
+                  )
+                ],
+              );
+            },
             activeIndex: _bottomNavIndex,
-            activeColor: const Color.fromRGBO(148, 92, 254, 1),
             gapLocation: GapLocation.center,
             notchSmoothness: NotchSmoothness.defaultEdge,
-            iconSize: 25,
             onTap: (index) {
               if (index == 3) {
                 _drawerKey.currentState!.openEndDrawer();
