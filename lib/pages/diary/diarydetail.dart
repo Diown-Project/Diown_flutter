@@ -69,7 +69,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
           centerTitle: true,
           title: diary != null
               ? diary.containsKey('message')
-                  ? Text('This diary was deleted.')
+                  ? Text('This diary was deleted')
                   : Text('${time}')
               : Text('wait. . .'),
           elevation: 0,

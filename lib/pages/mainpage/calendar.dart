@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:diown/pages/diary/choosediary.dart';
 import 'package:diown/pages/diary/diarydetail.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
+import 'package:timeago/timeago.dart' as timeago;
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({Key? key}) : super(key: key);
@@ -128,58 +130,140 @@ class _CalendarPageState extends State<CalendarPage> {
       onRefresh: onRefresh,
       onLoading: onLoading,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(0.0),
         child: Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              'Calendar',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black
+              ),
+            ),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ),
             body: diary != null
                 ? SingleChildScrollView(
                     child: Column(
                       children: [
-                        TableCalendar(
-                          firstDay: DateTime.utc(2010, 10, 16),
-                          lastDay: DateTime.utc(2030, 3, 14),
-                          focusedDay: _focusedDay,
-                          selectedDayPredicate: (day) =>
-                              isSameDay(_selectedDay, day),
-                          rangeStartDay: _rangeStart,
-                          rangeEndDay: _rangeEnd,
-                          calendarFormat: _calendarFormat,
-                          rangeSelectionMode: _rangeSelectionMode,
-                          eventLoader: (date) {
-                            var result = [];
-                            dateCheck = date;
-                            for (int i = 0; i < diary.length; i++) {
-                              var c = diary[i]['date'];
-                              if (c.toString().substring(0, 10) ==
-                                  date.toString().substring(0, 10)) {
-                                result.add(c);
-                              }
-                            }
-                            return result;
-                          },
-                          calendarStyle: const CalendarStyle(
-                            // Use `CalendarStyle` to customize the UI
-                            outsideDaysVisible: false,
+                        Container(
+                          margin: EdgeInsets.fromLTRB(8, 0, 8, 5),
+                          width: double.infinity,
+                          decoration:  BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            gradient: LinearGradient(colors: [Color(0xff8b82ff), Color(0xff8a7efd)]),
+                            // boxShadow: <BoxShadow>[
+                            //   BoxShadow(
+                            //     color: Colors.black12,
+                            //     blurRadius: 5,
+                            //     offset: new Offset(0.0, 5)
+                            //   )
+                            // ]
                           ),
-                          onDaySelected: _onDaySelected,
-                          onRangeSelected: _onRangeSelected,
-                          onFormatChanged: (format) {
-                            if (_calendarFormat != format) {
-                              setState(() {
-                                _calendarFormat = format;
-                              });
-                            }
-                          },
-                          onPageChanged: (focusedDay) {
-                            _focusedDay = focusedDay;
-                          },
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                            child: TableCalendar(
+                              calendarStyle: const CalendarStyle(
+                                // Use `CalendarStyle` to customize the UI
+                                outsideDaysVisible: false,
+                                defaultTextStyle: TextStyle(color: Colors.white),
+                                weekendTextStyle: TextStyle(color: Colors.white),
+                                selectedDecoration: BoxDecoration(
+                                  color: Color(0xff6559ff),
+                                  shape: BoxShape.circle
+                                ),
+                                todayDecoration: BoxDecoration(
+                                  color: Colors.white60,
+                                  shape: BoxShape.circle
+                                ),
+                                markerDecoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle                               
+                                ),
+                                markerSize: 6,                  
+                                selectedTextStyle: TextStyle(color: Colors.white),
+                                todayTextStyle: TextStyle(color: Color(0xff6559ff)),                          
+                              ),
+                              headerStyle: const HeaderStyle(
+                                leftChevronIcon: Icon(Icons.arrow_back_ios, size: 17, color: Colors.white),
+                                rightChevronIcon: Icon(Icons.arrow_forward_ios, size: 17, color: Colors.white),
+                                titleTextStyle: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white
+                                ),
+                                titleCentered: true,
+                                formatButtonVisible: false
+                              ),
+                              daysOfWeekStyle: const DaysOfWeekStyle(
+                                weekdayStyle: TextStyle(color: Colors.white38),
+                                weekendStyle: TextStyle(color: Colors.white38)
+                              ),
+                              onDaySelected: _onDaySelected,
+                              onRangeSelected: _onRangeSelected,                            
+                              firstDay: DateTime.utc(2010, 10, 16),
+                              lastDay: DateTime.utc(2030, 3, 14),
+                              focusedDay: _focusedDay,
+                              selectedDayPredicate: (day) =>
+                                  isSameDay(_selectedDay, day),
+                              rangeStartDay: _rangeStart,
+                              rangeEndDay: _rangeEnd,
+                              // calendarFormat: _calendarFormat,
+                              rangeSelectionMode: _rangeSelectionMode,
+                              eventLoader: (date) {
+                                var result = [];
+                                dateCheck = date;
+                                for (int i = 0; i < diary.length; i++) {
+                                  var c = diary[i]['date'];
+                                  if (c.toString().substring(0, 10) ==
+                                      date.toString().substring(0, 10)) {
+                                    result.add(c);
+                                  }
+                                }
+                                return result;
+                              },
+                              onFormatChanged: (format) {
+                                if (_calendarFormat != format) {
+                                  setState(() {
+                                    _calendarFormat = format;
+                                  });
+                                }
+                              },
+                              onPageChanged: (focusedDay) {
+                                _focusedDay = focusedDay;
+                              },
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 8.0),
                         diary2 != null
                             ? Column(
                                 children: [
+                                  diary2.length == 0
+                                  ? Column(
+                                    children: [
+                                      const SizedBox(height: 20),
+                                      Icon(
+                                        MdiIcons.book,
+                                        size: 100,
+                                        color: Colors.grey[300],
+                                      ),
+                                      const SizedBox(height: 20),
+                                      const Text(
+                                        'No diary on this date',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.grey
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                  : Container(),
                                   for (int i = 0; i < diary2.length; i++)
                                     Container(
-                                      margin: EdgeInsets.only(bottom: 8),
+                                      margin: EdgeInsets.fromLTRB(8, 0, 8, 10),
                                       child: ListTile(
                                         leading: Column(
                                           mainAxisAlignment:
@@ -207,8 +291,8 @@ class _CalendarPageState extends State<CalendarPage> {
                                         subtitle: diary2[i]['activity'] == null
                                             ? null
                                             : Text('${diary2[i]['activity']}'),
-                                        trailing: Text(
-                                            '${diary2[i]['date'].toString().substring(0, 10)}'),
+                                        // trailing: Text(
+                                        //     '${diary2[i]['date'].toString().substring(0, 10)}'),
                                         tileColor: Color(0xfff1f3f4),
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
@@ -230,6 +314,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                         },
                                       ),
                                     ),
+                                    const SizedBox(height: 25)
                                 ],
                               )
                             : Container()
