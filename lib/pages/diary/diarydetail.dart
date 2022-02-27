@@ -69,7 +69,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
           centerTitle: true,
           title: diary != null
               ? diary.containsKey('message')
-                  ? Text('This diary was deleted')
+                  ? Text('This diary was deleted.')
                   : Text('${time}')
               : Text('wait. . .'),
           elevation: 0,
@@ -177,7 +177,8 @@ class _DiaryDetailState extends State<DiaryDetail> {
           ],
         ),
         body: SingleChildScrollView(
-          child: Column(
+          child: 
+          Column(
             children: [
               diary != null && diary['imageLocation'] != null
                   ? Container(
@@ -221,7 +222,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
                 child: Row(
                   children: [
                     Flexible(
-                      child: diary != null
+                      child: diary != null && diary['mood_emoji'] != null
                           ? Chip(
                               padding: EdgeInsets.all(0),
                               backgroundColor: Colors.grey[100],

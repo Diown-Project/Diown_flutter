@@ -9,7 +9,6 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
-import 'package:timeago/timeago.dart' as timeago;
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({Key? key}) : super(key: key);
@@ -141,6 +140,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 color: Colors.black
               ),
             ),
+            automaticallyImplyLeading: false,
             backgroundColor: Colors.transparent,
             elevation: 0,
           ),
@@ -201,17 +201,12 @@ class _CalendarPageState extends State<CalendarPage> {
                                 weekdayStyle: TextStyle(color: Colors.white38),
                                 weekendStyle: TextStyle(color: Colors.white38)
                               ),
-                              onDaySelected: _onDaySelected,
-                              onRangeSelected: _onRangeSelected,                            
+                              onDaySelected: _onDaySelected,                            
                               firstDay: DateTime.utc(2010, 10, 16),
                               lastDay: DateTime.utc(2030, 3, 14),
                               focusedDay: _focusedDay,
                               selectedDayPredicate: (day) =>
                                   isSameDay(_selectedDay, day),
-                              rangeStartDay: _rangeStart,
-                              rangeEndDay: _rangeEnd,
-                              // calendarFormat: _calendarFormat,
-                              rangeSelectionMode: _rangeSelectionMode,
                               eventLoader: (date) {
                                 var result = [];
                                 dateCheck = date;
@@ -224,16 +219,9 @@ class _CalendarPageState extends State<CalendarPage> {
                                 }
                                 return result;
                               },
-                              onFormatChanged: (format) {
-                                if (_calendarFormat != format) {
-                                  setState(() {
-                                    _calendarFormat = format;
-                                  });
-                                }
-                              },
-                              onPageChanged: (focusedDay) {
-                                _focusedDay = focusedDay;
-                              },
+                              // onPageChanged: (focusedDay) {
+                              //   _focusedDay = focusedDay;
+                              // },
                             ),
                           ),
                         ),

@@ -41,14 +41,14 @@ class _SignInState extends State<SignIn> {
                   height: 20,
                 ),
                 Container(
-                  alignment: Alignment.topLeft,
+                  alignment: Alignment.center,
                   child: const Text(
-                    'Sign In',
+                    'DIOWN',
                     style: TextStyle(
                         fontSize: 25.0,
-                        fontWeight: FontWeight.normal,
-                        fontFamily: 'readex'),
-                  ),
+                        fontWeight: FontWeight.bold,
+                    ),
+                ),
                 ),
                 const SizedBox(
                   height: 30,
@@ -56,17 +56,37 @@ class _SignInState extends State<SignIn> {
                 Form(
                     key: _formkey,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        const Text(
+                          'Email',
+                          style: TextStyle(
+                            color: Color(0xff8fa1b6),
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400
+                          ),                     
+                        ),
+                        const SizedBox(height: 10),
                         TextFormField(
                           keyboardType: TextInputType.emailAddress,
+                          cursorColor: const Color(0xff8a7efd),
                           decoration: const InputDecoration(
-                            labelText: 'email',
-                            border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15))),
-                            prefixIcon: Icon(
-                              Icons.email_outlined,
+                            filled: true,
+                            fillColor: Color(0xfff1f3f4),
+                            hintText: 'yourname@example.com',
+                            hintStyle: TextStyle(
+                              color: Color(0xffc5d2e1),
+                              fontWeight: FontWeight.w200
                             ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide.none
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide.none
+                            ),
+                            // prefixIcon: Icon(
+                            //   Icons.email_outlined,
+                            // ),
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -79,15 +99,34 @@ class _SignInState extends State<SignIn> {
                           },
                         ),
                         const SizedBox(
-                          height: 25.0,
+                          height: 25,
                         ),
+                        const Text(
+                          'Password',
+                          style: TextStyle(
+                            color: Color(0xff8fa1b6),
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400
+                          ),                      
+                        ),
+                        const SizedBox(height: 10),
                         TextFormField(
+                          cursorColor: Color(0xff8a7efd),
                           decoration: InputDecoration(
-                            labelText: 'password',
-                            border: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15))),
-                            prefixIcon: const Icon(Icons.lock),
+                            filled: true,
+                            fillColor: Color(0xfff1f3f4),
+                            hintText: 'yourpassword',
+                            hintStyle: const TextStyle(
+                              color: Color(0xffc5d2e1),
+                              fontWeight: FontWeight.w200
+                            ),
+                            focusedBorder: const UnderlineInputBorder(
+                              borderSide: BorderSide.none
+                            ),
+                            enabledBorder: const UnderlineInputBorder(
+                              borderSide: BorderSide.none
+                            ),
+                            // prefixIcon: const Icon(Icons.lock),
                             suffixIcon: IconButton(
                                 onPressed: () {
                                   setState(() {
@@ -96,7 +135,10 @@ class _SignInState extends State<SignIn> {
                                 },
                                 icon: Icon(see
                                     ? Icons.visibility
-                                    : Icons.visibility_off)),
+                                    : Icons.visibility_off),
+                                color: Color(0xff8fa1b6),
+                                focusColor: Color(0xff8fa1b6),
+                            ),
                           ),
                           obscureText: see,
                           onSaved: (value) {
@@ -110,66 +152,65 @@ class _SignInState extends State<SignIn> {
                           },
                         ),
                         const SizedBox(
-                          height: 30,
+                          height: 50,
                         ),
-                        ElevatedButton(
-                            onPressed: () async {
-                              setState(() {
-                                if (_formkey.currentState!.validate()) {
-                                  _formkey.currentState!.save();
-                                }
-                              });
-
-                              if (email == null || password == null) {
+                        GestureDetector(
+                          onTap: () async {
+                            setState(() {
+                              if (_formkey.currentState!.validate()) {
+                                _formkey.currentState!.save();
+                              }
+                            });
+                    
+                            if (email == null || password == null) {
+                            } else {
+                              CoolAlert.show(
+                                barrierDismissible: false,
+                                context: context,
+                                type: CoolAlertType.loading,
+                              );
+                              await signin(email, password);
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              String? msg = prefs.getString('msg');
+                              if (msg == 'success') {
+                                Navigator.of(context)
+                                    .pushReplacement(PageTransition(
+                                  child: const Home(),
+                                  type: PageTransitionType.rightToLeft,
+                                ));
                               } else {
                                 CoolAlert.show(
-                                  barrierDismissible: false,
-                                  context: context,
-                                  type: CoolAlertType.loading,
-                                );
-                                await signin(email, password);
-                                SharedPreferences prefs =
-                                    await SharedPreferences.getInstance();
-                                String? msg = prefs.getString('msg');
-                                if (msg == 'success') {
-                                  Navigator.of(context)
-                                      .pushReplacement(PageTransition(
-                                    child: const Home(),
-                                    type: PageTransitionType.rightToLeft,
-                                  ));
-                                } else {
-                                  CoolAlert.show(
-                                      barrierDismissible: false,
-                                      context: context,
-                                      type: CoolAlertType.error,
-                                      title: 'Error warning!',
-                                      text: msg,
-                                      onConfirmBtnTap: () {
-                                        Navigator.of(context).pop();
-                                        Navigator.of(context).pop();
-                                      });
-                                }
+                                    barrierDismissible: false,
+                                    context: context,
+                                    type: CoolAlertType.error,
+                                    title: 'Error warning!',
+                                    text: msg,
+                                    onConfirmBtnTap: () {
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                    });
                               }
-                            },
-                            child: const Text(
-                              'Sign In',
-                              style: TextStyle(fontSize: 20),
+                            }
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            height: 60,
+                            decoration: const BoxDecoration(
+                              color: Color(0xff8b82ff),
+                              borderRadius: BorderRadius.all(Radius.circular(10))
                             ),
-                            style: ButtonStyle(
-                                minimumSize: MaterialStateProperty.all<Size>(
-                                    const Size(304, 65)),
-                                foregroundColor: MaterialStateProperty.all<Color>(
-                                    Colors.black),
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        const Color.fromRGBO(229, 221, 255, 1)),
-                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(80.0),
-                                        side: const BorderSide(
-                                            color:
-                                                Color.fromRGBO(229, 221, 255, 1)))))),
+                            child: const Center(
+                              child: Text(
+                                  'SIGN IN',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.white
+                                  ),
+                                ),
+                            ),
+                          ),
+                        ),
                       ],
                     )),
                 const SizedBox(
@@ -181,7 +222,25 @@ class _SignInState extends State<SignIn> {
                           type: PageTransitionType.rightToLeft,
                           child: const SignUp()));
                     },
-                    child: const Text('Dont have an account?'))
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Dont have an account?',
+                          style: TextStyle(
+                            color: Colors.black
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        const Text(
+                          'Register',
+                          style: TextStyle(
+                            color: Color(0xff8a7efd)
+                          ),
+                        )
+                      ],
+                    )
+                )
               ],
             ),
           ),

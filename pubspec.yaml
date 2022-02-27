@@ -118,6 +118,8 @@ flutter:
     - family: readex
       fonts:
         - asset: fonts/ReadexPro-VariableFont_wght.ttf
+
+        
         
   #   - family: Trajan Pro
   #     fonts:
