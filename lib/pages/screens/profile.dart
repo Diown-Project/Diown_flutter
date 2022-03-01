@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:diown/pages/model/profile.dart';
 import 'package:diown/pages/screens/editprofile.dart';
 import 'package:diown/pages/screens/widgets/mood_chart.dart';
 
@@ -21,7 +20,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final profile = Profile.generateProfile();
   dynamic pro;
   findUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -281,6 +279,7 @@ callUser(token) async {
   var result = jsonDecode(response.body);
   return result;
 }
+
 checkAchievement4() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');

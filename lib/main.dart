@@ -7,8 +7,12 @@ import 'package:diown/pages/mainpage/home_page.dart';
 import 'package:diown/pages/mainpage/map.dart';
 import 'package:flutter/material.dart';
 import 'package:diown/pages/auth/signup.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(MaterialApp(
     theme: ThemeData(fontFamily: 'readex'),
     initialRoute: LoaddingPage.id,

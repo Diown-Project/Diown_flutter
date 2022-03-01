@@ -131,15 +131,19 @@ class _CalendarPageState extends State<CalendarPage> {
       child: Padding(
         padding: const EdgeInsets.all(0.0),
         child: Scaffold(
-          appBar: AppBar(
-            title: const Text(
-              'Calendar',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black
+            appBar: AppBar(
+              title: const Text(
+                'Calendar',
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
               ),
+              automaticallyImplyLeading: false,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
             ),
+
             automaticallyImplyLeading: false,
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -151,10 +155,11 @@ class _CalendarPageState extends State<CalendarPage> {
                         Container(
                           margin: EdgeInsets.fromLTRB(8, 0, 8, 5),
                           width: double.infinity,
-                          decoration:  BoxDecoration(
+                          decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(10),
-                            gradient: LinearGradient(colors: [Color(0xff8b82ff), Color(0xff8a7efd)]),
+                            gradient: LinearGradient(
+                                colors: [Color(0xff8b82ff), Color(0xff8a7efd)]),
                             // boxShadow: <BoxShadow>[
                             //   BoxShadow(
                             //     color: Colors.black12,
@@ -169,39 +174,42 @@ class _CalendarPageState extends State<CalendarPage> {
                               calendarStyle: const CalendarStyle(
                                 // Use `CalendarStyle` to customize the UI
                                 outsideDaysVisible: false,
-                                defaultTextStyle: TextStyle(color: Colors.white),
-                                weekendTextStyle: TextStyle(color: Colors.white),
+                                defaultTextStyle:
+                                    TextStyle(color: Colors.white),
+                                weekendTextStyle:
+                                    TextStyle(color: Colors.white),
                                 selectedDecoration: BoxDecoration(
-                                  color: Color(0xff6559ff),
-                                  shape: BoxShape.circle
-                                ),
+                                    color: Color(0xff6559ff),
+                                    shape: BoxShape.circle),
                                 todayDecoration: BoxDecoration(
-                                  color: Colors.white60,
-                                  shape: BoxShape.circle
-                                ),
+                                    color: Colors.white60,
+                                    shape: BoxShape.circle),
                                 markerDecoration: BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle                               
-                                ),
-                                markerSize: 6,                  
-                                selectedTextStyle: TextStyle(color: Colors.white),
-                                todayTextStyle: TextStyle(color: Color(0xff6559ff)),                          
+                                    color: Colors.white,
+                                    shape: BoxShape.circle),
+                                markerSize: 6,
+                                selectedTextStyle:
+                                    TextStyle(color: Colors.white),
+                                todayTextStyle:
+                                    TextStyle(color: Color(0xff6559ff)),
                               ),
                               headerStyle: const HeaderStyle(
-                                leftChevronIcon: Icon(Icons.arrow_back_ios, size: 17, color: Colors.white),
-                                rightChevronIcon: Icon(Icons.arrow_forward_ios, size: 17, color: Colors.white),
-                                titleTextStyle: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.white
-                                ),
-                                titleCentered: true,
-                                formatButtonVisible: false
-                              ),
+                                  leftChevronIcon: Icon(Icons.arrow_back_ios,
+                                      size: 17, color: Colors.white),
+                                  rightChevronIcon: Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 17,
+                                      color: Colors.white),
+                                  titleTextStyle: TextStyle(
+                                      fontSize: 18, color: Colors.white),
+                                  titleCentered: true,
+                                  formatButtonVisible: false),
                               daysOfWeekStyle: const DaysOfWeekStyle(
                                 weekdayStyle: TextStyle(color: Colors.white38),
                                 weekendStyle: TextStyle(color: Colors.white38)
                               ),
                               onDaySelected: _onDaySelected,                            
+
                               firstDay: DateTime.utc(2010, 10, 16),
                               lastDay: DateTime.utc(2030, 3, 14),
                               focusedDay: _focusedDay,
@@ -230,25 +238,24 @@ class _CalendarPageState extends State<CalendarPage> {
                             ? Column(
                                 children: [
                                   diary2.length == 0
-                                  ? Column(
-                                    children: [
-                                      const SizedBox(height: 20),
-                                      Icon(
-                                        MdiIcons.book,
-                                        size: 100,
-                                        color: Colors.grey[300],
-                                      ),
-                                      const SizedBox(height: 20),
-                                      const Text(
-                                        'No diary on this date',
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          color: Colors.grey
-                                        ),
-                                      )
-                                    ],
-                                  )
-                                  : Container(),
+                                      ? Column(
+                                          children: [
+                                            const SizedBox(height: 20),
+                                            Icon(
+                                              MdiIcons.book,
+                                              size: 100,
+                                              color: Colors.grey[300],
+                                            ),
+                                            const SizedBox(height: 20),
+                                            const Text(
+                                              'No diary on this date',
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  color: Colors.grey),
+                                            )
+                                          ],
+                                        )
+                                      : Container(),
                                   for (int i = 0; i < diary2.length; i++)
                                     Container(
                                       margin: EdgeInsets.fromLTRB(8, 0, 8, 10),
@@ -302,7 +309,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                         },
                                       ),
                                     ),
-                                    const SizedBox(height: 25)
+                                  const SizedBox(height: 25)
                                 ],
                               )
                             : Container()
