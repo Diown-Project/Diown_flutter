@@ -321,14 +321,14 @@ class _EditProfileState extends State<EditProfile> {
                                       ? Image.memory(
                                           _imageByte![0],
                                           fit: BoxFit.cover,
-                                          width: 180,
-                                          height: 180,
+                                          width: 120,
+                                          height: 120,
                                         )
                                       : Image.network(
                                           'https://storage.googleapis.com/noseason/${user['profile_image']}',
                                           fit: BoxFit.cover,
-                                          width: 180,
-                                          height: 180,
+                                          width: 120,
+                                          height: 120,
                                         )),
                             )),
                             Positioned(
@@ -361,16 +361,32 @@ class _EditProfileState extends State<EditProfile> {
                       child: Form(
                           key: _formkey,
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              const Text(
+                                'Username',
+                                style: TextStyle(
+                                  color: Color(0xff8fa1b6),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400
+                                ),                     
+                              ),
+                              const SizedBox(height: 5),
                               TextFormField(
                                 maxLength: 20,
                                 initialValue: user['username'],
+                                cursorColor: const Color(0xff8a7efd),
                                 decoration: const InputDecoration(
                                   contentPadding: EdgeInsets.fromLTRB(
                                       20.0, 10.0, 20.0, 10.0),
+                                  counterStyle: TextStyle(color: Color(0xff8fa1b6)),
                                   filled: true,
                                   fillColor: Color(0xfff1f3f4),
-                                  hintText: 'Topic',
+                                  hintText: 'usernaem',
+                                  hintStyle: TextStyle(
+                                    color: Color(0xffc5d2e1),
+                                    fontWeight: FontWeight.w200
+                                  ),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide.none,
                                   ),
@@ -393,15 +409,34 @@ class _EditProfileState extends State<EditProfile> {
                               const SizedBox(
                                 height: 15,
                               ),
+                              const Text(
+                                'Bio',
+                                style: TextStyle(
+                                  color: Color(0xff8fa1b6),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400
+                                ),                     
+                              ),
+                              const SizedBox(height: 5),
                               LayoutBuilder(builder: (context, constraints) {
                                 return SizedBox(
                                   child: TextFormField(
                                     maxLength: 150,
+                                    maxLines: 8,
+                                    minLines: 5,
                                     initialValue: user['bio'],
+                                    cursorColor: const Color(0xff8a7efd),
                                     decoration: const InputDecoration(
+                                      counterStyle: TextStyle(color: Color(0xff8fa1b6)),
                                       contentPadding: EdgeInsets.fromLTRB(
                                           20.0, 10.0, 20.0, 10.0),
+                                      filled: true,
+                                      fillColor: Color(0xfff1f3f4),
                                       hintText: 'Describe yourself here.',
+                                      hintStyle: TextStyle(
+                                        color: Color(0xffc5d2e1),
+                                        fontWeight: FontWeight.w200
+                                      ),
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide.none,
                                       ),
@@ -409,8 +444,6 @@ class _EditProfileState extends State<EditProfile> {
                                         borderSide: BorderSide.none,
                                       ),
                                     ),
-                                    maxLines: 7,
-                                    minLines: 4,
                                     onSaved: (value) {
                                       setState(() {
                                         bio = value;
