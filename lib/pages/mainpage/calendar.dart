@@ -143,11 +143,6 @@ class _CalendarPageState extends State<CalendarPage> {
               backgroundColor: Colors.transparent,
               elevation: 0,
             ),
-
-            automaticallyImplyLeading: false,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-          ),
             body: diary != null
                 ? SingleChildScrollView(
                     child: Column(
@@ -205,10 +200,11 @@ class _CalendarPageState extends State<CalendarPage> {
                                   titleCentered: true,
                                   formatButtonVisible: false),
                               daysOfWeekStyle: const DaysOfWeekStyle(
-                                weekdayStyle: TextStyle(color: Colors.white38),
-                                weekendStyle: TextStyle(color: Colors.white38)
-                              ),
-                              onDaySelected: _onDaySelected,                            
+                                  weekdayStyle:
+                                      TextStyle(color: Colors.white38),
+                                  weekendStyle:
+                                      TextStyle(color: Colors.white38)),
+                              onDaySelected: _onDaySelected,
 
                               firstDay: DateTime.utc(2010, 10, 16),
                               lastDay: DateTime.utc(2030, 3, 14),
