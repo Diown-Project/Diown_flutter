@@ -52,45 +52,11 @@ class BarChartOneState extends State<BarChartOne> {
           child: moodCount != null
               ? Column(
                   children: [
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 48, 24, 0),
-                      child: Container(
-                        alignment: Alignment.topRight,
-                        child: DropdownButton<String>(
-                          isDense: true,
-                          value: dropdownvalue,
-                          icon: Icon(Icons.keyboard_arrow_down),
-                          iconSize: 28,
-                          elevation: 20,
-                          onChanged: (String? newval) {
-                            setState(() {
-                              dropdownvalue = newval;
-                            });
-                          },
-                          items: <String>["7", "30", "60", '90', '180', '365']
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              onTap: () {
-                                var c = int.parse(value);
-                                textChart = value;
-                                getMood(value);
-                                setState(() {});
-                              },
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
                     Container(
                       height: 290,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(18.0),
-                        color: const Color(0xffC7B7FF),
+                        color: const Color(0xff8a7efd),
                       ),
                       margin: const EdgeInsets.fromLTRB(20.0, 60.0, 20.0, 20.0),
                       padding: const EdgeInsets.all(16.0),
@@ -98,12 +64,52 @@ class BarChartOneState extends State<BarChartOne> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          const Text(
-                            'Mood',
-                            style: TextStyle(
-                                color: Color(0xff3f3a83),
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Mood',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                child: Container(
+                                  child: DropdownButton<String>(
+                                    focusColor: Colors.black,
+                                    isDense: true,
+                                    value: dropdownvalue,
+                                    icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white,),
+                                    iconSize: 28,
+                                    // elevation: 100,
+                                    onChanged: (String? newval) {
+                                      setState(() {
+                                        dropdownvalue = newval;
+                                      });
+                                    },
+                                    items: <String>["7", "30", "60", '90', '180', '365']
+                                        .map<DropdownMenuItem<String>>((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        onTap: () {
+                                          var c = int.parse(value);
+                                          textChart = value;
+                                          getMood(value);
+                                          setState(() {});
+                                        },
+                                        child: Text(
+                                          value,
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              ),  
+                            
+                            ],
                           ),
                           const SizedBox(
                             height: 4,
@@ -111,9 +117,9 @@ class BarChartOneState extends State<BarChartOne> {
                           Text(
                             '${textChartList[textChart]}',
                             style: const TextStyle(
-                                color: Color(0xff5a519e),
+                                color: Colors.white,
                                 fontSize: 18,
-                                fontWeight: FontWeight.bold),
+                                fontWeight: FontWeight.w100),
                           ),
                           const SizedBox(
                             height: 25,
