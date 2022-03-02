@@ -1,9 +1,4 @@
-import 'package:diown/pages/mainpage/homeDetail/FeatureEvent.dart';
-import 'package:diown/pages/mainpage/homeDetail/HomeAppBar.dart';
-import 'package:diown/pages/mainpage/homeDetail/ListEvent.dart';
-import 'package:diown/pages/mainpage/homeDetail/TitleEvent.dart';
-import 'package:diown/pages/mainpage/homeDetail/TitleLast.dart';
-import 'package:diown/pages/mainpage/homeDetail/TitlePut.dart';
+import 'package:diown/pages/event/carousel_loading.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,17 +12,29 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Column(
-            children: [
-            HomeAppBar(),
-            // TitleEvent('Event', '+ more'),
-            FeatureEvent(),
-            TitlePut('Following put down', '+ more'),
-            TitleLast('Last Diary'),
-          
-        ],)],
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            Column(
+              children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(10, 5, 15, 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Image.asset(
+                      'images/logo_support.png',
+                      width: 120,
+                    ),
+                    ClipOval(
+                      child: Image.asset('images/non.jpg', width: 50),
+                    ),
+                  ],
+                ),
+              ),
+              CarouselLoading(),
+          ],)],
+        ),
       ),
     );
   }

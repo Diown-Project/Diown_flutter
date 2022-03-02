@@ -190,7 +190,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
                         pagination: const SwiperPagination(
                             margin: EdgeInsets.all(15),
                             builder: DotSwiperPaginationBuilder(
-                                activeColor: Colors.white, color: Colors.grey)),
+                                activeColor: Colors.black, color: Colors.white)),
                         layout: SwiperLayout.DEFAULT,
                         itemBuilder: (context, index) {
                           return Container(
