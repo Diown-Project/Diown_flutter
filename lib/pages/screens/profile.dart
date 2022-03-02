@@ -78,50 +78,35 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ClipOval(
                                           child: Material(
                                         color: Colors.transparent,
-                                        child: InkWidget(
-                                            onTap: () async {
-                                              Navigator.push(
-                                                      context,
-                                                      PageTransition(
-                                                          child: EditProfile(
-                                                              pro: pro),
-                                                          type:
-                                                              PageTransitionType
-                                                                  .rightToLeft))
-                                                  .then((_) async {
-                                                await findUser();
-                                                setState(() {});
-                                              });
-                                            },
-                                            child: Image.network(
-                                              'https://storage.googleapis.com/noseason/${pro['profile_image']}',
-                                              fit: BoxFit.cover,
-                                              width: 120,
-                                              height: 120,
-                                            )),
-                                      )),
-                                      Positioned(
-                                        bottom: 0,
-                                        right: 1,
-                                        child: ClipOval(
-                                          child: Container(
-                                            padding: const EdgeInsets.all(4.0),
-                                            color: Colors.white,
-                                            child: ClipOval(
-                                              child: Container(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                color: const Color(0xff945CFE),
-                                                child: const Icon(
-                                                  Icons.edit,
-                                                  size: 20.0,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
+                                        child: Image.network(
+                                          'https://storage.googleapis.com/noseason/${pro['profile_image']}',
+                                          fit: BoxFit.cover,
+                                          width: 100,
+                                          height: 100,
                                         ),
-                                      ),
+                                      )),
+                                      // Positioned(
+                                      //   bottom: 0,
+                                      //   right: 1,
+                                      //   child: ClipOval(
+                                      //     child: Container(
+                                      //       padding: const EdgeInsets.all(4.0),
+                                      //       color: Colors.white,
+                                      //       child: ClipOval(
+                                      //         child: Container(
+                                      //           padding:
+                                      //               const EdgeInsets.all(8.0),
+                                      //           color: const Color(0xff945CFE),
+                                      //           child: const Icon(
+                                      //             Icons.edit,
+                                      //             size: 20.0,
+                                      //             color: Colors.white,
+                                      //           ),
+                                      //         ),
+                                      //       ),
+                                      //     ),
+                                      //   ),
+                                      // ),
                                     ]),
                                     SizedBox(width: 10),
                                     Column(
@@ -186,7 +171,44 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                       ),
                                     )
-                                  : Container()
+                                  : Container(),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(18, 5, 15, 0),
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      Navigator.push(
+                                              context,
+                                              PageTransition(
+                                                  child: EditProfile(
+                                                      pro: pro),
+                                                  type:
+                                                      PageTransitionType
+                                                          .rightToLeft))
+                                          .then((_) async {
+                                        await findUser();
+                                        setState(() {});
+                                      });
+                                    },
+                                    child: Container(
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.black54
+                                        ),
+                                        borderRadius: BorderRadius.circular(4.0)
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          'Edit Profile',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.black87
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
                             ],
                           ),
                         ),
