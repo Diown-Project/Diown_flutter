@@ -703,11 +703,11 @@ class _EditLocalDiaryState extends State<EditLocalDiary> {
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(25), topRight: Radius.circular(25)),
           boxShadow: [
-            BoxShadow(
-                color: Colors.grey,
-                spreadRadius: -7,
-                blurRadius: 20,
-                offset: Offset(0, 5)),
+            // BoxShadow(
+            //     color: Colors.grey,
+            //     spreadRadius: -7,
+            //     blurRadius: 20,
+            //     offset: Offset(0, 5)),
           ]),
       child: Column(
         children: [

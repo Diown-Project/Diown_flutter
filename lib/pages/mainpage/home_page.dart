@@ -11,29 +11,31 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            Column(
-              children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(10, 5, 15, 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Image.asset(
-                      'images/logo_support.png',
-                      width: 120,
-                    ),
-                    ClipOval(
-                      child: Image.asset('images/non.jpg', width: 50),
-                    ),
-                  ],
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Column(
+                children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(10, 5, 15, 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Image.asset(
+                        'images/logo_support.png',
+                        width: 120,
+                      ),
+                      ClipOval(
+                        child: Image.asset('images/non.jpg', width: 50),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              CarouselLoading(),
-          ],)],
+                CarouselLoading(),
+            ],)],
+          ),
         ),
       ),
     );
