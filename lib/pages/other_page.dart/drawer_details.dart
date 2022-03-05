@@ -3,6 +3,7 @@ import 'package:diown/pages/auth/signin.dart';
 import 'package:diown/pages/extraPage/loadding.dart';
 import 'package:diown/pages/menu_page/FAQsScreen.dart';
 import 'package:diown/pages/menu_page/favpage.dart';
+import 'package:diown/pages/menu_page/follow.dart';
 import 'package:diown/pages/menu_page/picdiarypage.dart';
 import 'package:diown/pages/menu_page/setting.dart';
 import 'package:diown/pages/menu_page/support.dart';
@@ -118,7 +119,11 @@ class _DrawerDetailsState extends State<DrawerDetails> {
               leading: const Icon(Icons.groups_outlined),
               title: const Text('Follower'),
               visualDensity: VisualDensity.compact,
-              onTap: () {}),
+              onTap: () {Navigator.push(
+                    context,
+                    PageTransition(
+                        child: const FollowPage(),
+                        type: PageTransitionType.rightToLeft));}),
           ListTile(
             leading: const Icon(Icons.notifications_outlined),
             title: const Text('Notification'),
