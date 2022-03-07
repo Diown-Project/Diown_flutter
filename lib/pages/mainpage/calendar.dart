@@ -41,7 +41,7 @@ class _CalendarPageState extends State<CalendarPage> {
   void initState() {
     super.initState();
     waitForFind();
-    _selectedDay = _focusedDay;
+    // _selectedDay = _focusedDay;
     // _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
   }
 
@@ -146,6 +146,7 @@ class _CalendarPageState extends State<CalendarPage> {
             body: diary != null
                 ? SingleChildScrollView(
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
                           margin: EdgeInsets.fromLTRB(8, 0, 8, 5),
@@ -177,11 +178,12 @@ class _CalendarPageState extends State<CalendarPage> {
                                     color: Color(0xff6559ff),
                                     shape: BoxShape.circle),
                                 todayDecoration: BoxDecoration(
-                                    color: Colors.white60,
+                                    color: Colors.white38,
                                     shape: BoxShape.circle),
                                 markerDecoration: BoxDecoration(
                                     color: Colors.white,
-                                    shape: BoxShape.circle),
+                                    shape: BoxShape.circle    
+                                ),                               
                                 markerSize: 6,
                                 selectedTextStyle:
                                     TextStyle(color: Colors.white),
@@ -210,7 +212,7 @@ class _CalendarPageState extends State<CalendarPage> {
                               lastDay: DateTime.utc(2030, 3, 14),
                               focusedDay: _focusedDay,
                               selectedDayPredicate: (day) =>
-                                  isSameDay(_selectedDay, day),
+                                  isSameDay(_selectedDay, day),                             
                               eventLoader: (date) {
                                 var result = [];
                                 dateCheck = date;
@@ -223,6 +225,39 @@ class _CalendarPageState extends State<CalendarPage> {
                                 }
                                 return result;
                               },
+                              calendarBuilders: CalendarBuilders(
+                                markerBuilder: (context, day, events) {
+                                  if(events.isNotEmpty) {
+                                    return Stack(
+                                      alignment: Alignment.bottomRight,
+                                      children: [
+                                        Positioned(
+                                          bottom: 4.0,
+                                          right: 4.0,
+                                          child: Container(
+                                            height: 16,
+                                            width: 16,
+                                            decoration: const BoxDecoration(
+                                              color: Colors.white,
+                                              shape: BoxShape.rectangle,
+                                              borderRadius: BorderRadius.all(Radius.circular(20))
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                '${events.length}',
+                                                style: const TextStyle(
+                                                  color: Color(0xff6559ff),
+                                                  fontSize: 10
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    );
+                                  }
+                                },
+                              ),
                               // onPageChanged: (focusedDay) {
                               //   _focusedDay = focusedDay;
                               // },
@@ -231,26 +266,60 @@ class _CalendarPageState extends State<CalendarPage> {
                         ),
                         const SizedBox(height: 8.0),
                         diary2 != null
+                          ? diary2.length != 0
+                          ? Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 0, 10),
+                            child: Text(
+                              '${diary2.length} diary on this date',
+                              style: const TextStyle(
+                                fontSize: 20
+                              ),
+                            ),
+                          )
+                          : Container()
+                          : Center(
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 20),
+                                Icon(
+                                  MdiIcons.bookSearch,
+                                  size: 100,
+                                  color: Colors.grey[300],
+                                ),
+                                const SizedBox(height: 10),
+                                const Text(
+                                  'Select a date\nto see your diary',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.grey),
+                                  textAlign: TextAlign.center,
+                                )
+                              ],
+                            ),
+                          ),
+                        diary2 != null 
                             ? Column(
                                 children: [
                                   diary2.length == 0
-                                      ? Column(
-                                          children: [
-                                            const SizedBox(height: 20),
-                                            Icon(
-                                              MdiIcons.book,
-                                              size: 100,
-                                              color: Colors.grey[300],
-                                            ),
-                                            const SizedBox(height: 20),
-                                            const Text(
-                                              'No diary on this date',
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  color: Colors.grey),
-                                            )
-                                          ],
-                                        )
+                                      ? Center(
+                                        child: Column(
+                                            children: [
+                                              const SizedBox(height: 20),
+                                              Icon(
+                                                MdiIcons.bookRemove,
+                                                size: 100,
+                                                color: Colors.grey[300],
+                                              ),
+                                              const SizedBox(height: 20),
+                                              const Text(
+                                                'No diary on this date',
+                                                style: TextStyle(
+                                                    fontSize: 20,
+                                                    color: Colors.grey),
+                                              )
+                                            ],
+                                          ),
+                                      )
                                       : Container(),
                                   for (int i = 0; i < diary2.length; i++)
                                     Container(
@@ -287,7 +356,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                         tileColor: Color(0xfff1f3f4),
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(15)),
+                                                BorderRadius.circular(10)),
                                         onTap: () async {
                                           Navigator.push(
                                                   context,

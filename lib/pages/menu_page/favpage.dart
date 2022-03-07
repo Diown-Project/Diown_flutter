@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:diown/pages/diary/diarydetail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -61,6 +62,10 @@ class _FavPageState extends State<FavPage> {
             elevation: 0,
             backgroundColor: Colors.transparent,
             foregroundColor: Colors.black,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
           ),
           body: SmartRefresher(
             onRefresh: onRefresh,
@@ -68,10 +73,11 @@ class _FavPageState extends State<FavPage> {
             controller: _refreshController,
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(18.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Column(
                   children: [
                     CupertinoSearchTextField(
+                      placeholder: 'Search by date, topic',
                       onChanged: (value) async {
                         listDiary = await favSearch(value);
                         setState(() {});
@@ -171,8 +177,24 @@ class _FavPageState extends State<FavPage> {
                                   );
                                 }).toList()
                               : [
-                                  const Center(
-                                    child: Text('no favorite'),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      const SizedBox(height: 20),
+                                      Icon(
+                                        MdiIcons.bookOff,
+                                        size: 100,
+                                        color: Colors.grey[300],
+                                      ),
+                                      const SizedBox(height: 20),
+                                      const Text(
+                                        'Dont have favorite diary',
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.grey),
+                                      )
+                                    ],
                                   )
                                 ]
                           : [
