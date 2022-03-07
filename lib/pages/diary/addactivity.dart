@@ -222,7 +222,7 @@ class _AddActivityState extends State<AddActivity> {
                               ),
                               buttonElevation: 2,
                               itemHeight: 40,
-                              itemWidth: 90,
+                              customItemsHeight: 90,
                               itemPadding:
                                   const EdgeInsets.only(left: 30, right: 14),
                               dropdownMaxHeight: 250,
