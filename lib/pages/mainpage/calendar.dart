@@ -40,7 +40,7 @@ class _CalendarPageState extends State<CalendarPage> {
   void initState() {
     super.initState();
     waitForFind();
-    _selectedDay = _focusedDay;
+    // _selectedDay = _focusedDay;
     // _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
   }
 
@@ -143,104 +143,175 @@ class _CalendarPageState extends State<CalendarPage> {
                 backgroundColor: Colors.transparent,
                 elevation: 0,
               ),
-              body: diary != null
-                  ? SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.fromLTRB(8, 0, 8, 5),
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              gradient: LinearGradient(colors: [
-                                Color(0xff8b82ff),
-                                Color(0xff8a7efd)
-                              ]),
-                              // boxShadow: <BoxShadow>[
-                              //   BoxShadow(
-                              //     color: Colors.black12,
-                              //     blurRadius: 5,
-                              //     offset: new Offset(0.0, 5)
-                              //   )
-                              // ]
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                              child: TableCalendar(
-                                calendarStyle: const CalendarStyle(
-                                  // Use `CalendarStyle` to customize the UI
-                                  outsideDaysVisible: false,
-                                  defaultTextStyle:
-                                      TextStyle(color: Colors.white),
-                                  weekendTextStyle:
-                                      TextStyle(color: Colors.white),
-                                  selectedDecoration: BoxDecoration(
-                                      color: Color(0xff6559ff),
-                                      shape: BoxShape.circle),
-                                  todayDecoration: BoxDecoration(
-                                      color: Colors.white60,
-                                      shape: BoxShape.circle),
-                                  markerDecoration: BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle),
-                                  markerSize: 6,
-                                  selectedTextStyle:
-                                      TextStyle(color: Colors.white),
-                                  todayTextStyle:
-                                      TextStyle(color: Color(0xff6559ff)),
-                                ),
-                                headerStyle: const HeaderStyle(
-                                    leftChevronIcon: Icon(Icons.arrow_back_ios,
-                                        size: 17, color: Colors.white),
-                                    rightChevronIcon: Icon(
-                                        Icons.arrow_forward_ios,
-                                        size: 17,
-                                        color: Colors.white),
-                                    titleTextStyle: TextStyle(
-                                        fontSize: 18, color: Colors.white),
-                                    titleCentered: true,
-                                    formatButtonVisible: false),
-                                daysOfWeekStyle: const DaysOfWeekStyle(
-                                    weekdayStyle:
-                                        TextStyle(color: Colors.white38),
-                                    weekendStyle:
-                                        TextStyle(color: Colors.white38)),
-                                onDaySelected: _onDaySelected,
 
-                                firstDay: DateTime.utc(2010, 10, 16),
-                                lastDay: DateTime.utc(2030, 3, 14),
-                                focusedDay: _focusedDay,
-                                selectedDayPredicate: (day) =>
-                                    isSameDay(_selectedDay, day),
-                                eventLoader: (date) {
-                                  var result = [];
-                                  dateCheck = date;
-                                  for (int i = 0; i < diary.length; i++) {
-                                    var c = diary[i]['date'];
-                                    if (c.toString().substring(0, 10) ==
-                                        date.toString().substring(0, 10)) {
-                                      result.add(c);
-                                    }
-                                  }
-                                  return result;
-                                },
-                                // onPageChanged: (focusedDay) {
-                                //   _focusedDay = focusedDay;
-                                // },
+              automaticallyImplyLeading: false,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+            ),
+            body: diary != null
+                ? SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.fromLTRB(8, 0, 8, 5),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            gradient: LinearGradient(
+                                colors: [Color(0xff8b82ff), Color(0xff8a7efd)]),
+                            // boxShadow: <BoxShadow>[
+                            //   BoxShadow(
+                            //     color: Colors.black12,
+                            //     blurRadius: 5,
+                            //     offset: new Offset(0.0, 5)
+                            //   )
+                            // ]
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                            child: TableCalendar(
+                              calendarStyle: const CalendarStyle(
+                                // Use `CalendarStyle` to customize the UI
+                                outsideDaysVisible: false,
+                                defaultTextStyle:
+                                    TextStyle(color: Colors.white),
+                                weekendTextStyle:
+                                    TextStyle(color: Colors.white),
+                                selectedDecoration: BoxDecoration(
+                                    color: Color(0xff6559ff),
+                                    shape: BoxShape.circle),
+                                todayDecoration: BoxDecoration(
+                                    color: Colors.white38,
+                                    shape: BoxShape.circle),
+                                markerDecoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle    
+                                ),                               
+                                markerSize: 6,
+                                selectedTextStyle:
+                                    TextStyle(color: Colors.white),
+                                todayTextStyle:
+                                    TextStyle(color: Color(0xff6559ff)),
                               ),
+                              headerStyle: const HeaderStyle(
+                                  leftChevronIcon: Icon(Icons.arrow_back_ios,
+                                      size: 17, color: Colors.white),
+                                  rightChevronIcon: Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 17,
+                                      color: Colors.white),
+                                  titleTextStyle: TextStyle(
+                                      fontSize: 18, color: Colors.white),
+                                  titleCentered: true,
+                                  formatButtonVisible: false),
+                              daysOfWeekStyle: const DaysOfWeekStyle(
+                                  weekdayStyle:
+                                      TextStyle(color: Colors.white38),
+                                  weekendStyle:
+                                      TextStyle(color: Colors.white38)),
+                              onDaySelected: _onDaySelected,
+
+                              firstDay: DateTime.utc(2010, 10, 16),
+                              lastDay: DateTime.utc(2030, 3, 14),
+                              focusedDay: _focusedDay,
+                              selectedDayPredicate: (day) =>
+                                  isSameDay(_selectedDay, day),                             
+                              eventLoader: (date) {
+                                var result = [];
+                                dateCheck = date;
+                                for (int i = 0; i < diary.length; i++) {
+                                  var c = diary[i]['date'];
+                                  if (c.toString().substring(0, 10) ==
+                                      date.toString().substring(0, 10)) {
+                                    result.add(c);
+                                  }
+                                }
+                                return result;
+                              },
+                              calendarBuilders: CalendarBuilders(
+                                markerBuilder: (context, day, events) {
+                                  if(events.isNotEmpty) {
+                                    return Stack(
+                                      alignment: Alignment.bottomRight,
+                                      children: [
+                                        Positioned(
+                                          bottom: 4.0,
+                                          right: 4.0,
+                                          child: Container(
+                                            height: 16,
+                                            width: 16,
+                                            decoration: const BoxDecoration(
+                                              color: Colors.white,
+                                              shape: BoxShape.rectangle,
+                                              borderRadius: BorderRadius.all(Radius.circular(20))
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                '${events.length}',
+                                                style: const TextStyle(
+                                                  color: Color(0xff6559ff),
+                                                  fontSize: 10
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    );
+                                  }
+                                },
+                              ),
+                              // onPageChanged: (focusedDay) {
+                              //   _focusedDay = focusedDay;
+                              // },
                             ),
                           ),
-                          const SizedBox(height: 8.0),
-                          diary2 != null
-                              ? Column(
-                                  children: [
-                                    diary2.length == 0
-                                        ? Column(
+                        ),
+                        const SizedBox(height: 8.0),
+                        diary2 != null
+                          ? diary2.length != 0
+                          ? Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 0, 10),
+                            child: Text(
+                              '${diary2.length} diary on this date',
+                              style: const TextStyle(
+                                fontSize: 20
+                              ),
+                            ),
+                          )
+                          : Container()
+                          : Center(
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 20),
+                                Icon(
+                                  MdiIcons.bookSearch,
+                                  size: 100,
+                                  color: Colors.grey[300],
+                                ),
+                                const SizedBox(height: 10),
+                                const Text(
+                                  'Select a date\nto see your diary',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.grey),
+                                  textAlign: TextAlign.center,
+                                )
+                              ],
+                            ),
+                          ),
+                        diary2 != null 
+                            ? Column(
+                                children: [
+                                  diary2.length == 0
+                                      ? Center(
+                                        child: Column(
                                             children: [
                                               const SizedBox(height: 20),
                                               Icon(
-                                                MdiIcons.book,
+                                                MdiIcons.bookRemove,
                                                 size: 100,
                                                 color: Colors.grey[300],
                                               ),
@@ -252,66 +323,61 @@ class _CalendarPageState extends State<CalendarPage> {
                                                     color: Colors.grey),
                                               )
                                             ],
-                                          )
-                                        : Container(),
-                                    for (int i = 0; i < diary2.length; i++)
-                                      Container(
-                                        margin:
-                                            EdgeInsets.fromLTRB(8, 0, 8, 10),
-                                        child: ListTile(
-                                          leading: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                '${diary2[i]['mood_emoji']}',
-                                                style: TextStyle(fontSize: 24),
-                                              ),
-                                            ],
+
                                           ),
-                                          title: diary2[i]['topic'] == null
-                                              ? Text(
-                                                  '${diary2[i]['mood_detail']}',
-                                                  style:
-                                                      TextStyle(fontSize: 16))
-                                              : RichText(
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  text: TextSpan(
-                                                      text:
-                                                          '${diary2[i]['topic']}',
-                                                      style: const TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 16)),
-                                                ),
-                                          subtitle: diary2[i]['activity'] ==
-                                                  null
-                                              ? null
-                                              : Text(
-                                                  '${diary2[i]['activity']}'),
-                                          // trailing: Text(
-                                          //     '${diary2[i]['date'].toString().substring(0, 10)}'),
-                                          tileColor: Color(0xfff1f3f4),
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15)),
-                                          onTap: () async {
-                                            Navigator.push(
-                                                    context,
-                                                    PageTransition(
-                                                        child: DiaryDetail(
-                                                            id: diary2[i]
-                                                                ['_id']),
-                                                        type: PageTransitionType
-                                                            .rightToLeft))
-                                                .then((_) async {
-                                              await waitForFind();
-                                              _onDaySelected(
-                                                  selectedDay2!, focusDay2!);
-                                              setState(() {});
-                                            });
-                                          },
+                                      )
+                                      : Container(),
+                                  for (int i = 0; i < diary2.length; i++)
+                                    Container(
+                                      margin: EdgeInsets.fromLTRB(8, 0, 8, 10),
+                                      child: ListTile(
+                                        leading: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              '${diary2[i]['mood_emoji']}',
+                                              style: TextStyle(fontSize: 24),
+                                            ),
+                                          ],
                                         ),
+                                        title: diary2[i]['topic'] == null
+                                            ? Text(
+                                                '${diary2[i]['mood_detail']}',
+                                                style: TextStyle(fontSize: 16))
+                                            : RichText(
+                                                overflow: TextOverflow.ellipsis,
+                                                text: TextSpan(
+                                                    text:
+                                                        '${diary2[i]['topic']}',
+                                                    style: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 16)),
+                                              ),
+                                        subtitle: diary2[i]['activity'] == null
+                                            ? null
+                                            : Text('${diary2[i]['activity']}'),
+                                        // trailing: Text(
+                                        //     '${diary2[i]['date'].toString().substring(0, 10)}'),
+                                        tileColor: Color(0xfff1f3f4),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        onTap: () async {
+                                          Navigator.push(
+                                                  context,
+                                                  PageTransition(
+                                                      child: DiaryDetail(
+                                                          id: diary2[i]['_id']),
+                                                      type: PageTransitionType
+                                                          .rightToLeft))
+                                              .then((_) async {
+                                            await waitForFind();
+                                            _onDaySelected(
+                                                selectedDay2!, focusDay2!);
+                                            setState(() {});
+                                          });
+                                        },
                                       ),
                                     const SizedBox(height: 25)
                                   ],

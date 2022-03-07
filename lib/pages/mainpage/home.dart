@@ -147,15 +147,14 @@ class _HomeState extends State<Home> {
                         });
                   },
                 ),
+
           bottomNavigationBar: AnimatedBottomNavigationBar.builder(
             backgroundColor: const Color.fromRGBO(255, 248, 248, 1),
             elevation: 0,
             height: 50,
             itemCount: iconList.length,
             tabBuilder: (int index, bool isActive) {
-              final color = isActive
-                  ? const Color.fromRGBO(148, 92, 254, 1)
-                  : Colors.black;
+              final color = isActive ? const Color(0xff8a7efd) : Colors.black;
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
