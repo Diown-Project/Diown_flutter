@@ -32,6 +32,10 @@ class _SettingPageState extends State<SettingPage> {
         elevation: 0,
         centerTitle: true,
         title: const Text('Settings'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body: FutureBuilder(
         future: checkPin(),

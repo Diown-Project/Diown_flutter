@@ -223,7 +223,7 @@ class _EditProfileState extends State<EditProfile> {
                   style: OutlinedButton.styleFrom(
                     minimumSize: Size(65, 30),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0)),
+                        borderRadius: BorderRadius.circular(5.0)),
                     backgroundColor: Color(0xff945cfe),
                     side: BorderSide.none,
                   ),

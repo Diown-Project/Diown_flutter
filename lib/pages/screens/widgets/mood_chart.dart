@@ -45,6 +45,14 @@ class BarChartOneState extends State<BarChartOne> {
     '180': '180 days mood status',
     '365': '1 year mood status'
   };
+  var dropDownList = {
+    '7': '7 days',
+    '30': '1 month',
+    '60': '2 months',
+    '90': '3 months',
+    '180': '6 months',
+    '365': '1 year'
+  };
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,14 +82,21 @@ class BarChartOneState extends State<BarChartOne> {
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                child: Container(
+                              Container(
+                                padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                // width: 110,
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.all(Radius.circular(20))
+                                ),
+                                child: DropdownButtonHideUnderline(
                                   child: DropdownButton<String>(
                                     focusColor: Colors.black,
                                     isDense: true,
+                                    // isExpanded: true,
                                     value: dropdownvalue,
-                                    icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white,),
+                                    icon: const Icon(Icons.keyboard_arrow_down, color: Color(0xff6559ff),),
                                     iconSize: 28,
                                     // elevation: 100,
                                     onChanged: (String? newval) {
@@ -89,7 +104,7 @@ class BarChartOneState extends State<BarChartOne> {
                                         dropdownvalue = newval;
                                       });
                                     },
-                                    items: <String>["7", "30", "60", '90', '180', '365']
+                                    items: <String>['7', '30', '60', '90', '180', '365']
                                         .map<DropdownMenuItem<String>>((String value) {
                                       return DropdownMenuItem<String>(
                                         value: value,
@@ -100,8 +115,8 @@ class BarChartOneState extends State<BarChartOne> {
                                           setState(() {});
                                         },
                                         child: Text(
-                                          value,
-                                          style: TextStyle(color: Colors.black),
+                                          '${dropDownList[value]}',
+                                          style: TextStyle(color: Color(0xff6559ff)),
                                         ),
                                       );
                                     }).toList(),

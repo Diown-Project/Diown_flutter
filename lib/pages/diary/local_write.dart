@@ -149,6 +149,730 @@ class _LocalDiaryState extends State<LocalDiary> {
           elevation: 0,
           centerTitle: true,
           title: const Text('New Diary'),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 12, 7, 12),
+              child: OutlinedButton(
+              onPressed: () async {
+                CoolAlert.show(
+                    barrierDismissible: false,
+                    context: context,
+                    type: CoolAlertType.confirm,
+                    title: 'Please confirm',
+                    text: 'If you want to save this diary.',
+                    onConfirmBtnTap: () async {
+                      CoolAlert.show(
+                          barrierDismissible: false,
+                          context: context,
+                          type: CoolAlertType.loading);
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      var token = prefs.getString('token');
+                      if (_imageByteList != null &&
+                          _imageNameList != null &&
+                          resultMood != null &&
+                          _imageByteList!.isNotEmpty &&
+                          _imageNameList!.isNotEmpty) {
+                        await _saveImage();
+                        var mood_emoji = resultMood!.substring(0, 2);
+                        var mood_detail = resultMood!.substring(3);
+                        await addDiaryWithOutText(
+                          token,
+                          topic,
+                          write_detail,
+                          mood_emoji,
+                          mood_detail,
+                          _imageNameList,
+                          resultAct,
+                        );
+                        var check = await checkAchievement(3);
+                        var checkImg = await checkAchievement(0);
+                        var check7 = await checkAchievement4();
+                        var check30 = await checkAchievement9();
+                        if (check['message'] == 'success' &&
+                            checkImg['message'] == 'success') {
+                          AwesomeDialog(
+                                  dismissOnTouchOutside: false,
+                                  context: context,
+                                  dialogType: DialogType.SUCCES,
+                                  customHeader: Container(
+                                    height: 100,
+                                    child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(50),
+                                        child: Image.asset(
+                                            'images/NewbieWriter.png')),
+                                  ),
+                                  title: 'congratulations',
+                                  body: Padding(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(
+                                              15, 0, 10, 10),
+                                      child: Column(
+                                        children: const [
+                                          Text(
+                                            'congratulations',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              height: 1.5,
+                                              fontWeight:
+                                                  FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Text(
+                                            'Congratulations to unlock this achievement (Newbie Writer).',
+                                            textAlign:
+                                                TextAlign.center,
+                                          ),
+                                        ],
+                                      )),
+                                  btnOk: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        AwesomeDialog(
+                                                dismissOnTouchOutside:
+                                                    false,
+                                                context: context,
+                                                dialogType:
+                                                    DialogType.SUCCES,
+                                                customHeader:
+                                                    Container(
+                                                  height: 100,
+                                                  child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius
+                                                              .circular(
+                                                                  50),
+                                                      child: Image.asset(
+                                                          'images/Picture_Memory.png')),
+                                                ),
+                                                title:
+                                                    'congratulations',
+                                                body: Padding(
+                                                    padding:
+                                                        const EdgeInsets
+                                                                .fromLTRB(
+                                                            15,
+                                                            0,
+                                                            10,
+                                                            10),
+                                                    child: Column(
+                                                      children: const [
+                                                        Text(
+                                                          'congratulations',
+                                                          style:
+                                                              TextStyle(
+                                                            fontSize:
+                                                                20,
+                                                            height:
+                                                                1.5,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold,
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                            height:
+                                                                10),
+                                                        Text(
+                                                          'Congratulations to unlock this achievement (Picture Memory).',
+                                                          textAlign:
+                                                              TextAlign
+                                                                  .center,
+                                                        ),
+                                                      ],
+                                                    )),
+                                                btnOk: ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(
+                                                          context);
+                                                      Navigator.pop(
+                                                          context);
+                                                      Navigator.pop(
+                                                          context);
+                                                      Navigator.pop(
+                                                          context,
+                                                          "yeah");
+                                                      Navigator.pop(
+                                                          context);
+                                                    },
+                                                    child:
+                                                        Text('ok')))
+                                            .show();
+                                      },
+                                      child: const Text('ok')))
+                              .show();
+                        } else if (checkImg['message'] == 'success' &&
+                            check7['message'] == 'success') {
+                          AwesomeDialog(
+                                  dismissOnTouchOutside: false,
+                                  context: context,
+                                  dialogType: DialogType.SUCCES,
+                                  customHeader: Container(
+                                    height: 100,
+                                    child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(50),
+                                        child: Image.asset(
+                                            'images/Picture_Memory.png')),
+                                  ),
+                                  title: 'congratulations',
+                                  body: Padding(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(
+                                              15, 0, 10, 10),
+                                      child: Column(
+                                        children: const [
+                                          Text(
+                                            'congratulations',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              height: 1.5,
+                                              fontWeight:
+                                                  FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Text(
+                                            'Congratulations to unlock this achievement (Picture Memory).',
+                                            textAlign:
+                                                TextAlign.center,
+                                          ),
+                                        ],
+                                      )),
+                                  btnOk: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        AwesomeDialog(
+                                                dismissOnTouchOutside:
+                                                    false,
+                                                context: context,
+                                                dialogType:
+                                                    DialogType.SUCCES,
+                                                customHeader:
+                                                    Container(
+                                                  height: 100,
+                                                  child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius
+                                                              .circular(
+                                                                  50),
+                                                      child: Image.asset(
+                                                          'images/Diary_diary.png')),
+                                                ),
+                                                title:
+                                                    'congratulations',
+                                                body: Padding(
+                                                    padding:
+                                                        const EdgeInsets
+                                                                .fromLTRB(
+                                                            15,
+                                                            0,
+                                                            10,
+                                                            10),
+                                                    child: Column(
+                                                      children: const [
+                                                        Text(
+                                                          'congratulations',
+                                                          style:
+                                                              TextStyle(
+                                                            fontSize:
+                                                                20,
+                                                            height:
+                                                                1.5,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold,
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                            height:
+                                                                10),
+                                                        Text(
+                                                          'Congratulations to unlock this achievement (Diary diary).',
+                                                          textAlign:
+                                                              TextAlign
+                                                                  .center,
+                                                        ),
+                                                      ],
+                                                    )),
+                                                btnOk: ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(
+                                                          context);
+                                                      Navigator.pop(
+                                                          context);
+                                                      Navigator.pop(
+                                                          context);
+                                                      Navigator.pop(
+                                                          context,
+                                                          "yeah");
+                                                      Navigator.pop(
+                                                          context);
+                                                    },
+                                                    child: const Text(
+                                                        'Ok')))
+                                            .show();
+                                      },
+                                      child: Text('ok')))
+                              .show();
+                        } else if (checkImg['message'] == 'success' &&
+                            check30['message'] == 'success') {
+                          AwesomeDialog(
+                                  context: context,
+                                  dismissOnTouchOutside: false,
+                                  dialogType: DialogType.SUCCES,
+                                  customHeader: Container(
+                                    height: 100,
+                                    child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(50),
+                                        child: Image.asset(
+                                            'images/Picture_Memory.png')),
+                                  ),
+                                  title: 'congratulations',
+                                  body: Padding(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(
+                                              15, 0, 10, 10),
+                                      child: Column(
+                                        children: const [
+                                          Text(
+                                            'congratulations',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              height: 1.5,
+                                              fontWeight:
+                                                  FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Text(
+                                            'Congratulations to unlock this achievement (Picture Memory).',
+                                            textAlign:
+                                                TextAlign.center,
+                                          ),
+                                        ],
+                                      )),
+                                  btnOk: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        AwesomeDialog(
+                                                context: context,
+                                                dismissOnTouchOutside:
+                                                    false,
+                                                dialogType:
+                                                    DialogType.SUCCES,
+                                                customHeader:
+                                                    Container(
+                                                  height: 100,
+                                                  child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius
+                                                              .circular(
+                                                                  50),
+                                                      child: Image.asset(
+                                                          'images/Expert_writer.png')),
+                                                ),
+                                                title:
+                                                    'congratulations',
+                                                body: Padding(
+                                                    padding:
+                                                        const EdgeInsets
+                                                                .fromLTRB(
+                                                            15,
+                                                            0,
+                                                            10,
+                                                            10),
+                                                    child: Column(
+                                                      children: const [
+                                                        Text(
+                                                          'congratulations',
+                                                          style:
+                                                              TextStyle(
+                                                            fontSize:
+                                                                20,
+                                                            height:
+                                                                1.5,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold,
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                            height:
+                                                                10),
+                                                        Text(
+                                                          'Congratulations to unlock this achievement (Expert writer).',
+                                                          textAlign:
+                                                              TextAlign
+                                                                  .center,
+                                                        ),
+                                                      ],
+                                                    )),
+                                                btnOk: ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(
+                                                          context);
+                                                      Navigator.pop(
+                                                          context);
+                                                      Navigator.pop(
+                                                          context);
+                                                      Navigator.pop(
+                                                          context,
+                                                          "yeah");
+                                                      Navigator.pop(
+                                                          context);
+                                                    },
+                                                    child: const Text(
+                                                        'Ok')))
+                                            .show();
+                                      },
+                                      child: const Text('Ok')))
+                              .show();
+                        } else if (check7['message'] == 'success') {
+                          AwesomeDialog(
+                                  context: context,
+                                  dismissOnTouchOutside: false,
+                                  dialogType: DialogType.SUCCES,
+                                  customHeader: Container(
+                                    height: 100,
+                                    child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(50),
+                                        child: Image.asset(
+                                            'images/Diary_diary.png')),
+                                  ),
+                                  title: 'congratulations',
+                                  body: Padding(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(
+                                              15, 0, 10, 10),
+                                      child: Column(
+                                        children: const [
+                                          Text(
+                                            'congratulations',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              height: 1.5,
+                                              fontWeight:
+                                                  FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Text(
+                                            'Congratulations to unlock this achievement (Diary diary).',
+                                            textAlign:
+                                                TextAlign.center,
+                                          ),
+                                        ],
+                                      )),
+                                  btnOk: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        Navigator.pop(
+                                            context, "yeah");
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('Ok')))
+                              .show();
+                        } else if (checkImg['message'] == 'success') {
+                          AwesomeDialog(
+                                  context: context,
+                                  dismissOnTouchOutside: false,
+                                  dialogType: DialogType.SUCCES,
+                                  customHeader: Container(
+                                    height: 100,
+                                    child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(50),
+                                        child: Image.asset(
+                                            'images/Picture_Memory.png')),
+                                  ),
+                                  title: 'congratulations',
+                                  body: Padding(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(
+                                              15, 0, 10, 10),
+                                      child: Column(
+                                        children: const [
+                                          Text(
+                                            'congratulations',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              height: 1.5,
+                                              fontWeight:
+                                                  FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Text(
+                                            'Congratulations to unlock this achievement (Picture Memory).',
+                                            textAlign:
+                                                TextAlign.center,
+                                          ),
+                                        ],
+                                      )),
+                                  btnOk: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        Navigator.pop(
+                                            context, "yeah");
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('Ok')))
+                              .show();
+                        } else if (check30['message'] == 'success') {
+                          AwesomeDialog(
+                                  context: context,
+                                  dismissOnTouchOutside: false,
+                                  dialogType: DialogType.SUCCES,
+                                  customHeader: Container(
+                                    height: 100,
+                                    child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(50),
+                                        child: Image.asset(
+                                            'images/Expert_writer.png')),
+                                  ),
+                                  title: 'congratulations',
+                                  body: Padding(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(
+                                              15, 0, 10, 10),
+                                      child: Column(
+                                        children: const [
+                                          Text(
+                                            'congratulations',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              height: 1.5,
+                                              fontWeight:
+                                                  FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Text(
+                                            'Congratulations to unlock this achievement (Expert writer).',
+                                            textAlign:
+                                                TextAlign.center,
+                                          ),
+                                        ],
+                                      )),
+                                  btnOk: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        Navigator.pop(
+                                            context, "yeah");
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('Ok')))
+                              .show();
+                        } else {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          Navigator.pop(context, "yeah");
+                          Navigator.pop(context);
+                        }
+                      } else if (resultMood != null) {
+                        var mood_emoji = resultMood!.substring(0, 2);
+                        var mood_detail = resultMood!.substring(3);
+                        await addDiaryWithOutText(
+                          token,
+                          topic,
+                          write_detail,
+                          mood_emoji,
+                          mood_detail,
+                          _imageNameList,
+                          resultAct,
+                        );
+                        var check = await checkAchievement(3);
+                        var check7 = await checkAchievement4();
+                        var check30 = await checkAchievement9();
+                        if (check['message'] == 'success') {
+                          AwesomeDialog(
+                                  dismissOnTouchOutside: false,
+                                  context: context,
+                                  dialogType: DialogType.SUCCES,
+                                  customHeader: Container(
+                                    height: 100,
+                                    child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(50),
+                                        child: Image.asset(
+                                            'images/NewbieWriter.png')),
+                                  ),
+                                  title: 'congratulations',
+                                  body: Padding(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(
+                                              15, 0, 10, 10),
+                                      child: Column(
+                                        children: const [
+                                          Text(
+                                            'congratulations',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              height: 1.5,
+                                              fontWeight:
+                                                  FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Text(
+                                            'Congratulations to unlock this achievement (Newbie Writer).',
+                                            textAlign:
+                                                TextAlign.center,
+                                          ),
+                                        ],
+                                      )),
+                                  btnOk: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        Navigator.pop(
+                                            context, "yeah");
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text('ok')))
+                              .show();
+                        } else if (check7['message'] == 'success') {
+                          print('hello');
+                          AwesomeDialog(
+                                  context: context,
+                                  dismissOnTouchOutside: false,
+                                  dialogType: DialogType.SUCCES,
+                                  customHeader: Container(
+                                    height: 100,
+                                    child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(50),
+                                        child: Image.asset(
+                                            'images/Diary_diary.png')),
+                                  ),
+                                  title: 'congratulations',
+                                  body: Padding(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(
+                                              15, 0, 10, 10),
+                                      child: Column(
+                                        children: const [
+                                          Text(
+                                            'congratulations',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              height: 1.5,
+                                              fontWeight:
+                                                  FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Text(
+                                            'Congratulations to unlock this achievement (Diary diary).',
+                                            textAlign:
+                                                TextAlign.center,
+                                          ),
+                                        ],
+                                      )),
+                                  btnOk: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        Navigator.pop(
+                                            context, "yeah");
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('Ok')))
+                              .show();
+                        } else if (check30['message'] == 'success') {
+                          AwesomeDialog(
+                                  context: context,
+                                  dismissOnTouchOutside: false,
+                                  dialogType: DialogType.SUCCES,
+                                  customHeader: Container(
+                                    height: 100,
+                                    child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(50),
+                                        child: Image.asset(
+                                            'images/Expert_writer.png')),
+                                  ),
+                                  title: 'congratulations',
+                                  body: Padding(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(
+                                              15, 0, 10, 10),
+                                      child: Column(
+                                        children: const [
+                                          Text(
+                                            'congratulations',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              height: 1.5,
+                                              fontWeight:
+                                                  FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Text(
+                                            'Congratulations to unlock this achievement (Expert writer).',
+                                            textAlign:
+                                                TextAlign.center,
+                                          ),
+                                        ],
+                                      )),
+                                  btnOk: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        Navigator.pop(
+                                            context, "yeah");
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('Ok')))
+                              .show();
+                        } else {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          Navigator.pop(context, "yeah");
+                          Navigator.pop(context);
+                        }
+                      } else {
+                        CoolAlert.show(
+                            barrierDismissible: false,
+                            context: context,
+                            type: CoolAlertType.error,
+                            title: 'error Alert!',
+                            text: 'You must to fill at less mood.',
+                            onConfirmBtnTap: () {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            });
+                      }
+                    });
+              },
+              child: const Text('save',
+                  style: TextStyle(color: Colors.white)),
+              style: OutlinedButton.styleFrom(
+                minimumSize: Size(65, 30),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0)),
+                backgroundColor: Color(0xff8a7efd),
+                side: BorderSide.none,
+              )),
+            )
+          ],
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
@@ -161,701 +885,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                       child: Text(now.toString().substring(0, 10),
                           style: const TextStyle(
                               fontSize: 15, color: Color(0xffafacac)))),
-                  const Spacer(),
-                  OutlinedButton(
-                      onPressed: () async {
-                        CoolAlert.show(
-                            barrierDismissible: false,
-                            context: context,
-                            type: CoolAlertType.confirm,
-                            title: 'Please confirm',
-                            text: 'If you want to save this diary.',
-                            onConfirmBtnTap: () async {
-                              CoolAlert.show(
-                                  barrierDismissible: false,
-                                  context: context,
-                                  type: CoolAlertType.loading);
-                              SharedPreferences prefs =
-                                  await SharedPreferences.getInstance();
-                              var token = prefs.getString('token');
-                              if (_imageByteList != null &&
-                                  _imageNameList != null &&
-                                  resultMood != null &&
-                                  _imageByteList!.isNotEmpty &&
-                                  _imageNameList!.isNotEmpty) {
-                                await _saveImage();
-                                var mood_emoji = resultMood!.substring(0, 2);
-                                var mood_detail = resultMood!.substring(3);
-                                await addDiaryWithOutText(
-                                  token,
-                                  topic,
-                                  write_detail,
-                                  mood_emoji,
-                                  mood_detail,
-                                  _imageNameList,
-                                  resultAct,
-                                );
-                                var check = await checkAchievement(3);
-                                var checkImg = await checkAchievement(0);
-                                var check7 = await checkAchievement4();
-                                var check30 = await checkAchievement9();
-                                if (check['message'] == 'success' &&
-                                    checkImg['message'] == 'success') {
-                                  AwesomeDialog(
-                                          dismissOnTouchOutside: false,
-                                          context: context,
-                                          dialogType: DialogType.SUCCES,
-                                          customHeader: Container(
-                                            height: 100,
-                                            child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                child: Image.asset(
-                                                    'images/NewbieWriter.png')),
-                                          ),
-                                          title: 'congratulations',
-                                          body: Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      15, 0, 10, 10),
-                                              child: Column(
-                                                children: const [
-                                                  Text(
-                                                    'congratulations',
-                                                    style: TextStyle(
-                                                      fontSize: 20,
-                                                      height: 1.5,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 10),
-                                                  Text(
-                                                    'Congratulations to unlock this achievement (Newbie Writer).',
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ],
-                                              )),
-                                          btnOk: ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                AwesomeDialog(
-                                                        dismissOnTouchOutside:
-                                                            false,
-                                                        context: context,
-                                                        dialogType:
-                                                            DialogType.SUCCES,
-                                                        customHeader: Container(
-                                                          height: 100,
-                                                          child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          50),
-                                                              child: Image.asset(
-                                                                  'images/Picture_Memory.png')),
-                                                        ),
-                                                        title:
-                                                            'congratulations',
-                                                        body: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    15,
-                                                                    0,
-                                                                    10,
-                                                                    10),
-                                                            child: Column(
-                                                              children: const [
-                                                                Text(
-                                                                  'congratulations',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        20,
-                                                                    height: 1.5,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                    height: 10),
-                                                                Text(
-                                                                  'Congratulations to unlock this achievement (Picture Memory).',
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                ),
-                                                              ],
-                                                            )),
-                                                        btnOk: ElevatedButton(
-                                                            onPressed: () {
-                                                              Navigator.pop(
-                                                                  context);
-                                                              Navigator.pop(
-                                                                  context);
-                                                              Navigator.pop(
-                                                                  context);
-                                                              Navigator.pop(
-                                                                  context,
-                                                                  "yeah");
-                                                              Navigator.pop(
-                                                                  context);
-                                                            },
-                                                            child: Text('ok')))
-                                                    .show();
-                                              },
-                                              child: const Text('ok')))
-                                      .show();
-                                } else if (checkImg['message'] == 'success' &&
-                                    check7['message'] == 'success') {
-                                  AwesomeDialog(
-                                          dismissOnTouchOutside: false,
-                                          context: context,
-                                          dialogType: DialogType.SUCCES,
-                                          customHeader: Container(
-                                            height: 100,
-                                            child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                child: Image.asset(
-                                                    'images/Picture_Memory.png')),
-                                          ),
-                                          title: 'congratulations',
-                                          body: Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      15, 0, 10, 10),
-                                              child: Column(
-                                                children: const [
-                                                  Text(
-                                                    'congratulations',
-                                                    style: TextStyle(
-                                                      fontSize: 20,
-                                                      height: 1.5,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 10),
-                                                  Text(
-                                                    'Congratulations to unlock this achievement (Picture Memory).',
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ],
-                                              )),
-                                          btnOk: ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                AwesomeDialog(
-                                                        dismissOnTouchOutside:
-                                                            false,
-                                                        context: context,
-                                                        dialogType:
-                                                            DialogType.SUCCES,
-                                                        customHeader: Container(
-                                                          height: 100,
-                                                          child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          50),
-                                                              child: Image.asset(
-                                                                  'images/Diary_diary.png')),
-                                                        ),
-                                                        title:
-                                                            'congratulations',
-                                                        body: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    15,
-                                                                    0,
-                                                                    10,
-                                                                    10),
-                                                            child: Column(
-                                                              children: const [
-                                                                Text(
-                                                                  'congratulations',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        20,
-                                                                    height: 1.5,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                    height: 10),
-                                                                Text(
-                                                                  'Congratulations to unlock this achievement (Diary diary).',
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                ),
-                                                              ],
-                                                            )),
-                                                        btnOk: ElevatedButton(
-                                                            onPressed: () {
-                                                              Navigator.pop(
-                                                                  context);
-                                                              Navigator.pop(
-                                                                  context);
-                                                              Navigator.pop(
-                                                                  context);
-                                                              Navigator.pop(
-                                                                  context,
-                                                                  "yeah");
-                                                              Navigator.pop(
-                                                                  context);
-                                                            },
-                                                            child: const Text(
-                                                                'Ok')))
-                                                    .show();
-                                              },
-                                              child: Text('ok')))
-                                      .show();
-                                } else if (checkImg['message'] == 'success' &&
-                                    check30['message'] == 'success') {
-                                  AwesomeDialog(
-                                          context: context,
-                                          dismissOnTouchOutside: false,
-                                          dialogType: DialogType.SUCCES,
-                                          customHeader: Container(
-                                            height: 100,
-                                            child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                child: Image.asset(
-                                                    'images/Picture_Memory.png')),
-                                          ),
-                                          title: 'congratulations',
-                                          body: Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      15, 0, 10, 10),
-                                              child: Column(
-                                                children: const [
-                                                  Text(
-                                                    'congratulations',
-                                                    style: TextStyle(
-                                                      fontSize: 20,
-                                                      height: 1.5,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 10),
-                                                  Text(
-                                                    'Congratulations to unlock this achievement (Picture Memory).',
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ],
-                                              )),
-                                          btnOk: ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                AwesomeDialog(
-                                                        context: context,
-                                                        dismissOnTouchOutside:
-                                                            false,
-                                                        dialogType:
-                                                            DialogType.SUCCES,
-                                                        customHeader: Container(
-                                                          height: 100,
-                                                          child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          50),
-                                                              child: Image.asset(
-                                                                  'images/Expert_writer.png')),
-                                                        ),
-                                                        title:
-                                                            'congratulations',
-                                                        body: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    15,
-                                                                    0,
-                                                                    10,
-                                                                    10),
-                                                            child: Column(
-                                                              children: const [
-                                                                Text(
-                                                                  'congratulations',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        20,
-                                                                    height: 1.5,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                    height: 10),
-                                                                Text(
-                                                                  'Congratulations to unlock this achievement (Expert writer).',
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                ),
-                                                              ],
-                                                            )),
-                                                        btnOk: ElevatedButton(
-                                                            onPressed: () {
-                                                              Navigator.pop(
-                                                                  context);
-                                                              Navigator.pop(
-                                                                  context);
-                                                              Navigator.pop(
-                                                                  context);
-                                                              Navigator.pop(
-                                                                  context,
-                                                                  "yeah");
-                                                              Navigator.pop(
-                                                                  context);
-                                                            },
-                                                            child: const Text(
-                                                                'Ok')))
-                                                    .show();
-                                              },
-                                              child: const Text('Ok')))
-                                      .show();
-                                } else if (check7['message'] == 'success') {
-                                  AwesomeDialog(
-                                          context: context,
-                                          dismissOnTouchOutside: false,
-                                          dialogType: DialogType.SUCCES,
-                                          customHeader: Container(
-                                            height: 100,
-                                            child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                child: Image.asset(
-                                                    'images/Diary_diary.png')),
-                                          ),
-                                          title: 'congratulations',
-                                          body: Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      15, 0, 10, 10),
-                                              child: Column(
-                                                children: const [
-                                                  Text(
-                                                    'congratulations',
-                                                    style: TextStyle(
-                                                      fontSize: 20,
-                                                      height: 1.5,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 10),
-                                                  Text(
-                                                    'Congratulations to unlock this achievement (Diary diary).',
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ],
-                                              )),
-                                          btnOk: ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context, "yeah");
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Text('Ok')))
-                                      .show();
-                                } else if (checkImg['message'] == 'success') {
-                                  AwesomeDialog(
-                                          context: context,
-                                          dismissOnTouchOutside: false,
-                                          dialogType: DialogType.SUCCES,
-                                          customHeader: Container(
-                                            height: 100,
-                                            child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                child: Image.asset(
-                                                    'images/Picture_Memory.png')),
-                                          ),
-                                          title: 'congratulations',
-                                          body: Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      15, 0, 10, 10),
-                                              child: Column(
-                                                children: const [
-                                                  Text(
-                                                    'congratulations',
-                                                    style: TextStyle(
-                                                      fontSize: 20,
-                                                      height: 1.5,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 10),
-                                                  Text(
-                                                    'Congratulations to unlock this achievement (Picture Memory).',
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ],
-                                              )),
-                                          btnOk: ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context, "yeah");
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Text('Ok')))
-                                      .show();
-                                } else if (check30['message'] == 'success') {
-                                  AwesomeDialog(
-                                          context: context,
-                                          dismissOnTouchOutside: false,
-                                          dialogType: DialogType.SUCCES,
-                                          customHeader: Container(
-                                            height: 100,
-                                            child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                child: Image.asset(
-                                                    'images/Expert_writer.png')),
-                                          ),
-                                          title: 'congratulations',
-                                          body: Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      15, 0, 10, 10),
-                                              child: Column(
-                                                children: const [
-                                                  Text(
-                                                    'congratulations',
-                                                    style: TextStyle(
-                                                      fontSize: 20,
-                                                      height: 1.5,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 10),
-                                                  Text(
-                                                    'Congratulations to unlock this achievement (Expert writer).',
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ],
-                                              )),
-                                          btnOk: ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context, "yeah");
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Text('Ok')))
-                                      .show();
-                                } else {
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context, "yeah");
-                                  Navigator.pop(context);
-                                }
-                              } else if (resultMood != null) {
-                                var mood_emoji = resultMood!.substring(0, 2);
-                                var mood_detail = resultMood!.substring(3);
-                                await addDiaryWithOutText(
-                                  token,
-                                  topic,
-                                  write_detail,
-                                  mood_emoji,
-                                  mood_detail,
-                                  _imageNameList,
-                                  resultAct,
-                                );
-                                var check = await checkAchievement(3);
-                                var check7 = await checkAchievement4();
-                                var check30 = await checkAchievement9();
-                                if (check['message'] == 'success') {
-                                  AwesomeDialog(
-                                          dismissOnTouchOutside: false,
-                                          context: context,
-                                          dialogType: DialogType.SUCCES,
-                                          customHeader: Container(
-                                            height: 100,
-                                            child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                child: Image.asset(
-                                                    'images/NewbieWriter.png')),
-                                          ),
-                                          title: 'congratulations',
-                                          body: Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      15, 0, 10, 10),
-                                              child: Column(
-                                                children: const [
-                                                  Text(
-                                                    'congratulations',
-                                                    style: TextStyle(
-                                                      fontSize: 20,
-                                                      height: 1.5,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 10),
-                                                  Text(
-                                                    'Congratulations to unlock this achievement (Newbie Writer).',
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ],
-                                              )),
-                                          btnOk: ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context, "yeah");
-                                                Navigator.pop(context);
-                                              },
-                                              child: Text('ok')))
-                                      .show();
-                                } else if (check7['message'] == 'success') {
-                                  print('hello');
-                                  AwesomeDialog(
-                                          context: context,
-                                          dismissOnTouchOutside: false,
-                                          dialogType: DialogType.SUCCES,
-                                          customHeader: Container(
-                                            height: 100,
-                                            child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                child: Image.asset(
-                                                    'images/Diary_diary.png')),
-                                          ),
-                                          title: 'congratulations',
-                                          body: Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      15, 0, 10, 10),
-                                              child: Column(
-                                                children: const [
-                                                  Text(
-                                                    'congratulations',
-                                                    style: TextStyle(
-                                                      fontSize: 20,
-                                                      height: 1.5,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 10),
-                                                  Text(
-                                                    'Congratulations to unlock this achievement (Diary diary).',
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ],
-                                              )),
-                                          btnOk: ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context, "yeah");
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Text('Ok')))
-                                      .show();
-                                } else if (check30['message'] == 'success') {
-                                  AwesomeDialog(
-                                          context: context,
-                                          dismissOnTouchOutside: false,
-                                          dialogType: DialogType.SUCCES,
-                                          customHeader: Container(
-                                            height: 100,
-                                            child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                child: Image.asset(
-                                                    'images/Expert_writer.png')),
-                                          ),
-                                          title: 'congratulations',
-                                          body: Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      15, 0, 10, 10),
-                                              child: Column(
-                                                children: const [
-                                                  Text(
-                                                    'congratulations',
-                                                    style: TextStyle(
-                                                      fontSize: 20,
-                                                      height: 1.5,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 10),
-                                                  Text(
-                                                    'Congratulations to unlock this achievement (Expert writer).',
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ],
-                                              )),
-                                          btnOk: ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context, "yeah");
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Text('Ok')))
-                                      .show();
-                                } else {
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context, "yeah");
-                                  Navigator.pop(context);
-                                }
-                              } else {
-                                CoolAlert.show(
-                                    barrierDismissible: false,
-                                    context: context,
-                                    type: CoolAlertType.error,
-                                    title: 'error Alert!',
-                                    text: 'You must to fill at less mood.',
-                                    onConfirmBtnTap: () {
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                    });
-                              }
-                            });
-                      },
-                      child: const Text('save',
-                          style: TextStyle(color: Colors.white)),
-                      style: OutlinedButton.styleFrom(
-                        minimumSize: Size(65, 30),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        backgroundColor: Color(0xff945cfe),
-                        side: BorderSide.none,
-                      ))
+
                 ],
               ),
               const SizedBox(
@@ -1102,7 +1132,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                         width: 48,
                                         height: 48,
                                         decoration: const BoxDecoration(
-                                            color: Color(0xff945cfe),
+                                            color: Color(0xff8a7efd),
                                             shape: BoxShape.circle),
                                         child: const Icon(
                                           MdiIcons.emoticonHappyOutline,
@@ -1144,7 +1174,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                         width: 48,
                                         height: 48,
                                         decoration: const BoxDecoration(
-                                            color: Color(0xff945cfe),
+                                            color: Color(0xff8a7efd),
                                             shape: BoxShape.circle),
                                         child: const Icon(
                                           MdiIcons.run,
@@ -1203,8 +1233,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                                   ListTile(
                                                     leading: const Icon(
                                                       Icons.photo,
-                                                      color: Color.fromRGBO(
-                                                          148, 92, 254, 1),
+                                                      color: Color(0xff8a7efd),
                                                     ),
                                                     title: const Text(
                                                         'Pick images in gallery.'),
@@ -1218,8 +1247,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                                   ListTile(
                                                     leading: const Icon(
                                                       Icons.camera_alt,
-                                                      color: Color.fromRGBO(
-                                                          148, 92, 254, 1),
+                                                      color: Color(0xff8a7efd),
                                                     ),
                                                     title: const Text(
                                                         'Take a picture.'),
@@ -1241,7 +1269,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                         width: 48,
                                         height: 48,
                                         decoration: const BoxDecoration(
-                                            color: Color(0xff945cfe),
+                                            color: Color(0xff8a7efd),
                                             shape: BoxShape.circle),
                                         child: const Icon(
                                           MdiIcons.imageOutline,
@@ -1298,7 +1326,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                       width: 48,
                       height: 48,
                       decoration: const BoxDecoration(
-                          color: Color(0xff945cfe), shape: BoxShape.circle),
+                          color: Color(0xff8a7efd), shape: BoxShape.circle),
                       child: const Icon(
                         MdiIcons.emoticonHappyOutline,
                         color: Colors.white,
@@ -1329,7 +1357,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                       width: 48,
                       height: 48,
                       decoration: const BoxDecoration(
-                          color: Color(0xff945cfe), shape: BoxShape.circle),
+                          color: Color(0xff8a7efd), shape: BoxShape.circle),
                       child: const Icon(
                         MdiIcons.run,
                         color: Colors.white,
@@ -1351,11 +1379,11 @@ class _LocalDiaryState extends State<LocalDiary> {
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
                                 color: Colors.transparent,
-                                height: 200,
+                                height: 220,
                                 child: ListView(
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.all(8.0),
+                                      padding: const EdgeInsets.all(0.0),
                                       child: ListTile(
                                           title: const Text(
                                             'Select to add images.',
@@ -1363,7 +1391,9 @@ class _LocalDiaryState extends State<LocalDiary> {
                                           ),
                                           trailing: IconButton(
                                             icon: const Icon(
-                                                Icons.highlight_remove_rounded),
+                                                Icons.close_outlined,
+                                                color: Colors.black,
+                                            ),
                                             onPressed: () {
                                               Navigator.pop(context);
                                             },
@@ -1373,9 +1403,18 @@ class _LocalDiaryState extends State<LocalDiary> {
                                       thickness: 0.8,
                                     ),
                                     ListTile(
-                                      leading: const Icon(
-                                        Icons.photo,
-                                        color: Color.fromRGBO(148, 92, 254, 1),
+                                      leading: Container(
+                                        height: 40,
+                                        width: 40,
+                                        decoration: const BoxDecoration(
+                                          color: Color(0xff8a7efd),
+                                          shape: BoxShape.circle
+                                        ),
+                                        child: const Icon(
+                                          Icons.photo,
+                                          color: Colors.white,
+                                          size: 22,
+                                        ),
                                       ),
                                       title:
                                           const Text('Pick images in gallery.'),
@@ -1387,9 +1426,18 @@ class _LocalDiaryState extends State<LocalDiary> {
                                       },
                                     ),
                                     ListTile(
-                                      leading: const Icon(
-                                        Icons.camera_alt,
-                                        color: Color.fromRGBO(148, 92, 254, 1),
+                                      leading: Container(
+                                        height: 40,
+                                        width: 40,
+                                        decoration: const BoxDecoration(
+                                          color: Color(0xff8a7efd),
+                                          shape: BoxShape.circle
+                                        ),
+                                        child: const Icon(
+                                          Icons.camera_alt,
+                                          color: Colors.white,
+                                          size: 22,
+                                        ),
                                       ),
                                       title: const Text('Take a picture.'),
                                       trailing: const Icon(
@@ -1408,7 +1456,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                       width: 48,
                       height: 48,
                       decoration: const BoxDecoration(
-                          color: Color(0xff945cfe), shape: BoxShape.circle),
+                          color: Color(0xff8a7efd), shape: BoxShape.circle),
                       child: const Icon(
                         MdiIcons.imageOutline,
                         color: Colors.white,

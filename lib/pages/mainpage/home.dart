@@ -62,7 +62,7 @@ class _HomeState extends State<Home> {
               Icons.add_rounded,
               size: 40,
             ),
-            backgroundColor: const Color.fromRGBO(148, 92, 254, 1),
+            backgroundColor: const Color(0xff8a7efd),
             onPressed: () {
               showModalBottomSheet(
                   context: context,
@@ -81,7 +81,7 @@ class _HomeState extends State<Home> {
                           child: ListView(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(0.0),
                                 child: ListTile(
                                     title: const Text(
                                       'Diary',
@@ -89,7 +89,9 @@ class _HomeState extends State<Home> {
                                     ),
                                     trailing: IconButton(
                                       icon: const Icon(
-                                          Icons.highlight_remove_rounded),
+                                          Icons.close_outlined,
+                                          color: Colors.black,
+                                      ),
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
@@ -99,9 +101,18 @@ class _HomeState extends State<Home> {
                                 thickness: 0.8,
                               ),
                               ListTile(
-                                leading: const Icon(
-                                  Icons.book,
-                                  color: Color.fromRGBO(148, 92, 254, 1),
+                                leading: Container(
+                                  height: 40,
+                                  width: 40,
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xff8a7efd),
+                                    shape: BoxShape.circle
+                                  ),
+                                  child: const Icon(
+                                    MdiIcons.book,
+                                    color: Colors.white,
+                                    size: 22,
+                                  ),
                                 ),
                                 title: const Text('Write your diary.'),
                                 trailing:
@@ -120,9 +131,18 @@ class _HomeState extends State<Home> {
                                 },
                               ),
                               ListTile(
-                                leading: const Icon(
-                                  Icons.pin_drop,
-                                  color: Color.fromRGBO(148, 92, 254, 1),
+                                leading: Container(
+                                  height: 40,
+                                  width: 40,
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xff8a7efd),
+                                    shape: BoxShape.circle
+                                  ),
+                                  child: const Icon(
+                                    MdiIcons.mapMarkerRadius,
+                                    color: Colors.white,
+                                    size: 22,
+                                  ),
                                 ),
                                 title:
                                     const Text('Write your diary for putdown.'),
@@ -142,9 +162,7 @@ class _HomeState extends State<Home> {
             height: 50,
             itemCount: iconList.length,
             tabBuilder: (int index, bool isActive) {
-              final color = isActive
-                  ? const Color.fromRGBO(148, 92, 254, 1)
-                  : Colors.black;
+              final color = isActive ? const Color(0xff8a7efd) : Colors.black;
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
