@@ -7,6 +7,7 @@ import 'package:diown/pages/other_page.dart/drawer_details.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -17,6 +18,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   var c;
+
   var pagepop;
   var _bottomNavIndex = 0;
   var _saveindex = 0;
@@ -27,23 +29,25 @@ class _HomeState extends State<Home> {
     MdiIcons.calendarBlank,
     MdiIcons.menu,
   ];
-  final textList = <String>[
-    'Home',
-    'Map',
-    'Calendar',
-    'Menu'
-  ];
-
+  final textList = <String>['Home', 'Map', 'Calendar', 'Menu'];
   var pageList = [
     const HomePage(),
     const MapPage(),
     const CalendarPage(),
   ];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return KeyboardVisibilityProvider(
       child: Scaffold(
+          resizeToAvoidBottomInset: false,
           key: _drawerKey,
           endDrawer: const Drawer(
             child: DrawerDetails(),
@@ -153,6 +157,8 @@ class _HomeState extends State<Home> {
             },
           ),
           bottomNavigationBar: AnimatedBottomNavigationBar.builder(
+            backgroundColor: const Color.fromRGBO(255, 248, 248, 1),
+            elevation: 0,
             height: 50,
             itemCount: iconList.length,
             tabBuilder: (int index, bool isActive) {
@@ -162,18 +168,15 @@ class _HomeState extends State<Home> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
-                   iconList[index],
-                   size: 24,
-                   color: color,
+                    iconList[index],
+                    size: 24,
+                    color: color,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Text(
                       textList[index],
-                      style: TextStyle(
-                        color: color,
-                        fontSize: 11
-                      ),
+                      style: TextStyle(color: color, fontSize: 11),
                     ),
                   )
                 ],

@@ -130,15 +130,21 @@ class _CalendarPageState extends State<CalendarPage> {
       onLoading: onLoading,
       child: Padding(
         padding: const EdgeInsets.all(0.0),
-        child: Scaffold(
-            appBar: AppBar(
-              title: const Text(
-                'Calendar',
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black),
+        child: SafeArea(
+          child: Scaffold(
+              appBar: AppBar(
+                title: const Text(
+                  'Calendar',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ),
+                automaticallyImplyLeading: false,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
               ),
+
               automaticallyImplyLeading: false,
               backgroundColor: Colors.transparent,
               elevation: 0,
@@ -318,6 +324,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                                     color: Colors.grey),
                                               )
                                             ],
+
                                           ),
                                       )
                                       : Container(),
@@ -373,17 +380,17 @@ class _CalendarPageState extends State<CalendarPage> {
                                           });
                                         },
                                       ),
-                                    ),
-                                  const SizedBox(height: 25)
-                                ],
-                              )
-                            : Container()
-                      ],
-                    ),
-                  )
-                : const Center(
-                    child: CircularProgressIndicator(),
-                  )),
+                                    const SizedBox(height: 25)
+                                  ],
+                                )
+                              : Container()
+                        ],
+                      ),
+                    )
+                  : const Center(
+                      child: CircularProgressIndicator(),
+                    )),
+        ),
       ),
     );
   }

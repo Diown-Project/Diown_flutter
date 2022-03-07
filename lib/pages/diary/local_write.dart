@@ -885,6 +885,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                       child: Text(now.toString().substring(0, 10),
                           style: const TextStyle(
                               fontSize: 15, color: Color(0xffafacac)))),
+
                 ],
               ),
               const SizedBox(
@@ -1069,11 +1070,11 @@ class _LocalDiaryState extends State<LocalDiary> {
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(25), topRight: Radius.circular(25)),
           boxShadow: [
-            BoxShadow(
-                color: Colors.grey,
-                spreadRadius: -7,
-                blurRadius: 20,
-                offset: Offset(0, 5)),
+            // BoxShadow(
+            //     color: Colors.grey,
+            //     spreadRadius: -7,
+            //     blurRadius: 20,
+            //     offset: Offset(0, 5)),
           ]),
       child: Column(
         children: [

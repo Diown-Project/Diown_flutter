@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:diown/pages/auth/signup.dart';
 import 'package:diown/pages/mainpage/home.dart';
@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:dart_ipify/dart_ipify.dart';
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
   static String id = 'SignIn';
@@ -45,10 +45,10 @@ class _SignInState extends State<SignIn> {
                   child: const Text(
                     'DIOWN',
                     style: TextStyle(
-                        fontSize: 25.0,
-                        fontWeight: FontWeight.bold,
+                      fontSize: 25.0,
+                      fontWeight: FontWeight.bold,
                     ),
-                ),
+                  ),
                 ),
                 const SizedBox(
                   height: 30,
@@ -61,10 +61,9 @@ class _SignInState extends State<SignIn> {
                         const Text(
                           'Email',
                           style: TextStyle(
-                            color: Color(0xff8fa1b6),
-                            fontSize: 18,
-                            fontWeight: FontWeight.w400
-                          ),                     
+                              color: Color(0xff8fa1b6),
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400),
                         ),
                         const SizedBox(height: 10),
                         TextFormField(
@@ -75,15 +74,12 @@ class _SignInState extends State<SignIn> {
                             fillColor: Color(0xfff1f3f4),
                             hintText: 'yourname@example.com',
                             hintStyle: TextStyle(
-                              color: Color(0xffc5d2e1),
-                              fontWeight: FontWeight.w200
-                            ),
+                                color: Color(0xffc5d2e1),
+                                fontWeight: FontWeight.w200),
                             focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide.none
-                            ),
+                                borderSide: BorderSide.none),
                             enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide.none
-                            ),
+                                borderSide: BorderSide.none),
                             // prefixIcon: Icon(
                             //   Icons.email_outlined,
                             // ),
@@ -104,10 +100,9 @@ class _SignInState extends State<SignIn> {
                         const Text(
                           'Password',
                           style: TextStyle(
-                            color: Color(0xff8fa1b6),
-                            fontSize: 18,
-                            fontWeight: FontWeight.w400
-                          ),                      
+                              color: Color(0xff8fa1b6),
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400),
                         ),
                         const SizedBox(height: 10),
                         TextFormField(
@@ -117,27 +112,24 @@ class _SignInState extends State<SignIn> {
                             fillColor: Color(0xfff1f3f4),
                             hintText: 'yourpassword',
                             hintStyle: const TextStyle(
-                              color: Color(0xffc5d2e1),
-                              fontWeight: FontWeight.w200
-                            ),
+                                color: Color(0xffc5d2e1),
+                                fontWeight: FontWeight.w200),
                             focusedBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide.none
-                            ),
+                                borderSide: BorderSide.none),
                             enabledBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide.none
-                            ),
+                                borderSide: BorderSide.none),
                             // prefixIcon: const Icon(Icons.lock),
                             suffixIcon: IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    see = !see;
-                                  });
-                                },
-                                icon: Icon(see
-                                    ? Icons.visibility
-                                    : Icons.visibility_off),
-                                color: Color(0xff8fa1b6),
-                                focusColor: Color(0xff8fa1b6),
+                              onPressed: () {
+                                setState(() {
+                                  see = !see;
+                                });
+                              },
+                              icon: Icon(see
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                              color: Color(0xff8fa1b6),
+                              focusColor: Color(0xff8fa1b6),
                             ),
                           ),
                           obscureText: see,
@@ -161,7 +153,7 @@ class _SignInState extends State<SignIn> {
                                 _formkey.currentState!.save();
                               }
                             });
-                    
+
                             if (email == null || password == null) {
                             } else {
                               CoolAlert.show(
@@ -197,17 +189,15 @@ class _SignInState extends State<SignIn> {
                             width: double.infinity,
                             height: 60,
                             decoration: const BoxDecoration(
-                              color: Color(0xff8b82ff),
-                              borderRadius: BorderRadius.all(Radius.circular(10))
-                            ),
+                                color: Color(0xff8b82ff),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
                             child: const Center(
                               child: Text(
-                                  'SIGN IN',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.white
-                                  ),
-                                ),
+                                'SIGN IN',
+                                style: TextStyle(
+                                    fontSize: 20, color: Colors.white),
+                              ),
                             ),
                           ),
                         ),
@@ -227,20 +217,15 @@ class _SignInState extends State<SignIn> {
                       children: [
                         const Text(
                           'Dont have an account?',
-                          style: TextStyle(
-                            color: Colors.black
-                          ),
+                          style: TextStyle(color: Colors.black),
                         ),
                         const SizedBox(width: 5),
                         const Text(
                           'Register',
-                          style: TextStyle(
-                            color: Color(0xff8a7efd)
-                          ),
+                          style: TextStyle(color: Color(0xff8a7efd)),
                         )
                       ],
-                    )
-                )
+                    ))
               ],
             ),
           ),
