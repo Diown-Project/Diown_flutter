@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:diown/pages/diary/choosediary.dart';
 import 'package:diown/pages/diary/diarydetail.dart';
 import 'package:flutter/material.dart';

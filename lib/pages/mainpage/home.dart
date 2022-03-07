@@ -35,6 +35,7 @@ class _HomeState extends State<Home> {
     const MapPage(),
     const CalendarPage(),
   ];
+
   @override
   void initState() {
     // TODO: implement initState
@@ -45,9 +46,10 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    bool keyboardIsOpened = MediaQuery.of(context).viewInsets.bottom != 0.0;
     return KeyboardVisibilityProvider(
       child: Scaffold(
-          resizeToAvoidBottomInset: false,
+          // resizeToAvoidBottomInset: false,
           key: _drawerKey,
           endDrawer: const Drawer(
             child: DrawerDetails(),
@@ -57,105 +59,95 @@ class _HomeState extends State<Home> {
               : pageList[_saveindex],
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: FloatingActionButton(
-            child: const Icon(
-              Icons.add_rounded,
-              size: 40,
-            ),
-            backgroundColor: const Color(0xff8a7efd),
-            onPressed: () {
-              showModalBottomSheet(
-                  context: context,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30)),
+          floatingActionButton: keyboardIsOpened
+              ? null
+              : FloatingActionButton(
+                  child: const Icon(
+                    Icons.add_rounded,
+                    size: 40,
                   ),
-                  useRootNavigator: false,
-                  builder: (context) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                          color: Colors.transparent,
-                          height: 220,
-                          child: ListView(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(0.0),
-                                child: ListTile(
-                                    title: const Text(
-                                      'Diary',
-                                      style: TextStyle(fontSize: 25),
+                  backgroundColor: const Color.fromRGBO(148, 92, 254, 1),
+                  onPressed: () {
+                    showModalBottomSheet(
+                        context: context,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              topRight: Radius.circular(30)),
+                        ),
+                        useRootNavigator: false,
+                        builder: (context) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                                color: Colors.transparent,
+                                height: 220,
+                                child: ListView(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ListTile(
+                                          title: const Text(
+                                            'Diary',
+                                            style: TextStyle(fontSize: 25),
+                                          ),
+                                          trailing: IconButton(
+                                            icon: const Icon(
+                                                Icons.highlight_remove_rounded),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                          )),
                                     ),
-                                    trailing: IconButton(
-                                      icon: const Icon(
-                                          Icons.close_outlined,
-                                          color: Colors.black,
+                                    const Divider(
+                                      thickness: 0.8,
+                                    ),
+                                    ListTile(
+                                      leading: const Icon(
+                                        Icons.book,
+                                        color: Color.fromRGBO(148, 92, 254, 1),
                                       ),
-                                      onPressed: () {
-                                        Navigator.pop(context);
+                                      title: const Text('Write your diary.'),
+                                      trailing: const Icon(
+                                          Icons.navigate_next_rounded),
+                                      onTap: () async {
+                                        var sult = await Navigator.of(context)
+                                            .push(PageTransition(
+                                                child: const LocalDiary(),
+                                                type: PageTransitionType
+                                                    .rightToLeft));
+                                        if (sult != null) {
+                                          setState(() {
+                                            _bottomNavIndex = 0;
+                                          });
+                                        }
                                       },
-                                    )),
-                              ),
-                              const Divider(
-                                thickness: 0.8,
-                              ),
-                              ListTile(
-                                leading: Container(
-                                  height: 40,
-                                  width: 40,
-                                  decoration: const BoxDecoration(
-                                    color: Color(0xff8a7efd),
-                                    shape: BoxShape.circle
-                                  ),
-                                  child: const Icon(
-                                    MdiIcons.book,
-                                    color: Colors.white,
-                                    size: 22,
-                                  ),
-                                ),
-                                title: const Text('Write your diary.'),
-                                trailing:
-                                    const Icon(Icons.navigate_next_rounded),
-                                onTap: () async {
-                                  var sult = await Navigator.of(context).push(
-                                      PageTransition(
-                                          child: const LocalDiary(),
-                                          type:
-                                              PageTransitionType.rightToLeft));
-                                  if (sult != null) {
-                                    setState(() {
-                                      _bottomNavIndex = 0;
-                                    });
-                                  }
-                                },
-                              ),
-                              ListTile(
-                                leading: Container(
-                                  height: 40,
-                                  width: 40,
-                                  decoration: const BoxDecoration(
-                                    color: Color(0xff8a7efd),
-                                    shape: BoxShape.circle
-                                  ),
-                                  child: const Icon(
-                                    MdiIcons.mapMarkerRadius,
-                                    color: Colors.white,
-                                    size: 22,
-                                  ),
-                                ),
-                                title:
-                                    const Text('Write your diary for putdown.'),
-                                trailing:
-                                    const Icon(Icons.navigate_next_rounded),
-                                onTap: () {},
-                              )
-                            ],
-                          )),
-                    );
-                  });
-            },
-          ),
+                                    ),
+                                    ListTile(
+                                      leading: const Icon(
+                                        Icons.pin_drop,
+                                        color: Color.fromRGBO(148, 92, 254, 1),
+                                      ),
+                                      title: const Text(
+                                          'Write your diary for putdown.'),
+                                      trailing: const Icon(
+                                          Icons.navigate_next_rounded),
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                child: const MapPage(),
+                                                type: PageTransitionType
+                                                    .rightToLeft));
+                                      },
+                                    )
+                                  ],
+                                )),
+                          );
+                        });
+                  },
+                ),
+
           bottomNavigationBar: AnimatedBottomNavigationBar.builder(
             backgroundColor: const Color.fromRGBO(255, 248, 248, 1),
             elevation: 0,
