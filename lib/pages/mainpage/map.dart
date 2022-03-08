@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
+import 'dart:math';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:diown/pages/allmap/ownerpin.dart';
 import 'package:diown/pages/mainpage/direction/direction_repository.dart';
 import 'package:diown/pages/mainpage/searchmap/location_service.dart';
@@ -10,6 +13,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:location/location.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -26,11 +31,37 @@ class _MapPageState extends State<MapPage> {
   Marker? marker;
   Circle? circle;
   String? input;
+  var putdownDiary,
+      ownPutdown,
+      followingPutdown,
+      generalPutdown,
+      user,
+      newlocation;
   bool focus = false;
   GoogleMapController? mapController;
   Completer<GoogleMapController> _controller = Completer();
   String? searchaddr;
   var initlaglng;
+
+  forDiarypinFunc(pin, lag, lng) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    putdownDiary = await findDiaryInPin(token, pin, lag, lng);
+    user = await findMyself(token);
+    if (putdownDiary[2].length <= 2) {
+    } else {
+      ownPutdown = putdownDiary[2].sublist(0, 2);
+    }
+    if (putdownDiary[1].length <= 2) {
+    } else {
+      followingPutdown = putdownDiary[1].sublist(0, 2);
+    }
+    if (putdownDiary[0].length <= 2) {
+    } else {
+      generalPutdown = putdownDiary[0].sublist(0, 2);
+    }
+    setState(() {});
+  }
 
   Future<Uint8List> getMarker() async {
     ByteData byteData =
@@ -99,9 +130,15 @@ class _MapPageState extends State<MapPage> {
                     tilt: 0,
                     zoom: 18.00)));
             updateMarkerAndCircle(newLocalData, imageData);
+            setState(() {
+              newlocation = newLocalData;
+            });
           }
         } else {
           updateMarkerAndCircle(newLocalData, imageData);
+          setState(() {
+            newlocation = newLocalData;
+          });
         }
       });
     } on PlatformException catch (e) {
@@ -176,7 +213,12 @@ class _MapPageState extends State<MapPage> {
                                     var lng = 100.34083452967317;
                                     var pin = 'บ้านกูไอแม่เย็ด';
                                     Future.delayed(const Duration(seconds: 0),
-                                        () {
+                                        () async {
+                                      var dis = distance(
+                                          newlocation.latitude as double,
+                                          lag,
+                                          newlocation.longitude as double,
+                                          lng);
                                       showModalBottomSheet(
                                           context: context,
                                           builder: (context) {
@@ -194,190 +236,274 @@ class _MapPageState extends State<MapPage> {
                                                     foregroundColor:
                                                         Colors.black,
                                                     centerTitle: true,
-                                                    title: Text('ชื่อ pin'),
+                                                    title: Text(pin),
                                                   ),
-                                                  body: SingleChildScrollView(
-                                                    child: Container(
-                                                        color:
-                                                            Colors.transparent,
-                                                        child: Column(
-                                                          children: [
-                                                            ListTile(
-                                                              onTap: () {
-                                                                Navigator.push(
-                                                                    context,
-                                                                    PageTransition(
-                                                                        child:
-                                                                            WritePutdownDiary(
-                                                                          lag:
-                                                                              lag,
-                                                                          lng:
-                                                                              lng,
-                                                                          pin:
-                                                                              pin,
-                                                                        ),
-                                                                        type: PageTransitionType
-                                                                            .rightToLeft));
-                                                              },
-                                                              leading:
-                                                                  const Padding(
-                                                                padding:
-                                                                    EdgeInsets
-                                                                        .all(
-                                                                            8.0),
-                                                                child:
-                                                                    CircleAvatar(
-                                                                  radius: 30,
-                                                                  backgroundImage:
-                                                                      NetworkImage(
-                                                                          'https://storage.googleapis.com/noseason/nonja'),
-                                                                ),
-                                                              ),
-                                                              title: const Text(
-                                                                'Put down your diary.',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        18),
-                                                              ),
-                                                              trailing:
-                                                                  const Icon(Icons
-                                                                      .navigate_next_rounded),
-                                                            ),
-                                                            const Divider(
-                                                              thickness: 0.8,
-                                                            ),
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .fromLTRB(
-                                                                      20.0,
-                                                                      10.0,
-                                                                      20.0,
-                                                                      0),
-                                                              child: Row(
+                                                  body: FutureBuilder(
+                                                    future: forDiarypinFunc(
+                                                        pin, lag, lng),
+                                                    builder:
+                                                        (BuildContext context,
+                                                            AsyncSnapshot
+                                                                snapshot) {
+                                                      if (snapshot
+                                                              .connectionState ==
+                                                          ConnectionState
+                                                              .done) {
+                                                        return SingleChildScrollView(
+                                                          child: Container(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              child: Column(
                                                                 children: [
-                                                                  Text(
-                                                                      'My diary: '),
-                                                                  Spacer(),
-                                                                  TextButton(
-                                                                      onPressed:
-                                                                          () {},
+                                                                  ListTile(
+                                                                    onTap: () {
+                                                                      if (dis >
+                                                                          0.050) {
+                                                                        AwesomeDialog(
+                                                                                context: context,
+                                                                                dialogType: DialogType.WARNING,
+                                                                                desc: 'Distance is to long.\nYou must to go closely on pin.\n Go closely on pin less than 50 meters.',
+                                                                                btnOk: ElevatedButton(
+                                                                                    onPressed: () {
+                                                                                      Navigator.pop(context);
+                                                                                    },
+                                                                                    child: const Text('ok')))
+                                                                            .show();
+                                                                      } else {
+                                                                        Navigator.push(
+                                                                            context,
+                                                                            PageTransition(
+                                                                                child: WritePutdownDiary(
+                                                                                  lag: lag,
+                                                                                  lng: lng,
+                                                                                  pin: pin,
+                                                                                ),
+                                                                                type: PageTransitionType.rightToLeft));
+                                                                      }
+                                                                    },
+                                                                    leading:
+                                                                        Padding(
+                                                                      padding:
+                                                                          EdgeInsets.all(
+                                                                              8.0),
                                                                       child:
-                                                                          Text(
-                                                                        'view more',
-                                                                        style: TextStyle(
-                                                                            fontWeight:
-                                                                                FontWeight.bold),
-                                                                      )),
+                                                                          CircleAvatar(
+                                                                        radius:
+                                                                            30,
+                                                                        backgroundImage:
+                                                                            NetworkImage('https://storage.googleapis.com/noseason/${user['profile_image']}'),
+                                                                      ),
+                                                                    ),
+                                                                    title:
+                                                                        const Text(
+                                                                      'Put down your diary.',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              18),
+                                                                    ),
+                                                                    subtitle: Text(
+                                                                        'distance: ${dis.toStringAsFixed(3)} km.'),
+                                                                    trailing:
+                                                                        const Icon(
+                                                                            Icons.navigate_next_rounded),
+                                                                  ),
+                                                                  const Divider(
+                                                                    thickness:
+                                                                        0.8,
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .fromLTRB(
+                                                                        20.0,
+                                                                        10.0,
+                                                                        20.0,
+                                                                        0),
+                                                                    child: Row(
+                                                                      children: [
+                                                                        const Text(
+                                                                            'My diary: '),
+                                                                        const Spacer(),
+                                                                        TextButton(
+                                                                            onPressed:
+                                                                                () {},
+                                                                            child:
+                                                                                Text(
+                                                                              'view more',
+                                                                              style: TextStyle(fontWeight: FontWeight.bold),
+                                                                            )),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  Column(
+                                                                    children: putdownDiary[2].length <=
+                                                                            2
+                                                                        ? putdownDiary[2]
+                                                                            .map<Widget>(
+                                                                              (e) => ListTile(
+                                                                                leading: CircleAvatar(
+                                                                                  backgroundImage: NetworkImage('https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                                                ),
+                                                                                title: e['topic'] != null ? Text(e['topic']) : Text('${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                subtitle: Text('@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                trailing: e['status'] == 'Public'
+                                                                                    ? Icon(Icons.public)
+                                                                                    : e['status'] == 'Follower'
+                                                                                        ? Icon(Icons.people)
+                                                                                        : Icon(Icons.lock),
+                                                                                onTap: () async {},
+                                                                              ),
+                                                                            )
+                                                                            .toList()
+                                                                        : ownPutdown
+                                                                            .map<Widget>(
+                                                                              (e) => ListTile(
+                                                                                leading: CircleAvatar(
+                                                                                  backgroundImage: NetworkImage('https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                                                ),
+                                                                                title: e['topic'] != null ? Text(e['topic']) : Text('${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                subtitle: Text('@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                trailing: e['status'] == 'Public'
+                                                                                    ? Icon(Icons.public)
+                                                                                    : e['status'] == 'Follower'
+                                                                                        ? Icon(Icons.people)
+                                                                                        : Icon(Icons.lock),
+                                                                                onTap: () async {},
+                                                                              ),
+                                                                            )
+                                                                            .toList(),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .fromLTRB(
+                                                                        20.0,
+                                                                        10.0,
+                                                                        20.0,
+                                                                        0),
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Text(
+                                                                            'For following: '),
+                                                                        Spacer(),
+                                                                        TextButton(
+                                                                            onPressed:
+                                                                                () {},
+                                                                            child:
+                                                                                Text(
+                                                                              'view more',
+                                                                              style: TextStyle(fontWeight: FontWeight.bold),
+                                                                            )),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  Column(
+                                                                    children: putdownDiary[1].length <=
+                                                                            2
+                                                                        ? putdownDiary[1]
+                                                                            .map<Widget>(
+                                                                              (e) => ListTile(
+                                                                                leading: CircleAvatar(
+                                                                                  backgroundImage: NetworkImage('https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                                                ),
+                                                                                title: e['topic'] != null ? Text(e['topic']) : Text('${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                subtitle: Text('@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                trailing: e['status'] == 'Public'
+                                                                                    ? Icon(Icons.public)
+                                                                                    : e['status'] == 'Follower'
+                                                                                        ? Icon(Icons.people)
+                                                                                        : Icon(Icons.lock),
+                                                                                onTap: () async {},
+                                                                              ),
+                                                                            )
+                                                                            .toList()
+                                                                        : ownPutdown
+                                                                            .map<Widget>(
+                                                                              (e) => ListTile(
+                                                                                leading: CircleAvatar(
+                                                                                  backgroundImage: NetworkImage('https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                                                ),
+                                                                                title: e['topic'] != null ? Text(e['topic']) : Text('${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                subtitle: Text('@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                trailing: e['status'] == 'Public'
+                                                                                    ? Icon(Icons.public)
+                                                                                    : e['status'] == 'Follower'
+                                                                                        ? Icon(Icons.people)
+                                                                                        : Icon(Icons.lock),
+                                                                                onTap: () async {},
+                                                                              ),
+                                                                            )
+                                                                            .toList(),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .fromLTRB(
+                                                                        20.0,
+                                                                        10.0,
+                                                                        20.0,
+                                                                        0),
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Text(
+                                                                            'General: '),
+                                                                        Spacer(),
+                                                                        TextButton(
+                                                                            onPressed:
+                                                                                () {},
+                                                                            child:
+                                                                                Text(
+                                                                              'view more',
+                                                                              style: TextStyle(fontWeight: FontWeight.bold),
+                                                                            )),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  Column(
+                                                                    children: putdownDiary[0].length <=
+                                                                            2
+                                                                        ? putdownDiary[0]
+                                                                            .map<Widget>(
+                                                                              (e) => ListTile(
+                                                                                leading: CircleAvatar(
+                                                                                  backgroundImage: NetworkImage('https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                                                ),
+                                                                                title: e['topic'] != null ? Text(e['topic']) : Text('${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                subtitle: Text('@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                trailing: e['status'] == 'Public'
+                                                                                    ? Icon(Icons.public)
+                                                                                    : e['status'] == 'Follower'
+                                                                                        ? Icon(Icons.people)
+                                                                                        : Icon(Icons.lock),
+                                                                                onTap: () async {},
+                                                                              ),
+                                                                            )
+                                                                            .toList()
+                                                                        : generalPutdown
+                                                                            .map<Widget>(
+                                                                              (e) => ListTile(
+                                                                                leading: CircleAvatar(
+                                                                                  backgroundImage: NetworkImage('https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                                                ),
+                                                                                title: e['topic'] != null ? Text(e['topic']) : Text('${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                subtitle: Text('@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                trailing: e['status'] == 'Public'
+                                                                                    ? Icon(Icons.public)
+                                                                                    : e['status'] == 'Follower'
+                                                                                        ? Icon(Icons.people)
+                                                                                        : Icon(Icons.lock),
+                                                                                onTap: () async {},
+                                                                              ),
+                                                                            )
+                                                                            .toList(),
+                                                                  ),
                                                                 ],
-                                                              ),
-                                                            ),
-                                                            ListTile(
-                                                              leading:
-                                                                  CircleAvatar(
-                                                                backgroundImage:
-                                                                    NetworkImage(
-                                                                        'https://storage.googleapis.com/noseason/nonja'),
-                                                              ),
-                                                              title: const Text(
-                                                                  'The weather was really good.'),
-                                                              subtitle: const Text(
-                                                                  '@noseason - 😀 Happy'),
-                                                              trailing:
-                                                                  const Icon(
-                                                                      Icons
-                                                                          .lock),
-                                                              onTap:
-                                                                  () async {},
-                                                            ),
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .fromLTRB(
-                                                                      20.0,
-                                                                      10.0,
-                                                                      20.0,
-                                                                      0),
-                                                              child: Row(
-                                                                children: [
-                                                                  Text(
-                                                                      'For following: '),
-                                                                  Spacer(),
-                                                                  TextButton(
-                                                                      onPressed:
-                                                                          () {},
-                                                                      child:
-                                                                          Text(
-                                                                        'view more',
-                                                                        style: TextStyle(
-                                                                            fontWeight:
-                                                                                FontWeight.bold),
-                                                                      )),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            ListTile(
-                                                              leading:
-                                                                  CircleAvatar(
-                                                                backgroundImage:
-                                                                    NetworkImage(
-                                                                        'https://storage.googleapis.com/noseason/nonja'),
-                                                              ),
-                                                              title: const Text(
-                                                                  'The weather was really good.'),
-                                                              subtitle: const Text(
-                                                                  '@noseason - 😀 Happy'),
-                                                              trailing:
-                                                                  const Icon(Icons
-                                                                      .public_rounded),
-                                                              onTap:
-                                                                  () async {},
-                                                            ),
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .fromLTRB(
-                                                                      20.0,
-                                                                      10.0,
-                                                                      20.0,
-                                                                      0),
-                                                              child: Row(
-                                                                children: [
-                                                                  Text(
-                                                                      'General: '),
-                                                                  Spacer(),
-                                                                  TextButton(
-                                                                      onPressed:
-                                                                          () {},
-                                                                      child:
-                                                                          Text(
-                                                                        'view more',
-                                                                        style: TextStyle(
-                                                                            fontWeight:
-                                                                                FontWeight.bold),
-                                                                      )),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            ListTile(
-                                                              leading:
-                                                                  CircleAvatar(
-                                                                backgroundImage:
-                                                                    NetworkImage(
-                                                                        'https://storage.googleapis.com/noseason/nonja'),
-                                                              ),
-                                                              title: const Text(
-                                                                  'The weather was really good.'),
-                                                              subtitle: const Text(
-                                                                  '@noseason - 😀 Happy'),
-                                                              trailing:
-                                                                  const Icon(Icons
-                                                                      .people),
-                                                              onTap:
-                                                                  () async {},
-                                                            ),
-                                                          ],
-                                                        )),
+                                                              )),
+                                                        );
+                                                      } else {
+                                                        return const Center(
+                                                          child:
+                                                              CircularProgressIndicator(),
+                                                        );
+                                                      }
+                                                    },
                                                   ),
                                                 ),
                                               ),
@@ -548,4 +674,51 @@ class _MapPageState extends State<MapPage> {
         child: GestureDetector(
             onTap: FocusScope.of(context).unfocus, child: child),
       );
+}
+
+findDiaryInPin(token, pin, lag, lng) async {
+  var url = 'http://10.0.2.2:3000/putdown/findDiaryInPin';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'token': token,
+          'pin': pin,
+          'lag': lag,
+          'lng': lng,
+        },
+      ));
+  var result = jsonDecode(response.body);
+  return result;
+}
+
+findMyself(token) async {
+  var url = 'http://10.0.2.2:3000/auth/rememberMe';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, String>{'token': token},
+      ));
+
+  var result = jsonDecode(response.body);
+  return result;
+}
+
+distance(lagcurrent, lagpin, lngcurrent, lngpin) {
+  const r = 6371e3;
+  var lag1 = lagcurrent * (pi / 180);
+  var lag2 = lagpin * (pi / 180);
+  var lng1 = lngcurrent;
+  var lng2 = lngpin;
+  var relag = (lag2 - lag1) * (pi / 180);
+  var relng = (lng2 - lng1) * (pi / 180);
+  var z = (sin(relag / 2) * sin(relag / 2)) +
+      (cos(lag1) * cos(lag2) * sin(relng / 2) * sin(relng / 2));
+  var zz = 2 * atan2(sqrt(z), sqrt(1 - z));
+  var zzz = r * zz;
+  return zzz / 1000;
 }

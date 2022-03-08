@@ -30,6 +30,7 @@ class _DrawerDetailsState extends State<DrawerDetails> {
   loaddingUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? c = prefs.getString('token');
+    print(c);
     user = await rememberMe(c!);
 
     setState(() {
@@ -116,20 +117,24 @@ class _DrawerDetailsState extends State<DrawerDetails> {
               leading: const Icon(Icons.person_outline),
               title: const Text('Following'),
               visualDensity: VisualDensity.compact,
-              onTap: () {Navigator.push(
+              onTap: () {
+                Navigator.push(
                     context,
                     PageTransition(
                         child: const FollowingPage(),
-                        type: PageTransitionType.rightToLeft));}),
+                        type: PageTransitionType.rightToLeft));
+              }),
           ListTile(
               leading: const Icon(Icons.groups_outlined),
               title: const Text('Follower'),
               visualDensity: VisualDensity.compact,
-              onTap: () {Navigator.push(
+              onTap: () {
+                Navigator.push(
                     context,
                     PageTransition(
                         child: const FollowPage(),
-                        type: PageTransitionType.rightToLeft));}),
+                        type: PageTransitionType.rightToLeft));
+              }),
           ListTile(
             leading: const Icon(Icons.notifications_outlined),
             title: const Text('Notification'),

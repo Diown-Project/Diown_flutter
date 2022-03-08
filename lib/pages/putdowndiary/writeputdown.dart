@@ -182,7 +182,169 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                             type: CoolAlertType.confirm,
                             title: 'Please confirm',
                             text: 'If you want to save this diary.',
-                            onConfirmBtnTap: () async {});
+                            onConfirmBtnTap: () async {
+                              CoolAlert.show(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  type: CoolAlertType.loading);
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              var token = prefs.getString('token');
+                              if (_imageByteList != null &&
+                                  _imageNameList != null &&
+                                  resultMood != null &&
+                                  _imageByteList!.isNotEmpty &&
+                                  _imageNameList!.isNotEmpty) {
+                                await _saveImage();
+                                var mood_emoji = resultMood!.substring(0, 2);
+                                var mood_detail = resultMood!.substring(3);
+                                await saveDiary(
+                                    token,
+                                    mood_emoji,
+                                    mood_detail,
+                                    resultAct,
+                                    _imageNameList,
+                                    topic,
+                                    write_detail,
+                                    widget.pin,
+                                    widget.lag,
+                                    widget.lng,
+                                    selectedValue);
+                                var check = await checkAchievement(1);
+                                if (check['message'] == 'success') {
+                                  AwesomeDialog(
+                                          context: context,
+                                          dismissOnTouchOutside: false,
+                                          dialogType: DialogType.SUCCES,
+                                          customHeader: Container(
+                                            height: 100,
+                                            child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(50),
+                                                child: Image.asset(
+                                                    'images/Place_Memory.png')),
+                                          ),
+                                          title: 'congratulations',
+                                          body: Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      15, 0, 10, 10),
+                                              child: Column(
+                                                children: const [
+                                                  Text(
+                                                    'congratulations',
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      height: 1.5,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 10),
+                                                  Text(
+                                                    'Congratulations to unlock this achievement (Place Memory).',
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ],
+                                              )),
+                                          btnOk: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                Navigator.pop(context);
+                                                Navigator.pop(context);
+                                                Navigator.pop(context);
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text('ok')))
+                                      .show();
+                                } else {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                }
+                              } else if (resultMood != null) {
+                                var mood_emoji = resultMood!.substring(0, 2);
+                                var mood_detail = resultMood!.substring(3);
+                                await saveDiary(
+                                    token,
+                                    mood_emoji,
+                                    mood_detail,
+                                    resultAct,
+                                    _imageNameList,
+                                    topic,
+                                    write_detail,
+                                    widget.pin,
+                                    widget.lag,
+                                    widget.lng,
+                                    selectedValue);
+                                var check = await checkAchievement(1);
+                                if (check['message'] == 'success') {
+                                  AwesomeDialog(
+                                          context: context,
+                                          dismissOnTouchOutside: false,
+                                          dialogType: DialogType.SUCCES,
+                                          customHeader: Container(
+                                            height: 100,
+                                            child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(50),
+                                                child: Image.asset(
+                                                    'images/Place_Memory.png')),
+                                          ),
+                                          title: 'congratulations',
+                                          body: Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      15, 0, 10, 10),
+                                              child: Column(
+                                                children: const [
+                                                  Text(
+                                                    'congratulations',
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      height: 1.5,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 10),
+                                                  Text(
+                                                    'Congratulations to unlock this achievement (Place Memory).',
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ],
+                                              )),
+                                          btnOk: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                Navigator.pop(context);
+                                                Navigator.pop(context);
+                                                Navigator.pop(context);
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text('ok')))
+                                      .show();
+                                } else {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                }
+                              } else {
+                                CoolAlert.show(
+                                    context: context,
+                                    type: CoolAlertType.error,
+                                    barrierDismissible: false,
+                                    title: 'error Alert!',
+                                    text: 'You must to fill at less mood.',
+                                    onConfirmBtnTap: () {
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                    });
+                              }
+                            });
                       },
                       child: const Text('save',
                           style: TextStyle(color: Colors.white)),
@@ -822,7 +984,8 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
   }
 }
 
-saveDiary(token,mood_emoji,mood_detail,resultAct,_imageNameList,topic,write_detail,) async {
+saveDiary(token, mood_emoji, mood_detail, resultAct, _imageNameList, topic,
+    write_detail, pin, lag, lng, selectedValue) async {
   var url = 'http://10.0.2.2:3000/putdown/saveDiary';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
@@ -837,10 +1000,28 @@ saveDiary(token,mood_emoji,mood_detail,resultAct,_imageNameList,topic,write_deta
           'imageLocation': _imageNameList,
           'topic': topic,
           'detail': write_detail,
+          'like': 0,
+          'marker_id': pin,
+          'lag': lag,
+          'lng': lng,
+          'status': selectedValue,
         },
       ));
   var result = jsonDecode(response.body);
   return result;
 }
 
-
+checkAchievement(index) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var token = prefs.getString('token');
+  var url = 'http://10.0.2.2:3000/achievement/checkSuccess';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{'token': token, 'index': index},
+      ));
+  var result = jsonDecode(response.body);
+  return result;
+}
