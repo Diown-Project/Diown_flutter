@@ -15,7 +15,7 @@ void main() {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(MaterialApp(
     theme: ThemeData(fontFamily: 'readex'),
-    initialRoute: Home.id,
+    initialRoute: LoaddingPage.id,
     debugShowCheckedModeBanner: false,
     routes: {
       LocalDiary.id: (context) => const LocalDiary(),

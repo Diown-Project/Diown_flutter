@@ -20,11 +20,9 @@ import 'package:http/http.dart' as http;
 import 'package:dropdown_button2/dropdown_button2.dart';
 
 class WritePutdownDiary extends StatefulWidget {
-  const WritePutdownDiary(
-      {Key? key, required this.lag, required this.lng, required this.pin})
+  const WritePutdownDiary({Key? key, required this.pin, required this.pin_name})
       : super(key: key);
-  final lag;
-  final lng;
+  final pin_name;
   final pin;
   @override
   State<WritePutdownDiary> createState() => _WritePutdownDiaryState();
@@ -207,8 +205,6 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                                     topic,
                                     write_detail,
                                     widget.pin,
-                                    widget.lag,
-                                    widget.lng,
                                     selectedValue);
                                 var check = await checkAchievement(1);
                                 if (check['message'] == 'success') {
@@ -275,8 +271,6 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                                     topic,
                                     write_detail,
                                     widget.pin,
-                                    widget.lag,
-                                    widget.lng,
                                     selectedValue);
                                 var check = await checkAchievement(1);
                                 if (check['message'] == 'success') {
@@ -370,7 +364,7 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                             Icons.pin_drop_rounded,
                             color: Colors.black,
                           ),
-                          Text(widget.pin,
+                          Text(widget.pin_name,
                               style: const TextStyle(
                                   fontSize: 15, color: Colors.black))
                         ],
@@ -985,7 +979,7 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
 }
 
 saveDiary(token, mood_emoji, mood_detail, resultAct, _imageNameList, topic,
-    write_detail, pin, lag, lng, selectedValue) async {
+    write_detail, pin, selectedValue) async {
   var url = 'http://10.0.2.2:3000/putdown/saveDiary';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
@@ -1002,8 +996,6 @@ saveDiary(token, mood_emoji, mood_detail, resultAct, _imageNameList, topic,
           'detail': write_detail,
           'like': 0,
           'marker_id': pin,
-          'lag': lag,
-          'lng': lng,
           'status': selectedValue,
         },
       ));

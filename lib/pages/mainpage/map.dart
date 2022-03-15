@@ -6,6 +6,8 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:diown/pages/allmap/ownerpin.dart';
 import 'package:diown/pages/mainpage/direction/direction_repository.dart';
 import 'package:diown/pages/mainpage/searchmap/location_service.dart';
+import 'package:diown/pages/putdowndiary/detailforonediary.dart';
+import 'package:diown/pages/putdowndiary/diarydetailputdown.dart';
 import 'package:diown/pages/putdowndiary/writeputdown.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:location/location.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:http/http.dart' as http;
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MapPage extends StatefulWidget {
@@ -36,17 +39,485 @@ class _MapPageState extends State<MapPage> {
       followingPutdown,
       generalPutdown,
       user,
-      newlocation;
+      newlocation,
+      allpin,
+      allPinShow;
   bool focus = false;
   GoogleMapController? mapController;
   Completer<GoogleMapController> _controller = Completer();
   String? searchaddr;
   var initlaglng;
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
 
-  forDiarypinFunc(pin, lag, lng) async {
+  allPin() async {
+    allpin = await findAllPin();
+    allPinShow = allpin!.map<Marker>((e) {
+      return Marker(
+          markerId: MarkerId('${e['marker_id']}'),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
+          position: LatLng(e['lag'], e['lng']),
+          infoWindow: InfoWindow(title: '${e['marker_id']}'),
+          onTap: () {
+            var lag = e['lag'];
+            var lng = e['lng'];
+            var pin = e['marker_id'];
+            var pin_id = e['_id'];
+            print(pin_id);
+            Future.delayed(const Duration(seconds: 0), () async {
+              var dis = distance(newlocation.latitude as double, lag,
+                  newlocation.longitude as double, lng);
+              showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return makeDismissible(
+                      child: DraggableScrollableSheet(
+                        initialChildSize: 1,
+                        builder: (_, controller) => Scaffold(
+                          backgroundColor: Colors.transparent,
+                          appBar: AppBar(
+                            backgroundColor: Colors.transparent,
+                            elevation: 0,
+                            foregroundColor: Colors.black,
+                            centerTitle: true,
+                            title: Text(pin),
+                          ),
+                          body: FutureBuilder(
+                            future: forDiarypinFunc(pin_id),
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                return SingleChildScrollView(
+                                  child: Container(
+                                      color: Colors.transparent,
+                                      child: Column(
+                                        children: [
+                                          ListTile(
+                                            onTap: () {
+                                              if (dis > 0.050) {
+                                                AwesomeDialog(
+                                                        context: context,
+                                                        dialogType:
+                                                            DialogType.WARNING,
+                                                        desc:
+                                                            'Distance is to long.\nYou must to go closely on pin.\n Go closely on pin less than 50 meters.',
+                                                        btnOk: ElevatedButton(
+                                                            onPressed: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            child: const Text(
+                                                                'ok')))
+                                                    .show();
+                                              } else {
+                                                Navigator.push(
+                                                    context,
+                                                    PageTransition(
+                                                        child:
+                                                            WritePutdownDiary(
+                                                          pin: pin_id,
+                                                          pin_name: pin,
+                                                        ),
+                                                        type: PageTransitionType
+                                                            .rightToLeft));
+                                              }
+                                            },
+                                            leading: Padding(
+                                              padding: EdgeInsets.all(8.0),
+                                              child: CircleAvatar(
+                                                radius: 30,
+                                                backgroundImage: NetworkImage(
+                                                    'https://storage.googleapis.com/noseason/${user['profile_image']}'),
+                                              ),
+                                            ),
+                                            title: const Text(
+                                              'Put down your diary.',
+                                              style: TextStyle(fontSize: 18),
+                                            ),
+                                            subtitle: Text(
+                                                'distance: ${dis.toStringAsFixed(3)} km.'),
+                                            trailing: const Icon(
+                                                Icons.navigate_next_rounded),
+                                          ),
+                                          const Divider(
+                                            thickness: 0.8,
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                20.0, 10.0, 20.0, 0),
+                                            child: Row(
+                                              children: [
+                                                const Text('My diary: '),
+                                                const Spacer(),
+                                                TextButton(
+                                                    onPressed: () async {
+                                                      var c =
+                                                          await Navigator.push(
+                                                              context,
+                                                              PageTransition(
+                                                                  child:
+                                                                      DiaryDetailPutdown(
+                                                                    diary: 2,
+                                                                    pin: pin_id,
+                                                                  ),
+                                                                  type: PageTransitionType
+                                                                      .rightToLeft));
+
+                                                      setState(() {
+                                                        print('asd');
+                                                      });
+                                                    },
+                                                    child: Text(
+                                                      'view more',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
+                                          Column(
+                                            children: putdownDiary[2].length <=
+                                                    2
+                                                ? putdownDiary[2]
+                                                    .map<Widget>(
+                                                      (e) => ListTile(
+                                                        leading: CircleAvatar(
+                                                          backgroundImage:
+                                                              NetworkImage(
+                                                                  'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                        ),
+                                                        title: e['topic'] !=
+                                                                null
+                                                            ? Text(e['topic'])
+                                                            : Text(
+                                                                '${e['mood_emoji']} ${e['mood_detail']}'),
+                                                        subtitle: Text(
+                                                            '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                        trailing: e['status'] ==
+                                                                'Public'
+                                                            ? Icon(Icons.public)
+                                                            : e['status'] ==
+                                                                    'Follower'
+                                                                ? Icon(Icons
+                                                                    .people)
+                                                                : Icon(
+                                                                    Icons.lock),
+                                                        onTap: () async {
+                                                          Navigator.push(
+                                                                  context,
+                                                                  PageTransition(
+                                                                      child: DetailDiaryOnePutdown(
+                                                                          id: e[
+                                                                              '_id']),
+                                                                      type: PageTransitionType
+                                                                          .rightToLeft))
+                                                              .then((_) {
+                                                            setState(() {});
+                                                          });
+                                                        },
+                                                      ),
+                                                    )
+                                                    .toList()
+                                                : ownPutdown
+                                                    .map<Widget>(
+                                                      (e) => ListTile(
+                                                        leading: CircleAvatar(
+                                                          backgroundImage:
+                                                              NetworkImage(
+                                                                  'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                        ),
+                                                        title: e['topic'] !=
+                                                                null
+                                                            ? Text(e['topic'])
+                                                            : Text(
+                                                                '${e['mood_emoji']} ${e['mood_detail']}'),
+                                                        subtitle: Text(
+                                                            '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                        trailing: e['status'] ==
+                                                                'Public'
+                                                            ? Icon(Icons.public)
+                                                            : e['status'] ==
+                                                                    'Follower'
+                                                                ? Icon(Icons
+                                                                    .people)
+                                                                : Icon(
+                                                                    Icons.lock),
+                                                        onTap: () async {
+                                                          Navigator.push(
+                                                                  context,
+                                                                  PageTransition(
+                                                                      child: DetailDiaryOnePutdown(
+                                                                          id: e[
+                                                                              '_id']),
+                                                                      type: PageTransitionType
+                                                                          .rightToLeft))
+                                                              .then((_) {
+                                                            setState(() {});
+                                                          });
+                                                        },
+                                                      ),
+                                                    )
+                                                    .toList(),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                20.0, 10.0, 20.0, 0),
+                                            child: Row(
+                                              children: [
+                                                Text('For following: '),
+                                                Spacer(),
+                                                TextButton(
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                              context,
+                                                              PageTransition(
+                                                                  child:
+                                                                      DiaryDetailPutdown(
+                                                                    diary: 1,
+                                                                    pin: pin_id,
+                                                                  ),
+                                                                  type: PageTransitionType
+                                                                      .rightToLeft))
+                                                          .then((_) {
+                                                        setState(() {});
+                                                      });
+                                                    },
+                                                    child: Text(
+                                                      'view more',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
+                                          Column(
+                                            children: putdownDiary[1].length <=
+                                                    2
+                                                ? putdownDiary[1]
+                                                    .map<Widget>(
+                                                      (e) => ListTile(
+                                                        leading: CircleAvatar(
+                                                          backgroundImage:
+                                                              NetworkImage(
+                                                                  'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                        ),
+                                                        title: e['topic'] !=
+                                                                null
+                                                            ? Text(e['topic'])
+                                                            : Text(
+                                                                '${e['mood_emoji']} ${e['mood_detail']}'),
+                                                        subtitle: Text(
+                                                            '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                        trailing: e['status'] ==
+                                                                'Public'
+                                                            ? Icon(Icons.public)
+                                                            : e['status'] ==
+                                                                    'Follower'
+                                                                ? Icon(Icons
+                                                                    .people)
+                                                                : Icon(
+                                                                    Icons.lock),
+                                                        onTap: () async {
+                                                          Navigator.push(
+                                                                  context,
+                                                                  PageTransition(
+                                                                      child: DetailDiaryOnePutdown(
+                                                                          id: e[
+                                                                              '_id']),
+                                                                      type: PageTransitionType
+                                                                          .rightToLeft))
+                                                              .then((_) {
+                                                            setState(() {});
+                                                          });
+                                                        },
+                                                      ),
+                                                    )
+                                                    .toList()
+                                                : ownPutdown
+                                                    .map<Widget>(
+                                                      (e) => ListTile(
+                                                        leading: CircleAvatar(
+                                                          backgroundImage:
+                                                              NetworkImage(
+                                                                  'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                        ),
+                                                        title: e['topic'] !=
+                                                                null
+                                                            ? Text(e['topic'])
+                                                            : Text(
+                                                                '${e['mood_emoji']} ${e['mood_detail']}'),
+                                                        subtitle: Text(
+                                                            '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                        trailing: e['status'] ==
+                                                                'Public'
+                                                            ? Icon(Icons.public)
+                                                            : e['status'] ==
+                                                                    'Follower'
+                                                                ? Icon(Icons
+                                                                    .people)
+                                                                : Icon(
+                                                                    Icons.lock),
+                                                        onTap: () async {
+                                                          Navigator.push(
+                                                                  context,
+                                                                  PageTransition(
+                                                                      child: DetailDiaryOnePutdown(
+                                                                          id: e[
+                                                                              '_id']),
+                                                                      type: PageTransitionType
+                                                                          .rightToLeft))
+                                                              .then((_) {
+                                                            setState(() {});
+                                                          });
+                                                        },
+                                                      ),
+                                                    )
+                                                    .toList(),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                20.0, 10.0, 20.0, 0),
+                                            child: Row(
+                                              children: [
+                                                Text('General: '),
+                                                Spacer(),
+                                                TextButton(
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                              context,
+                                                              PageTransition(
+                                                                  child:
+                                                                      DiaryDetailPutdown(
+                                                                    diary: 0,
+                                                                    pin: pin_id,
+                                                                  ),
+                                                                  type: PageTransitionType
+                                                                      .rightToLeft))
+                                                          .then((_) {
+                                                        setState(() {});
+                                                      });
+                                                    },
+                                                    child: Text(
+                                                      'view more',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
+                                          Column(
+                                            children: putdownDiary[0].length <=
+                                                    2
+                                                ? putdownDiary[0]
+                                                    .map<Widget>(
+                                                      (e) => ListTile(
+                                                        leading: CircleAvatar(
+                                                          backgroundImage:
+                                                              NetworkImage(
+                                                                  'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                        ),
+                                                        title: e['topic'] !=
+                                                                null
+                                                            ? Text(e['topic'])
+                                                            : Text(
+                                                                '${e['mood_emoji']} ${e['mood_detail']}'),
+                                                        subtitle: Text(
+                                                            '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                        trailing: e['status'] ==
+                                                                'Public'
+                                                            ? Icon(Icons.public)
+                                                            : e['status'] ==
+                                                                    'Follower'
+                                                                ? Icon(Icons
+                                                                    .people)
+                                                                : Icon(
+                                                                    Icons.lock),
+                                                        onTap: () async {
+                                                          Navigator.push(
+                                                                  context,
+                                                                  PageTransition(
+                                                                      child: DetailDiaryOnePutdown(
+                                                                          id: e[
+                                                                              '_id']),
+                                                                      type: PageTransitionType
+                                                                          .rightToLeft))
+                                                              .then((_) {
+                                                            setState(() {});
+                                                          });
+                                                        },
+                                                      ),
+                                                    )
+                                                    .toList()
+                                                : generalPutdown
+                                                    .map<Widget>(
+                                                      (e) => ListTile(
+                                                        leading: CircleAvatar(
+                                                          backgroundImage:
+                                                              NetworkImage(
+                                                                  'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                        ),
+                                                        title: e['topic'] !=
+                                                                null
+                                                            ? Text(e['topic'])
+                                                            : Text(
+                                                                '${e['mood_emoji']} ${e['mood_detail']}'),
+                                                        subtitle: Text(
+                                                            '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                        trailing: e['status'] ==
+                                                                'Public'
+                                                            ? Icon(Icons.public)
+                                                            : e['status'] ==
+                                                                    'Follower'
+                                                                ? Icon(Icons
+                                                                    .people)
+                                                                : Icon(
+                                                                    Icons.lock),
+                                                        onTap: () async {
+                                                          Navigator.push(
+                                                                  context,
+                                                                  PageTransition(
+                                                                      child: DetailDiaryOnePutdown(
+                                                                          id: e[
+                                                                              '_id']),
+                                                                      type: PageTransitionType
+                                                                          .rightToLeft))
+                                                              .then((_) {
+                                                            setState(() {});
+                                                          });
+                                                        },
+                                                      ),
+                                                    )
+                                                    .toList(),
+                                          ),
+                                        ],
+                                      )),
+                                );
+                              } else {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                    );
+                  });
+            });
+          });
+    }).toList();
+    print(allPinShow[0].runtimeType);
+    setState(() {});
+  }
+
+  forDiarypinFunc(pin) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
-    putdownDiary = await findDiaryInPin(token, pin, lag, lng);
+    putdownDiary = await findDiaryInPin(token, pin);
     user = await findMyself(token);
     if (putdownDiary[2].length <= 2) {
     } else {
@@ -74,6 +545,7 @@ class _MapPageState extends State<MapPage> {
     // TODO: implement initState
     super.initState();
     getCurrentLocation();
+    allPin();
     setState(() {
       focus = true;
     });
@@ -177,10 +649,14 @@ class _MapPageState extends State<MapPage> {
                 child: IconButton(
                     onPressed: () async {
                       Navigator.push(
-                          context,
-                          PageTransition(
-                              child: const OwnerPin(),
-                              type: PageTransitionType.rightToLeft));
+                              context,
+                              PageTransition(
+                                  child: OwnerPin(newlocation: newlocation),
+                                  type: PageTransitionType.rightToLeft))
+                          .then((_) {
+                        allPin();
+                        setState(() {});
+                      });
                       // print(initlaglng);
                       // await DirectionsRepository().getDirections(
                       //     origin: initlaglng,
@@ -199,320 +675,13 @@ class _MapPageState extends State<MapPage> {
                   children: [
                     GoogleMap(
                       markers: marker != null
-                          ? {
-                              Marker(
-                                  markerId: const MarkerId('_ku'),
-                                  icon: BitmapDescriptor.defaultMarkerWithHue(
-                                      BitmapDescriptor.hueCyan),
-                                  position: const LatLng(
-                                      13.697630703230097, 100.34083452967317),
-                                  infoWindow: const InfoWindow(
-                                      title: 'บ้านกูไอแม่เย็ด'),
-                                  onTap: () {
-                                    var lag = 13.697630703230097;
-                                    var lng = 100.34083452967317;
-                                    var pin = 'บ้านกูไอแม่เย็ด';
-                                    Future.delayed(const Duration(seconds: 0),
-                                        () async {
-                                      var dis = distance(
-                                          newlocation.latitude as double,
-                                          lag,
-                                          newlocation.longitude as double,
-                                          lng);
-                                      showModalBottomSheet(
-                                          context: context,
-                                          builder: (context) {
-                                            return makeDismissible(
-                                              child: DraggableScrollableSheet(
-                                                initialChildSize: 1,
-                                                builder: (_, controller) =>
-                                                    Scaffold(
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                  appBar: AppBar(
-                                                    backgroundColor:
-                                                        Colors.transparent,
-                                                    elevation: 0,
-                                                    foregroundColor:
-                                                        Colors.black,
-                                                    centerTitle: true,
-                                                    title: Text(pin),
-                                                  ),
-                                                  body: FutureBuilder(
-                                                    future: forDiarypinFunc(
-                                                        pin, lag, lng),
-                                                    builder:
-                                                        (BuildContext context,
-                                                            AsyncSnapshot
-                                                                snapshot) {
-                                                      if (snapshot
-                                                              .connectionState ==
-                                                          ConnectionState
-                                                              .done) {
-                                                        return SingleChildScrollView(
-                                                          child: Container(
-                                                              color: Colors
-                                                                  .transparent,
-                                                              child: Column(
-                                                                children: [
-                                                                  ListTile(
-                                                                    onTap: () {
-                                                                      if (dis >
-                                                                          0.050) {
-                                                                        AwesomeDialog(
-                                                                                context: context,
-                                                                                dialogType: DialogType.WARNING,
-                                                                                desc: 'Distance is to long.\nYou must to go closely on pin.\n Go closely on pin less than 50 meters.',
-                                                                                btnOk: ElevatedButton(
-                                                                                    onPressed: () {
-                                                                                      Navigator.pop(context);
-                                                                                    },
-                                                                                    child: const Text('ok')))
-                                                                            .show();
-                                                                      } else {
-                                                                        Navigator.push(
-                                                                            context,
-                                                                            PageTransition(
-                                                                                child: WritePutdownDiary(
-                                                                                  lag: lag,
-                                                                                  lng: lng,
-                                                                                  pin: pin,
-                                                                                ),
-                                                                                type: PageTransitionType.rightToLeft));
-                                                                      }
-                                                                    },
-                                                                    leading:
-                                                                        Padding(
-                                                                      padding:
-                                                                          EdgeInsets.all(
-                                                                              8.0),
-                                                                      child:
-                                                                          CircleAvatar(
-                                                                        radius:
-                                                                            30,
-                                                                        backgroundImage:
-                                                                            NetworkImage('https://storage.googleapis.com/noseason/${user['profile_image']}'),
-                                                                      ),
-                                                                    ),
-                                                                    title:
-                                                                        const Text(
-                                                                      'Put down your diary.',
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              18),
-                                                                    ),
-                                                                    subtitle: Text(
-                                                                        'distance: ${dis.toStringAsFixed(3)} km.'),
-                                                                    trailing:
-                                                                        const Icon(
-                                                                            Icons.navigate_next_rounded),
-                                                                  ),
-                                                                  const Divider(
-                                                                    thickness:
-                                                                        0.8,
-                                                                  ),
-                                                                  Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .fromLTRB(
-                                                                        20.0,
-                                                                        10.0,
-                                                                        20.0,
-                                                                        0),
-                                                                    child: Row(
-                                                                      children: [
-                                                                        const Text(
-                                                                            'My diary: '),
-                                                                        const Spacer(),
-                                                                        TextButton(
-                                                                            onPressed:
-                                                                                () {},
-                                                                            child:
-                                                                                Text(
-                                                                              'view more',
-                                                                              style: TextStyle(fontWeight: FontWeight.bold),
-                                                                            )),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                  Column(
-                                                                    children: putdownDiary[2].length <=
-                                                                            2
-                                                                        ? putdownDiary[2]
-                                                                            .map<Widget>(
-                                                                              (e) => ListTile(
-                                                                                leading: CircleAvatar(
-                                                                                  backgroundImage: NetworkImage('https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                                                                                ),
-                                                                                title: e['topic'] != null ? Text(e['topic']) : Text('${e['mood_emoji']} ${e['mood_detail']}'),
-                                                                                subtitle: Text('@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
-                                                                                trailing: e['status'] == 'Public'
-                                                                                    ? Icon(Icons.public)
-                                                                                    : e['status'] == 'Follower'
-                                                                                        ? Icon(Icons.people)
-                                                                                        : Icon(Icons.lock),
-                                                                                onTap: () async {},
-                                                                              ),
-                                                                            )
-                                                                            .toList()
-                                                                        : ownPutdown
-                                                                            .map<Widget>(
-                                                                              (e) => ListTile(
-                                                                                leading: CircleAvatar(
-                                                                                  backgroundImage: NetworkImage('https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                                                                                ),
-                                                                                title: e['topic'] != null ? Text(e['topic']) : Text('${e['mood_emoji']} ${e['mood_detail']}'),
-                                                                                subtitle: Text('@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
-                                                                                trailing: e['status'] == 'Public'
-                                                                                    ? Icon(Icons.public)
-                                                                                    : e['status'] == 'Follower'
-                                                                                        ? Icon(Icons.people)
-                                                                                        : Icon(Icons.lock),
-                                                                                onTap: () async {},
-                                                                              ),
-                                                                            )
-                                                                            .toList(),
-                                                                  ),
-                                                                  Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .fromLTRB(
-                                                                        20.0,
-                                                                        10.0,
-                                                                        20.0,
-                                                                        0),
-                                                                    child: Row(
-                                                                      children: [
-                                                                        Text(
-                                                                            'For following: '),
-                                                                        Spacer(),
-                                                                        TextButton(
-                                                                            onPressed:
-                                                                                () {},
-                                                                            child:
-                                                                                Text(
-                                                                              'view more',
-                                                                              style: TextStyle(fontWeight: FontWeight.bold),
-                                                                            )),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                  Column(
-                                                                    children: putdownDiary[1].length <=
-                                                                            2
-                                                                        ? putdownDiary[1]
-                                                                            .map<Widget>(
-                                                                              (e) => ListTile(
-                                                                                leading: CircleAvatar(
-                                                                                  backgroundImage: NetworkImage('https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                                                                                ),
-                                                                                title: e['topic'] != null ? Text(e['topic']) : Text('${e['mood_emoji']} ${e['mood_detail']}'),
-                                                                                subtitle: Text('@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
-                                                                                trailing: e['status'] == 'Public'
-                                                                                    ? Icon(Icons.public)
-                                                                                    : e['status'] == 'Follower'
-                                                                                        ? Icon(Icons.people)
-                                                                                        : Icon(Icons.lock),
-                                                                                onTap: () async {},
-                                                                              ),
-                                                                            )
-                                                                            .toList()
-                                                                        : ownPutdown
-                                                                            .map<Widget>(
-                                                                              (e) => ListTile(
-                                                                                leading: CircleAvatar(
-                                                                                  backgroundImage: NetworkImage('https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                                                                                ),
-                                                                                title: e['topic'] != null ? Text(e['topic']) : Text('${e['mood_emoji']} ${e['mood_detail']}'),
-                                                                                subtitle: Text('@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
-                                                                                trailing: e['status'] == 'Public'
-                                                                                    ? Icon(Icons.public)
-                                                                                    : e['status'] == 'Follower'
-                                                                                        ? Icon(Icons.people)
-                                                                                        : Icon(Icons.lock),
-                                                                                onTap: () async {},
-                                                                              ),
-                                                                            )
-                                                                            .toList(),
-                                                                  ),
-                                                                  Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .fromLTRB(
-                                                                        20.0,
-                                                                        10.0,
-                                                                        20.0,
-                                                                        0),
-                                                                    child: Row(
-                                                                      children: [
-                                                                        Text(
-                                                                            'General: '),
-                                                                        Spacer(),
-                                                                        TextButton(
-                                                                            onPressed:
-                                                                                () {},
-                                                                            child:
-                                                                                Text(
-                                                                              'view more',
-                                                                              style: TextStyle(fontWeight: FontWeight.bold),
-                                                                            )),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                  Column(
-                                                                    children: putdownDiary[0].length <=
-                                                                            2
-                                                                        ? putdownDiary[0]
-                                                                            .map<Widget>(
-                                                                              (e) => ListTile(
-                                                                                leading: CircleAvatar(
-                                                                                  backgroundImage: NetworkImage('https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                                                                                ),
-                                                                                title: e['topic'] != null ? Text(e['topic']) : Text('${e['mood_emoji']} ${e['mood_detail']}'),
-                                                                                subtitle: Text('@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
-                                                                                trailing: e['status'] == 'Public'
-                                                                                    ? Icon(Icons.public)
-                                                                                    : e['status'] == 'Follower'
-                                                                                        ? Icon(Icons.people)
-                                                                                        : Icon(Icons.lock),
-                                                                                onTap: () async {},
-                                                                              ),
-                                                                            )
-                                                                            .toList()
-                                                                        : generalPutdown
-                                                                            .map<Widget>(
-                                                                              (e) => ListTile(
-                                                                                leading: CircleAvatar(
-                                                                                  backgroundImage: NetworkImage('https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                                                                                ),
-                                                                                title: e['topic'] != null ? Text(e['topic']) : Text('${e['mood_emoji']} ${e['mood_detail']}'),
-                                                                                subtitle: Text('@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
-                                                                                trailing: e['status'] == 'Public'
-                                                                                    ? Icon(Icons.public)
-                                                                                    : e['status'] == 'Follower'
-                                                                                        ? Icon(Icons.people)
-                                                                                        : Icon(Icons.lock),
-                                                                                onTap: () async {},
-                                                                              ),
-                                                                            )
-                                                                            .toList(),
-                                                                  ),
-                                                                ],
-                                                              )),
-                                                        );
-                                                      } else {
-                                                        return const Center(
-                                                          child:
-                                                              CircularProgressIndicator(),
-                                                        );
-                                                      }
-                                                    },
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          });
-                                    });
-                                  }),
-                              marker!
-                            }
+                          ? allpin != null
+                              ? {
+                                  for (int i = 0; i < allPinShow.length; i++)
+                                    allPinShow[i],
+                                  marker!
+                                }
+                              : {marker!}
                           : {
                               Marker(
                                   markerId: const MarkerId('_ku'),
@@ -676,7 +845,7 @@ class _MapPageState extends State<MapPage> {
       );
 }
 
-findDiaryInPin(token, pin, lag, lng) async {
+findDiaryInPin(token, pin) async {
   var url = 'http://10.0.2.2:3000/putdown/findDiaryInPin';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
@@ -686,8 +855,6 @@ findDiaryInPin(token, pin, lag, lng) async {
         <String, dynamic>{
           'token': token,
           'pin': pin,
-          'lag': lag,
-          'lng': lng,
         },
       ));
   var result = jsonDecode(response.body);
@@ -721,4 +888,13 @@ distance(lagcurrent, lagpin, lngcurrent, lngpin) {
   var zz = 2 * atan2(sqrt(z), sqrt(1 - z));
   var zzz = r * zz;
   return zzz / 1000;
+}
+
+findAllPin() async {
+  var url = 'http://10.0.2.2:3000/putdown/findAllMarker';
+  final http.Response response = await http.get(
+    Uri.parse(url),
+  );
+  var result = jsonDecode(response.body);
+  return result;
 }
