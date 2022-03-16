@@ -112,6 +112,7 @@ class _DetailDiaryOnePutdownState extends State<DetailDiaryOnePutdown> {
                                           Future.delayed(
                                               const Duration(seconds: 0),
                                               () => CoolAlert.show(
+                                                  barrierDismissible: false,
                                                   context: context,
                                                   type: CoolAlertType.confirm,
                                                   title: 'Are you sure?',
@@ -120,6 +121,8 @@ class _DetailDiaryOnePutdownState extends State<DetailDiaryOnePutdown> {
                                                   confirmBtnColor: Colors.red,
                                                   onConfirmBtnTap: () async {
                                                     CoolAlert.show(
+                                                        barrierDismissible:
+                                                            false,
                                                         context: context,
                                                         type: CoolAlertType
                                                             .loading);
