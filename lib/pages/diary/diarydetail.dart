@@ -136,6 +136,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
                                     Future.delayed(
                                         const Duration(seconds: 0),
                                         () => CoolAlert.show(
+                                            barrierDismissible: false,
                                             context: context,
                                             type: CoolAlertType.confirm,
                                             title: 'Are you sure?',
@@ -144,6 +145,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
                                             confirmBtnColor: Colors.red,
                                             onConfirmBtnTap: () async {
                                               CoolAlert.show(
+                                                  barrierDismissible: false,
                                                   context: context,
                                                   type: CoolAlertType.loading);
                                               var re =
@@ -177,8 +179,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
           ],
         ),
         body: SingleChildScrollView(
-          child: 
-          Column(
+          child: Column(
             children: [
               diary != null && diary['imageLocation'] != null
                   ? Container(
@@ -190,7 +191,8 @@ class _DiaryDetailState extends State<DiaryDetail> {
                         pagination: const SwiperPagination(
                             margin: EdgeInsets.all(15),
                             builder: DotSwiperPaginationBuilder(
-                                activeColor: Colors.black, color: Colors.white)),
+                                activeColor: Colors.black,
+                                color: Colors.white)),
                         layout: SwiperLayout.DEFAULT,
                         itemBuilder: (context, index) {
                           return Container(

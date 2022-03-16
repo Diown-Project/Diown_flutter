@@ -55,6 +55,7 @@ class _OwnerPinState extends State<OwnerPin> {
                               TextButton(
                                   onPressed: () async {
                                     CoolAlert.show(
+                                        barrierDismissible: false,
                                         context: context,
                                         type: CoolAlertType.loading);
                                     SharedPreferences prefs =
@@ -74,6 +75,7 @@ class _OwnerPinState extends State<OwnerPin> {
                                         widget.newlocation.longitude as double);
                                     if (e['message'] == 'success') {
                                       CoolAlert.show(
+                                          barrierDismissible: false,
                                           context: context,
                                           type: CoolAlertType.success,
                                           title: 'Add pin was success.',
@@ -84,6 +86,7 @@ class _OwnerPinState extends State<OwnerPin> {
                                           });
                                     } else if (e['message'] == 'already have') {
                                       CoolAlert.show(
+                                          barrierDismissible: false,
                                           context: context,
                                           type: CoolAlertType.warning,
                                           title:
@@ -95,6 +98,7 @@ class _OwnerPinState extends State<OwnerPin> {
                                           });
                                     } else {
                                       CoolAlert.show(
+                                          barrierDismissible: false,
                                           context: context,
                                           type: CoolAlertType.error,
                                           title: 'Something wrong.',
@@ -126,7 +130,44 @@ class _OwnerPinState extends State<OwnerPin> {
                             title: Text(e['marker_id']),
                             subtitle: Text('${e['number_putdown']} Diary'),
                             trailing: IconButton(
-                                onPressed: () {},
+                                onPressed: () async {
+                                  CoolAlert.show(
+                                      barrierDismissible: false,
+                                      context: context,
+                                      type: CoolAlertType.confirm,
+                                      onConfirmBtnTap: () async {
+                                        CoolAlert.show(
+                                            barrierDismissible: false,
+                                            context: context,
+                                            type: CoolAlertType.loading);
+                                        var c = await deletePin(e['_id']);
+                                        if (c['message'] == 'success') {
+                                          CoolAlert.show(
+                                              barrierDismissible: false,
+                                              context: context,
+                                              type: CoolAlertType.success,
+                                              onConfirmBtnTap: () async {
+                                                await findOwn();
+                                                Navigator.pop(context);
+                                                Navigator.pop(context);
+                                                Navigator.pop(context);
+                                                setState(() {});
+                                              });
+                                        } else {
+                                          CoolAlert.show(
+                                              barrierDismissible: false,
+                                              context: context,
+                                              type: CoolAlertType.error,
+                                              onConfirmBtnTap: () async {
+                                                await findOwn();
+                                                Navigator.pop(context);
+                                                Navigator.pop(context);
+                                                Navigator.pop(context);
+                                                setState(() {});
+                                              });
+                                        }
+                                      });
+                                },
                                 icon: const Icon(Icons.delete_rounded)),
                           ))
                       .toList(),
@@ -136,6 +177,21 @@ class _OwnerPinState extends State<OwnerPin> {
                 child: CircularProgressIndicator(),
               ));
   }
+}
+
+deletePin(id) async {
+  var url = 'http://10.0.2.2:3000/putdown/deletePin';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'id': id,
+        },
+      ));
+  var result = jsonDecode(response.body);
+  return result;
 }
 
 findAllOwnMarker(token) async {
