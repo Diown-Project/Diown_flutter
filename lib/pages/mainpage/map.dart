@@ -6,8 +6,8 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:diown/pages/allmap/ownerpin.dart';
 import 'package:diown/pages/mainpage/direction/direction_repository.dart';
 import 'package:diown/pages/mainpage/searchmap/location_service.dart';
-import 'package:diown/pages/putdowndiary/detailforonediary.dart';
 import 'package:diown/pages/putdowndiary/diarydetailputdown.dart';
+import 'package:diown/pages/putdowndiary/listdiaryputdown.dart';
 import 'package:diown/pages/putdowndiary/writeputdown.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -157,7 +157,7 @@ class _MapPageState extends State<MapPage> {
                                                               context,
                                                               PageTransition(
                                                                   child:
-                                                                      DiaryDetailPutdown(
+                                                                      ListDiaryPutdown(
                                                                     diary: 2,
                                                                     pin: pin_id,
                                                                   ),
@@ -208,7 +208,7 @@ class _MapPageState extends State<MapPage> {
                                                           Navigator.push(
                                                                   context,
                                                                   PageTransition(
-                                                                      child: DetailDiaryOnePutdown(
+                                                                      child: DiaryDetailPutdown(
                                                                           id: e[
                                                                               '_id']),
                                                                       type: PageTransitionType
@@ -248,7 +248,7 @@ class _MapPageState extends State<MapPage> {
                                                           Navigator.push(
                                                                   context,
                                                                   PageTransition(
-                                                                      child: DetailDiaryOnePutdown(
+                                                                      child: DiaryDetailPutdown(
                                                                           id: e[
                                                                               '_id']),
                                                                       type: PageTransitionType
@@ -274,7 +274,7 @@ class _MapPageState extends State<MapPage> {
                                                               context,
                                                               PageTransition(
                                                                   child:
-                                                                      DiaryDetailPutdown(
+                                                                      ListDiaryPutdown(
                                                                     diary: 1,
                                                                     pin: pin_id,
                                                                   ),
@@ -324,7 +324,7 @@ class _MapPageState extends State<MapPage> {
                                                           Navigator.push(
                                                                   context,
                                                                   PageTransition(
-                                                                      child: DetailDiaryOnePutdown(
+                                                                      child: DiaryDetailPutdown(
                                                                           id: e[
                                                                               '_id']),
                                                                       type: PageTransitionType
@@ -364,7 +364,7 @@ class _MapPageState extends State<MapPage> {
                                                           Navigator.push(
                                                                   context,
                                                                   PageTransition(
-                                                                      child: DetailDiaryOnePutdown(
+                                                                      child: DiaryDetailPutdown(
                                                                           id: e[
                                                                               '_id']),
                                                                       type: PageTransitionType
@@ -390,7 +390,7 @@ class _MapPageState extends State<MapPage> {
                                                               context,
                                                               PageTransition(
                                                                   child:
-                                                                      DiaryDetailPutdown(
+                                                                      ListDiaryPutdown(
                                                                     diary: 0,
                                                                     pin: pin_id,
                                                                   ),
@@ -440,7 +440,7 @@ class _MapPageState extends State<MapPage> {
                                                           Navigator.push(
                                                                   context,
                                                                   PageTransition(
-                                                                      child: DetailDiaryOnePutdown(
+                                                                      child: DiaryDetailPutdown(
                                                                           id: e[
                                                                               '_id']),
                                                                       type: PageTransitionType
@@ -480,7 +480,7 @@ class _MapPageState extends State<MapPage> {
                                                           Navigator.push(
                                                                   context,
                                                                   PageTransition(
-                                                                      child: DetailDiaryOnePutdown(
+                                                                      child: DiaryDetailPutdown(
                                                                           id: e[
                                                                               '_id']),
                                                                       type: PageTransitionType
