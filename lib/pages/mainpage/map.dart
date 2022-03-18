@@ -9,6 +9,7 @@ import 'package:diown/pages/mainpage/searchmap/location_service.dart';
 import 'package:diown/pages/putdowndiary/diarydetailputdown.dart';
 import 'package:diown/pages/putdowndiary/listdiaryputdown.dart';
 import 'package:diown/pages/putdowndiary/writeputdown.dart';
+import 'package:diown/pages/screens/visitorprofile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -294,88 +295,155 @@ class _MapPageState extends State<MapPage> {
                                             ),
                                           ),
                                           Column(
-                                            children: putdownDiary[1].length <=
-                                                    2
-                                                ? putdownDiary[1]
-                                                    .map<Widget>(
-                                                      (e) => ListTile(
-                                                        leading: CircleAvatar(
-                                                          backgroundImage:
-                                                              NetworkImage(
-                                                                  'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                                                        ),
-                                                        title: e['topic'] !=
-                                                                null
-                                                            ? Text(e['topic'])
-                                                            : Text(
-                                                                '${e['mood_emoji']} ${e['mood_detail']}'),
-                                                        subtitle: Text(
-                                                            '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
-                                                        trailing: e['status'] ==
-                                                                'Public'
-                                                            ? Icon(Icons.public)
-                                                            : e['status'] ==
-                                                                    'Follower'
+                                            children:
+                                                putdownDiary[1].length <= 2
+                                                    ? putdownDiary[1]
+                                                        .map<Widget>(
+                                                          (e) => ListTile(
+                                                            leading:
+                                                                CircleAvatar(
+                                                              backgroundImage:
+                                                                  NetworkImage(
+                                                                      'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                            ),
+                                                            title: e['topic'] !=
+                                                                    null
+                                                                ? Text(
+                                                                    e['topic'])
+                                                                : Text(
+                                                                    '${e['mood_emoji']} ${e['mood_detail']}'),
+                                                            subtitle: Text(
+                                                                '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                            trailing: e['status'] ==
+                                                                    'Public'
                                                                 ? Icon(Icons
-                                                                    .people)
-                                                                : Icon(
-                                                                    Icons.lock),
-                                                        onTap: () async {
-                                                          Navigator.push(
-                                                                  context,
-                                                                  PageTransition(
-                                                                      child: DiaryDetailPutdown(
-                                                                          id: e[
-                                                                              '_id']),
-                                                                      type: PageTransitionType
-                                                                          .rightToLeft))
-                                                              .then((_) {
-                                                            setState(() {});
-                                                          });
-                                                        },
-                                                      ),
-                                                    )
-                                                    .toList()
-                                                : ownPutdown
-                                                    .map<Widget>(
-                                                      (e) => ListTile(
-                                                        leading: CircleAvatar(
-                                                          backgroundImage:
-                                                              NetworkImage(
-                                                                  'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                                                        ),
-                                                        title: e['topic'] !=
-                                                                null
-                                                            ? Text(e['topic'])
-                                                            : Text(
-                                                                '${e['mood_emoji']} ${e['mood_detail']}'),
-                                                        subtitle: Text(
-                                                            '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
-                                                        trailing: e['status'] ==
-                                                                'Public'
-                                                            ? Icon(Icons.public)
-                                                            : e['status'] ==
-                                                                    'Follower'
+                                                                    .public)
+                                                                : e['status'] ==
+                                                                        'Follower'
+                                                                    ? Icon(Icons
+                                                                        .people)
+                                                                    : Icon(Icons
+                                                                        .lock),
+                                                            onTap: () async {
+                                                              if (e['status'] ==
+                                                                  'Follower') {
+                                                                var check = await findFollow(
+                                                                    e['user_detail']
+                                                                            [0][
+                                                                        '_id']);
+                                                                if (check[
+                                                                        'message'] ==
+                                                                    'true') {
+                                                                  Navigator.push(
+                                                                          context,
+                                                                          PageTransition(
+                                                                              child: DiaryDetailPutdown(id: e['_id']),
+                                                                              type: PageTransitionType.rightToLeft))
+                                                                      .then((_) {
+                                                                    setState(
+                                                                        () {});
+                                                                  });
+                                                                } else if (check[
+                                                                        'message'] ==
+                                                                    'false') {
+                                                                  Navigator.push(
+                                                                      context,
+                                                                      PageTransition(
+                                                                          child: VisitorProfile(
+                                                                            user_id:
+                                                                                e['user_id'],
+                                                                          ),
+                                                                          type: PageTransitionType.rightToLeft));
+                                                                } else {}
+                                                              } else {
+                                                                Navigator.push(
+                                                                        context,
+                                                                        PageTransition(
+                                                                            child:
+                                                                                DiaryDetailPutdown(id: e['_id']),
+                                                                            type: PageTransitionType.rightToLeft))
+                                                                    .then((_) {
+                                                                  setState(
+                                                                      () {});
+                                                                });
+                                                              }
+                                                            },
+                                                          ),
+                                                        )
+                                                        .toList()
+                                                    : ownPutdown
+                                                        .map<Widget>(
+                                                          (e) => ListTile(
+                                                            leading:
+                                                                CircleAvatar(
+                                                              backgroundImage:
+                                                                  NetworkImage(
+                                                                      'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                            ),
+                                                            title: e['topic'] !=
+                                                                    null
+                                                                ? Text(
+                                                                    e['topic'])
+                                                                : Text(
+                                                                    '${e['mood_emoji']} ${e['mood_detail']}'),
+                                                            subtitle: Text(
+                                                                '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                            trailing: e['status'] ==
+                                                                    'Public'
                                                                 ? Icon(Icons
-                                                                    .people)
-                                                                : Icon(
-                                                                    Icons.lock),
-                                                        onTap: () async {
-                                                          Navigator.push(
-                                                                  context,
-                                                                  PageTransition(
-                                                                      child: DiaryDetailPutdown(
-                                                                          id: e[
-                                                                              '_id']),
-                                                                      type: PageTransitionType
-                                                                          .rightToLeft))
-                                                              .then((_) {
-                                                            setState(() {});
-                                                          });
-                                                        },
-                                                      ),
-                                                    )
-                                                    .toList(),
+                                                                    .public)
+                                                                : e['status'] ==
+                                                                        'Follower'
+                                                                    ? Icon(Icons
+                                                                        .people)
+                                                                    : Icon(Icons
+                                                                        .lock),
+                                                            onTap: () async {
+                                                              if (e['status'] ==
+                                                                  'Follower') {
+                                                                print('heeloo');
+                                                                var check = await findFollow(
+                                                                    e['user_detail']
+                                                                            [0][
+                                                                        '_id']);
+                                                                if (check[
+                                                                        'message'] ==
+                                                                    'true') {
+                                                                  Navigator.push(
+                                                                          context,
+                                                                          PageTransition(
+                                                                              child: DiaryDetailPutdown(id: e['_id']),
+                                                                              type: PageTransitionType.rightToLeft))
+                                                                      .then((_) {
+                                                                    setState(
+                                                                        () {});
+                                                                  });
+                                                                } else if (check[
+                                                                        'message'] ==
+                                                                    'false') {
+                                                                  Navigator.push(
+                                                                      context,
+                                                                      PageTransition(
+                                                                          child:
+                                                                              VisitorProfile(user_id: e['user_id']),
+                                                                          type: PageTransitionType.rightToLeft));
+                                                                } else {}
+                                                              } else {
+                                                                Navigator.push(
+                                                                        context,
+                                                                        PageTransition(
+                                                                            child:
+                                                                                DiaryDetailPutdown(id: e['_id']),
+                                                                            type: PageTransitionType.rightToLeft))
+                                                                    .then((_) {
+                                                                  setState(
+                                                                      () {});
+                                                                });
+                                                              }
+                                                            },
+                                                          ),
+                                                        )
+                                                        .toList(),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.fromLTRB(
@@ -410,88 +478,154 @@ class _MapPageState extends State<MapPage> {
                                             ),
                                           ),
                                           Column(
-                                            children: putdownDiary[0].length <=
-                                                    2
-                                                ? putdownDiary[0]
-                                                    .map<Widget>(
-                                                      (e) => ListTile(
-                                                        leading: CircleAvatar(
-                                                          backgroundImage:
-                                                              NetworkImage(
-                                                                  'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                                                        ),
-                                                        title: e['topic'] !=
-                                                                null
-                                                            ? Text(e['topic'])
-                                                            : Text(
-                                                                '${e['mood_emoji']} ${e['mood_detail']}'),
-                                                        subtitle: Text(
-                                                            '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
-                                                        trailing: e['status'] ==
-                                                                'Public'
-                                                            ? Icon(Icons.public)
-                                                            : e['status'] ==
-                                                                    'Follower'
+                                            children:
+                                                putdownDiary[0].length <= 2
+                                                    ? putdownDiary[0]
+                                                        .map<Widget>(
+                                                          (e) => ListTile(
+                                                            leading:
+                                                                CircleAvatar(
+                                                              backgroundImage:
+                                                                  NetworkImage(
+                                                                      'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                            ),
+                                                            title: e['topic'] !=
+                                                                    null
+                                                                ? Text(
+                                                                    e['topic'])
+                                                                : Text(
+                                                                    '${e['mood_emoji']} ${e['mood_detail']}'),
+                                                            subtitle: Text(
+                                                                '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                            trailing: e['status'] ==
+                                                                    'Public'
                                                                 ? Icon(Icons
-                                                                    .people)
-                                                                : Icon(
-                                                                    Icons.lock),
-                                                        onTap: () async {
-                                                          Navigator.push(
-                                                                  context,
-                                                                  PageTransition(
-                                                                      child: DiaryDetailPutdown(
-                                                                          id: e[
-                                                                              '_id']),
-                                                                      type: PageTransitionType
-                                                                          .rightToLeft))
-                                                              .then((_) {
-                                                            setState(() {});
-                                                          });
-                                                        },
-                                                      ),
-                                                    )
-                                                    .toList()
-                                                : generalPutdown
-                                                    .map<Widget>(
-                                                      (e) => ListTile(
-                                                        leading: CircleAvatar(
-                                                          backgroundImage:
-                                                              NetworkImage(
-                                                                  'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                                                        ),
-                                                        title: e['topic'] !=
-                                                                null
-                                                            ? Text(e['topic'])
-                                                            : Text(
-                                                                '${e['mood_emoji']} ${e['mood_detail']}'),
-                                                        subtitle: Text(
-                                                            '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
-                                                        trailing: e['status'] ==
-                                                                'Public'
-                                                            ? Icon(Icons.public)
-                                                            : e['status'] ==
-                                                                    'Follower'
+                                                                    .public)
+                                                                : e['status'] ==
+                                                                        'Follower'
+                                                                    ? Icon(Icons
+                                                                        .people)
+                                                                    : Icon(Icons
+                                                                        .lock),
+                                                            onTap: () async {
+                                                              if (e['status'] ==
+                                                                  'Follower') {
+                                                                print('heeloo');
+                                                                var check = await findFollow(
+                                                                    e['user_detail']
+                                                                            [0][
+                                                                        '_id']);
+                                                                if (check[
+                                                                        'message'] ==
+                                                                    'true') {
+                                                                  Navigator.push(
+                                                                          context,
+                                                                          PageTransition(
+                                                                              child: DiaryDetailPutdown(id: e['_id']),
+                                                                              type: PageTransitionType.rightToLeft))
+                                                                      .then((_) {
+                                                                    setState(
+                                                                        () {});
+                                                                  });
+                                                                } else if (check[
+                                                                        'message'] ==
+                                                                    'false') {
+                                                                  Navigator.push(
+                                                                      context,
+                                                                      PageTransition(
+                                                                          child:
+                                                                              VisitorProfile(user_id: e['user_id']),
+                                                                          type: PageTransitionType.rightToLeft));
+                                                                } else {}
+                                                              } else {
+                                                                Navigator.push(
+                                                                        context,
+                                                                        PageTransition(
+                                                                            child:
+                                                                                DiaryDetailPutdown(id: e['_id']),
+                                                                            type: PageTransitionType.rightToLeft))
+                                                                    .then((_) {
+                                                                  setState(
+                                                                      () {});
+                                                                });
+                                                              }
+                                                            },
+                                                          ),
+                                                        )
+                                                        .toList()
+                                                    : generalPutdown
+                                                        .map<Widget>(
+                                                          (e) => ListTile(
+                                                            leading:
+                                                                CircleAvatar(
+                                                              backgroundImage:
+                                                                  NetworkImage(
+                                                                      'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                            ),
+                                                            title: e['topic'] !=
+                                                                    null
+                                                                ? Text(
+                                                                    e['topic'])
+                                                                : Text(
+                                                                    '${e['mood_emoji']} ${e['mood_detail']}'),
+                                                            subtitle: Text(
+                                                                '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                            trailing: e['status'] ==
+                                                                    'Public'
                                                                 ? Icon(Icons
-                                                                    .people)
-                                                                : Icon(
-                                                                    Icons.lock),
-                                                        onTap: () async {
-                                                          Navigator.push(
-                                                                  context,
-                                                                  PageTransition(
-                                                                      child: DiaryDetailPutdown(
-                                                                          id: e[
-                                                                              '_id']),
-                                                                      type: PageTransitionType
-                                                                          .rightToLeft))
-                                                              .then((_) {
-                                                            setState(() {});
-                                                          });
-                                                        },
-                                                      ),
-                                                    )
-                                                    .toList(),
+                                                                    .public)
+                                                                : e['status'] ==
+                                                                        'Follower'
+                                                                    ? Icon(Icons
+                                                                        .people)
+                                                                    : Icon(Icons
+                                                                        .lock),
+                                                            onTap: () async {
+                                                              if (e['status'] ==
+                                                                  'Follower') {
+                                                                print('heeloo');
+                                                                var check = await findFollow(
+                                                                    e['user_detail']
+                                                                            [0][
+                                                                        '_id']);
+                                                                if (check[
+                                                                        'message'] ==
+                                                                    'true') {
+                                                                  Navigator.push(
+                                                                          context,
+                                                                          PageTransition(
+                                                                              child: DiaryDetailPutdown(id: e['_id']),
+                                                                              type: PageTransitionType.rightToLeft))
+                                                                      .then((_) {
+                                                                    setState(
+                                                                        () {});
+                                                                  });
+                                                                } else if (check[
+                                                                        'message'] ==
+                                                                    'false') {
+                                                                  Navigator.push(
+                                                                      context,
+                                                                      PageTransition(
+                                                                          child:
+                                                                              VisitorProfile(user_id: e['user_id']),
+                                                                          type: PageTransitionType.rightToLeft));
+                                                                } else {}
+                                                              } else {
+                                                                Navigator.push(
+                                                                        context,
+                                                                        PageTransition(
+                                                                            child:
+                                                                                DiaryDetailPutdown(id: e['_id']),
+                                                                            type: PageTransitionType.rightToLeft))
+                                                                    .then((_) {
+                                                                  setState(
+                                                                      () {});
+                                                                });
+                                                              }
+                                                            },
+                                                          ),
+                                                        )
+                                                        .toList(),
                                           ),
                                         ],
                                       )),
@@ -895,6 +1029,22 @@ findAllPin() async {
   final http.Response response = await http.get(
     Uri.parse(url),
   );
+  var result = jsonDecode(response.body);
+  return result;
+}
+
+findFollow(target_id) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var token = prefs.getString('token');
+  var url = 'http://10.0.2.2:3000/follow/checkFollow';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{'token': token, 'target_id': target_id},
+      ));
+
   var result = jsonDecode(response.body);
   return result;
 }

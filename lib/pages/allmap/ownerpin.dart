@@ -61,47 +61,60 @@ class _OwnerPinState extends State<OwnerPin> {
                                     SharedPreferences prefs =
                                         await SharedPreferences.getInstance();
                                     var token = prefs.getString('token');
-                                    var checkDate =
-                                        prefs.getString('dateAddPin');
-                                    // prefs.setString('dateAddPin', );
-                                    // if (checkDate != null) {
-                                    //   if (DateTime.parse(checkDate) >=
-                                    //       DateTime.now()) {}
-                                    // }
-                                    var e = await addUserMarker(
-                                        token,
-                                        textInput,
-                                        widget.newlocation.latitude as double,
-                                        widget.newlocation.longitude as double);
-                                    if (e['message'] == 'success') {
-                                      CoolAlert.show(
-                                          barrierDismissible: false,
-                                          context: context,
-                                          type: CoolAlertType.success,
-                                          title: 'Add pin was success.',
-                                          onConfirmBtnTap: () {
-                                            Navigator.pop(context);
-                                            Navigator.pop(context);
-                                            Navigator.pop(context);
-                                          });
-                                    } else if (e['message'] == 'already have') {
-                                      CoolAlert.show(
-                                          barrierDismissible: false,
-                                          context: context,
-                                          type: CoolAlertType.warning,
-                                          title:
-                                              'Your pin location already have.',
-                                          onConfirmBtnTap: () {
-                                            Navigator.pop(context);
-                                            Navigator.pop(context);
-                                            Navigator.pop(context);
-                                          });
+                                    var checkDelay = await checkDelayPin(token);
+                                    if (checkDelay['message'] ==
+                                            'add success' ||
+                                        checkDelay['message'] == 'success') {
+                                      var e = await addUserMarker(
+                                          token,
+                                          textInput,
+                                          widget.newlocation.latitude as double,
+                                          widget.newlocation.longitude
+                                              as double);
+                                      if (e['message'] == 'success') {
+                                        CoolAlert.show(
+                                            barrierDismissible: false,
+                                            context: context,
+                                            type: CoolAlertType.success,
+                                            title: 'Add pin was success.',
+                                            onConfirmBtnTap: () {
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                            });
+                                      } else if (e['message'] ==
+                                          'already have') {
+                                        CoolAlert.show(
+                                            barrierDismissible: false,
+                                            context: context,
+                                            type: CoolAlertType.warning,
+                                            title:
+                                                'Your pin location already have.',
+                                            onConfirmBtnTap: () {
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                            });
+                                      } else {
+                                        CoolAlert.show(
+                                            barrierDismissible: false,
+                                            context: context,
+                                            type: CoolAlertType.error,
+                                            title: 'Something wrong.',
+                                            onConfirmBtnTap: () {
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                            });
+                                      }
                                     } else {
                                       CoolAlert.show(
-                                          barrierDismissible: false,
                                           context: context,
                                           type: CoolAlertType.error,
-                                          title: 'Something wrong.',
+                                          title:
+                                              'You cannot add Pin right now.',
+                                          text:
+                                              'Because you need to wait for cooldown 1 day after add pin to add another one.',
                                           onConfirmBtnTap: () {
                                             Navigator.pop(context);
                                             Navigator.pop(context);
@@ -217,6 +230,19 @@ addUserMarker(token, pin, lag, lng) async {
       },
       body: jsonEncode(
         <String, dynamic>{'token': token, 'pin': pin, 'lag': lag, 'lng': lng},
+      ));
+  var result = jsonDecode(response.body);
+  return result;
+}
+
+checkDelayPin(token) async {
+  var url = 'http://10.0.2.2:3000/delay/addOrDeleteDelay';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{'token': token},
       ));
   var result = jsonDecode(response.body);
   return result;

@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:diown/pages/mainpage/map.dart';
 import 'package:diown/pages/putdowndiary/diarydetailputdown.dart';
+import 'package:diown/pages/screens/visitorprofile.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -55,17 +57,38 @@ class _ListDiaryPutdownState extends State<ListDiaryPutdown> {
                             : e['status'] == 'Follower'
                                 ? Icon(Icons.people)
                                 : Icon(Icons.lock),
-                        onTap: () {
-                          Navigator.push(
+                        onTap: () async {
+                          if (e['status'] == 'Follower') {
+                            var check =
+                                await findFollow(e['user_detail'][0]['_id']);
+                            if (check['message'] == 'true') {
+                              Navigator.push(
+                                      context,
+                                      PageTransition(
+                                          child:
+                                              DiaryDetailPutdown(id: e['_id']),
+                                          type: PageTransitionType.rightToLeft))
+                                  .then((_) {
+                                setState(() {});
+                              });
+                            } else if (check['message'] == 'false') {
+                              Navigator.push(
                                   context,
                                   PageTransition(
-                                      child:
-                                          DiaryDetailPutdown(id: e['_id']),
-                                      type: PageTransitionType.rightToLeft))
-                              .then((_) async {
-                            await forDiarypinFunc(widget.pin);
-                            setState(() {});
-                          });
+                                      child: VisitorProfile(user_id:e['user_id']),
+                                      type: PageTransitionType.rightToLeft));
+                            } else {}
+                          } else {
+                            Navigator.push(
+                                    context,
+                                    PageTransition(
+                                        child: DiaryDetailPutdown(id: e['_id']),
+                                        type: PageTransitionType.rightToLeft))
+                                .then((_) async {
+                              await forDiarypinFunc(widget.pin);
+                              setState(() {});
+                            });
+                          }
                         },
                       );
                     }).toList(),
