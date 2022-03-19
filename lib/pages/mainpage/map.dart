@@ -96,22 +96,22 @@ class _MapPageState extends State<MapPage> {
                                         children: [
                                           ListTile(
                                             onTap: () {
-                                              // if (dis > 0.050) {
-                                              //   AwesomeDialog(
-                                              //           context: context,
-                                              //           dialogType:
-                                              //               DialogType.WARNING,
-                                              //           desc:
-                                              //               'Distance is to long.\nYou must to go closely on pin.\n Go closely on pin less than 50 meters.',
-                                              //           btnOk: ElevatedButton(
-                                              //               onPressed: () {
-                                              //                 Navigator.pop(
-                                              //                     context);
-                                              //               },
-                                              //               child: const Text(
-                                              //                   'ok')))
-                                              //       .show();
-                                              // } else {
+                                              if (dis > 0.050) {
+                                                AwesomeDialog(
+                                                        context: context,
+                                                        dialogType:
+                                                            DialogType.WARNING,
+                                                        desc:
+                                                            'Distance is to long.\nYou must to go closely on pin.\n Go closely on pin less than 50 meters.',
+                                                        btnOk: ElevatedButton(
+                                                            onPressed: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            child: const Text(
+                                                                'ok')))
+                                                    .show();
+                                              } else {
                                                 Navigator.push(
                                                     context,
                                                     PageTransition(
@@ -122,7 +122,7 @@ class _MapPageState extends State<MapPage> {
                                                         ),
                                                         type: PageTransitionType
                                                             .rightToLeft));
-                                              // }
+                                              }
                                             },
                                             leading: Padding(
                                               padding: EdgeInsets.all(8.0),
