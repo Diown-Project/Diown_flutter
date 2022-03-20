@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:badges/badges.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:diown/pages/auth/signin.dart';
 import 'package:diown/pages/extraPage/loadding.dart';
@@ -14,6 +17,7 @@ import 'package:diown/pages/screens/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class DrawerDetails extends StatefulWidget {
   const DrawerDetails({Key? key}) : super(key: key);
@@ -25,6 +29,7 @@ class DrawerDetails extends StatefulWidget {
 class _DrawerDetailsState extends State<DrawerDetails> {
   dynamic user;
   String? d;
+  var request;
   // ignore: non_constant_identifier_names
   bool notification_switch = true;
   loaddingUserData() async {
@@ -38,11 +43,17 @@ class _DrawerDetailsState extends State<DrawerDetails> {
     });
   }
 
+  setRequest() async {
+    request = await findRequest();
+    setState(() {});
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     loaddingUserData();
+    setRequest();
   }
 
   @override
@@ -106,12 +117,28 @@ class _DrawerDetailsState extends State<DrawerDetails> {
               leading: const Icon(Icons.person_add_alt_1_outlined),
               title: const Text('Follow request'),
               visualDensity: VisualDensity.compact,
+              trailing: request != null
+                  ? request != 0
+                      ? Badge(
+                          animationDuration: const Duration(milliseconds: 100),
+                          animationType: BadgeAnimationType.scale,
+                          padding: EdgeInsets.all(6.0),
+                          badgeContent: Text(
+                            request.toString(),
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        )
+                      : null
+                  : null,
               onTap: () {
                 Navigator.push(
-                    context,
-                    PageTransition(
-                        child: const FollowRequest_Page(),
-                        type: PageTransitionType.rightToLeft));
+                        context,
+                        PageTransition(
+                            child: const FollowRequest_Page(),
+                            type: PageTransitionType.rightToLeft))
+                    .then((_) async {
+                  await setRequest();
+                });
               }),
           ListTile(
               leading: const Icon(Icons.person_outline),
@@ -200,4 +227,19 @@ class _DrawerDetailsState extends State<DrawerDetails> {
       ),
     )));
   }
+}
+
+findRequest() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var token = prefs.getString('token');
+  var url = 'http://10.0.2.2:3000/follow/checkAllRequest';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{'token': token},
+      ));
+  var result = jsonDecode(response.body);
+  return result.length;
 }

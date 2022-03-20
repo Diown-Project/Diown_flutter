@@ -1036,7 +1036,7 @@ findAllPin() async {
 findFollow(target_id) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/follow/checkFollow';
+  var url = 'http://10.0.2.2:3000/follow/checkFollowing';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

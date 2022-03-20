@@ -1,4 +1,5 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:badges/badges.dart';
 import 'package:diown/pages/diary/local_write.dart';
 import 'package:diown/pages/mainpage/calendar.dart';
 import 'package:diown/pages/mainpage/home_page.dart';
@@ -19,7 +20,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   var c;
 
-  var pagepop;
+  var pagepop, request;
   var _bottomNavIndex = 0;
   var _saveindex = 0;
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
@@ -35,12 +36,16 @@ class _HomeState extends State<Home> {
     const MapPage(),
     const CalendarPage(),
   ];
+  setRequest() async {
+    request = await findRequest();
+    setState(() {});
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    setRequest();
     setState(() {});
   }
 
@@ -147,11 +152,10 @@ class _HomeState extends State<Home> {
                         });
                   },
                 ),
-
           bottomNavigationBar: AnimatedBottomNavigationBar.builder(
             backgroundColor: const Color.fromRGBO(255, 248, 248, 1),
             elevation: 0,
-            height: 50,
+            height: 60,
             itemCount: iconList.length,
             tabBuilder: (int index, bool isActive) {
               final color = isActive ? const Color(0xff8a7efd) : Colors.black;
@@ -159,11 +163,31 @@ class _HomeState extends State<Home> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    iconList[index],
-                    size: 24,
-                    color: color,
-                  ),
+                  index == 3
+                      ? request != null
+                          ? request != 0
+                              ? Badge(
+                                  child: Icon(
+                                    iconList[index],
+                                    size: 24,
+                                    color: color,
+                                  ),
+                                )
+                              : Icon(
+                                  iconList[index],
+                                  size: 24,
+                                  color: color,
+                                )
+                          : Icon(
+                              iconList[index],
+                              size: 24,
+                              color: color,
+                            )
+                      : Icon(
+                          iconList[index],
+                          size: 24,
+                          color: color,
+                        ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Text(
@@ -180,8 +204,10 @@ class _HomeState extends State<Home> {
             onTap: (index) {
               if (index == 3) {
                 _drawerKey.currentState!.openEndDrawer();
+                setRequest();
                 setState(() {});
               } else {
+                setRequest();
                 setState(() {
                   _bottomNavIndex = index;
                   _saveindex = index;
@@ -194,6 +220,8 @@ class _HomeState extends State<Home> {
     );
   }
 }
+
+
 // decoration: BoxDecoration(
 //                           borderRadius:
 //                               BorderRadius.only(topLeft: Radius.circular(10))),
