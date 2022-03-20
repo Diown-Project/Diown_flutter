@@ -38,7 +38,9 @@ class _VisitorProfileState extends State<VisitorProfile> {
     } else {
       isFollowing = false;
     }
-    setState(() {});
+    setState(() {
+      user;
+    });
   }
 
   @override
@@ -193,6 +195,9 @@ class _VisitorProfileState extends State<VisitorProfile> {
                                               15, 10, 15, 0),
                                           child: GestureDetector(
                                             onTap: () async {
+                                              var c =
+                                                  await unFollow(user['_id']);
+                                              await findForUser();
                                               setState(() {
                                                 isFollowing = false;
                                               });
@@ -392,6 +397,22 @@ deleteRequest(target_id) async {
       },
       body: jsonEncode(
         <String, dynamic>{'token': token, 'target_id': target_id},
+      ));
+
+  var result = jsonDecode(response.body);
+  return result;
+}
+
+unFollow(target_id) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var token = prefs.getString('token');
+  var url = 'http://10.0.2.2:3000/follow/deleteFollowing';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{'token': token, 'target': target_id},
       ));
 
   var result = jsonDecode(response.body);
