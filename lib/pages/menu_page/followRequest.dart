@@ -1,7 +1,30 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class FollowRequest_Page extends StatelessWidget {
+class FollowRequest_Page extends StatefulWidget {
   const FollowRequest_Page({Key? key}) : super(key: key);
+
+  @override
+  State<FollowRequest_Page> createState() => _FollowRequest_PageState();
+}
+
+class _FollowRequest_PageState extends State<FollowRequest_Page> {
+  var request;
+
+  requestNow() async {
+    request = await findRequest();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    requestNow();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,119 +37,99 @@ class FollowRequest_Page extends StatelessWidget {
         title: const Text('Follow request'),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              margin: EdgeInsets.all(10),
-              decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 243, 243, 243),
-                  borderRadius: BorderRadius.all(Radius.circular(15))),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipOval(
-                        child: Image.asset('images/non.jpg', width: 45),
-                      ),
-                      const SizedBox(width: 15),
-                      Flexible(
-                          child: Padding(
-                        padding: const EdgeInsets.only(top: 2),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Donut Natcha',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 5),
-                            Text(
-                              'Sent request 5 min',
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  color: Color.fromARGB(255, 122, 122, 122)),
-                            ),
-                          ],
-                        ),
-                      )),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 6, left: 20),
-                        child: Container(
-                          width: 70,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10),
-                              bottomLeft: Radius.circular(10),
-                              bottomRight: Radius.circular(10),
-                            ),
-                            color: Color.fromARGB(255, 149, 83, 255),
-                            border: Border.all(
-                              color: Color.fromARGB(255, 149, 83, 255),
-                              width: 1,
-                            ),
+          child: request != null
+              ? Column(
+                  children: request
+                      .map<Widget>(
+                        (e) => ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            backgroundImage: NetworkImage(
+                                'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(2, 0, 5, 0),
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Text(
-                                    'Accept',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: Color.fromARGB(255, 255, 255, 255)),
-                                  ),
-                                ]),
+                          title: Text(
+                            e['user_detail'][0]['username'],
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          subtitle: const Text('Want to follow you.'),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextButton(
+                                  onPressed: () async {
+                                    var c = await addToFollow(
+                                        e['user_detail'][0]['_id']);
+                                    request.removeWhere((element) =>
+                                        element['user_detail'][0]['_id'] ==
+                                        e['user_detail'][0]['_id']);
+                                    setState(() {});
+                                  },
+                                  child: const Text('confirm')),
+                              TextButton(
+                                  onPressed: () async {
+                                    var c = await remove(
+                                        e['user_detail'][0]['_id']);
+                                    request.removeWhere((element) =>
+                                        element['user_detail'][0]['_id'] ==
+                                        e['user_detail'][0]['_id']);
+                                    setState(() {});
+                                  },
+                                  child: const Text(
+                                    'remove',
+                                    style: TextStyle(color: Colors.red),
+                                  ))
+                            ],
                           ),
                         ),
-                      ), 
-                      const SizedBox(width: 5),  
-                      Padding(
-                        padding: const EdgeInsets.only(top: 6),
-                        child: Container(
-                            width: 70,
-                            height: 30,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10),
-                                topRight: Radius.circular(10),
-                                bottomLeft: Radius.circular(10),
-                                bottomRight: Radius.circular(10),
-                              ),
-                              color: Color.fromARGB(255, 255, 255, 255),
-                              border: Border.all(
-                                color: Color.fromARGB(255, 0, 0, 0),
-                                width: 1,
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Text(
-                                      'Delete',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color: Color.fromARGB(255, 0, 0, 0)),
-                                    ),
-                                  ]),
-                            ),
-                          ),
-                      ),
-                    ]),
-              ),
-            ),
-          ],
-        ),
-      ),
+                      )
+                      .toList(),
+                )
+              : Center(child: CircularProgressIndicator())),
     );
   }
+}
+
+findRequest() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var token = prefs.getString('token');
+  var url = 'http://10.0.2.2:3000/follow/checkAllRequest';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{'token': token},
+      ));
+  var result = jsonDecode(response.body);
+  return result;
+}
+
+addToFollow(rb) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var token = prefs.getString('token');
+  var url = 'http://10.0.2.2:3000/follow/addFollow';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{'target': token, 'request_by': rb},
+      ));
+  var result = jsonDecode(response.body);
+  return result;
+}
+
+remove(rb) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var token = prefs.getString('token');
+  var url = 'http://10.0.2.2:3000/follow/removeRequest';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{'token': token, 'request_by': rb},
+      ));
+  var result = jsonDecode(response.body);
+  return result;
 }
