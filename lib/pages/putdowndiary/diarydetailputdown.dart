@@ -17,10 +17,28 @@ class DiaryDetailPutdown extends StatefulWidget {
 }
 
 class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
-  dynamic diary, user;
+  dynamic diary, user, like, likeCount;
   var time;
   // var isFav;
   findDetail(id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    var url2 = 'http://10.0.2.2:3000/putdown/checkLike';
+    final http.Response response2 = await http.post(Uri.parse(url2),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: jsonEncode(
+          <String, String>{'token': token!, 'diary_id': id},
+        ));
+    var result2 = jsonDecode(response2.body);
+    if (result2['message'] == 'true') {
+      like = true;
+      setState(() {});
+    } else {
+      like = false;
+      setState(() {});
+    }
     var url = 'http://10.0.2.2:3000/putdown/findDetail';
     final http.Response response = await http.post(Uri.parse(url),
         headers: <String, String>{
@@ -38,6 +56,7 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
     } else {
       setState(() {
         diary = result;
+        likeCount = diary['like'];
         time = DateFormat('EEE. MMM d / yyyy')
             .format(DateTime.parse(diary['date']));
         // isFav = diary['favorite'];
@@ -87,15 +106,72 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                   ? Container()
                   : user != null
                       ? user['_id'] == diary['user_id']
-                          ? FavoriteButton(
-                              iconSize: 40,
-                              valueChanged: (_) {},
+                          ? Row(
+                              children: [
+                                likeCount.toString().length > 6
+                                    ? Text(likeCount.toString().substring(0,
+                                            likeCount.toString().length - 6) +
+                                        'm')
+                                    : likeCount.toString().length > 3
+                                        ? Text(likeCount.toString().substring(
+                                                0,
+                                                likeCount.toString().length -
+                                                    3) +
+                                            'k')
+                                        : Text(likeCount.toString()),
+                                FavoriteButton(
+                                  iconSize: 40,
+                                  isFavorite: like,
+                                  valueChanged: (value) async {
+                                    if (value) {
+                                      setState(() {
+                                        likeCount += 1;
+                                      });
+                                      await addLike(diary['_id']);
+                                    } else {
+                                      setState(() {
+                                        likeCount -= 1;
+                                      });
+                                      await removeLike(diary['_id']);
+                                    }
+                                  },
+                                ),
+                              ],
                             )
                           : Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: FavoriteButton(
-                                iconSize: 40,
-                                valueChanged: (_) {},
+                              child: Row(
+                                children: [
+                                  likeCount.toString().length > 6
+                                      ? Text(likeCount.toString().substring(0,
+                                              likeCount.toString().length - 6) +
+                                          'm')
+                                      : likeCount.toString().length > 3
+                                          ? Text(likeCount.toString().substring(
+                                                  0,
+                                                  likeCount.toString().length -
+                                                      3) +
+                                              'k')
+                                          : Text(likeCount.toString()),
+                                  FavoriteButton(
+                                    iconSize: 40,
+                                    isFavorite: like,
+                                    valueChanged: (value) async {
+                                      print(value);
+                                      if (value) {
+                                        setState(() {
+                                          likeCount += 1;
+                                        });
+                                        await addLike(diary['_id']);
+                                      } else {
+                                        setState(() {
+                                          likeCount -= 1;
+                                        });
+                                        await removeLike(diary['_id']);
+                                      }
+                                    },
+                                  ),
+                                ],
                               ),
                             )
                       : Container()
@@ -272,6 +348,36 @@ deletePutdowndiary(diary) async {
       },
       body: jsonEncode(
         <String, dynamic>{'token': token, 'diary': diary},
+      ));
+  var result = jsonDecode(response.body);
+  return result;
+}
+
+addLike(id) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var token = prefs.getString('token');
+  var url = 'http://10.0.2.2:3000/putdown/addLike';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{'token': token, 'diary_id': id},
+      ));
+  var result = jsonDecode(response.body);
+  return result;
+}
+
+removeLike(id) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var token = prefs.getString('token');
+  var url = 'http://10.0.2.2:3000/putdown/removeLike';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{'token': token, 'diary_id': id},
       ));
   var result = jsonDecode(response.body);
   return result;
