@@ -67,11 +67,12 @@ class _HomeState extends State<Home> {
           floatingActionButton: keyboardIsOpened
               ? null
               : FloatingActionButton(
+                  elevation: 0,
                   child: const Icon(
                     Icons.add_rounded,
                     size: 40,
                   ),
-                  backgroundColor: const Color.fromRGBO(148, 92, 254, 1),
+                  backgroundColor: const Color(0xff8b82ff),
                   onPressed: () {
                     showModalBottomSheet(
                         context: context,
@@ -152,6 +153,7 @@ class _HomeState extends State<Home> {
                         });
                   },
                 ),
+
           bottomNavigationBar: AnimatedBottomNavigationBar.builder(
             backgroundColor: const Color.fromRGBO(255, 248, 248, 1),
             elevation: 0,

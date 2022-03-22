@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:location/location.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:http/http.dart' as http;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -32,6 +33,7 @@ class _MapPageState extends State<MapPage> {
   TextEditingController _searchController = TextEditingController();
   Location _locationTracker = Location();
   bool create = false;
+  bool click = true;
   Marker? marker;
   Circle? circle;
   String? input;
@@ -701,14 +703,16 @@ class _MapPageState extends State<MapPage> {
           zIndex: 2,
           flat: true,
           anchor: Offset(0.5, 0.5),
-          icon: BitmapDescriptor.fromBytes(imageData));
-      circle = Circle(
-          circleId: CircleId("car"),
-          radius: newLocalData.accuracy as double,
-          zIndex: 1,
-          strokeColor: Colors.blue,
-          center: latlng,
-          fillColor: Colors.blue.withAlpha(70));
+          // icon: BitmapDescriptor.fromBytes(imageData)
+          );
+      // circle = Circle(
+      //     circleId: CircleId("car"),
+      //     radius: newLocalData.accuracy as double,
+      //     zIndex: 1,
+      //     strokeColor: Colors.blue,
+      //     center: latlng,
+      //     fillColor: Colors.blue.withAlpha(70)
+      //     );
     });
   }
 
@@ -900,42 +904,54 @@ class _MapPageState extends State<MapPage> {
                       onMapCreated: (GoogleMapController controller) {
                         mapController = controller;
                       },
+                      zoomControlsEnabled: true,
+                      myLocationEnabled: true,
+                      myLocationButtonEnabled: false,
+                      mapToolbarEnabled: false,
+                      // myLocationButtonEnabled: true,
                     ),
                     Column(
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            controller: _searchController,
-                            onChanged: (value) {
-                              setState(() {
-                                input = value;
-                              });
-                            },
-                            onEditingComplete: () async {
-                              var place = await LocationService()
-                                  .getPlace(_searchController.text);
-                              if (place.isNotEmpty) {
-                                _goToPlace(place);
-                              }
-                            },
-                            textCapitalization: TextCapitalization.words,
-                            decoration: InputDecoration(
-                              suffixIcon: IconButton(
-                                onPressed: () {},
-                                icon: const Icon(Icons.search),
-                                color: Colors.purple,
+                          child: Material(
+                            elevation: 3,                     
+                            shadowColor: Colors.black,
+                            borderRadius: BorderRadius.circular(30),
+                            child: TextFormField(
+                              controller: _searchController,
+                              onChanged: (value) {
+                                setState(() {
+                                  input = value;
+                                });
+                              },
+                              onEditingComplete: () async {
+                                var place = await LocationService()
+                                    .getPlace(_searchController.text);
+                                if (place.isNotEmpty) {
+                                  _goToPlace(place);
+                                }
+                              },
+                              textCapitalization: TextCapitalization.words,
+                              decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(Icons.search),
+                                  color: Colors.black54,
+                                ),
+                                filled: true,
+                                fillColor: Colors.white,
+                                hintText: 'search Location',
+                                hintStyle: const TextStyle(
+                                    color: Colors.black38,
+                                    fontWeight: FontWeight.w200),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                    borderRadius: BorderRadius.circular(30)),
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                    borderRadius: BorderRadius.circular(30)),
                               ),
-                              filled: true,
-                              fillColor: const Color(0xfff1f3f4),
-                              hintText: 'search Location',
-                              hintStyle: const TextStyle(
-                                  color: Color(0xffc5d2e1),
-                                  fontWeight: FontWeight.w200),
-                              focusedBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide.none),
-                              enabledBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide.none),
                             ),
                           ),
                         ),
@@ -946,13 +962,21 @@ class _MapPageState extends State<MapPage> {
               : const Center(
                   child: CircularProgressIndicator(),
                 ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-          floatingActionButton: FloatingActionButton(
-              heroTag: 'asd',
-              child: Icon(Icons.location_searching),
-              onPressed: () {
-                getCurrentLocation();
-              }),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 200, 0, 0),
+            child: FloatingActionButton(
+                elevation: 3,
+                heroTag: 'asd',
+                backgroundColor: Colors.white,
+                child: click == true
+                  ? const Icon(MdiIcons.crosshairs, color: Colors.black45)
+                  : const Icon(MdiIcons.crosshairsGps, color: Color(0xff8b82ff)),
+                onPressed: () {
+                  getCurrentLocation();
+                  click = !click;
+                }),
+          ),
         ),
       ),
     );
