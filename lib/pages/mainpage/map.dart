@@ -707,6 +707,7 @@ class _MapPageState extends State<MapPage> {
           anchor: Offset(0.5, 0.5),
           visible: false
           );
+
       // circle = Circle(
       //     circleId: CircleId("car"),
       //     radius: newLocalData.accuracy as double,
