@@ -373,7 +373,7 @@ class _MapPageState extends State<MapPage> {
                                                           ),
                                                         )
                                                         .toList()
-                                                    : ownPutdown
+                                                    : followingPutdown
                                                         .map<Widget>(
                                                           (e) => ListTile(
                                                             leading:
@@ -696,15 +696,16 @@ class _MapPageState extends State<MapPage> {
     });
     setState(() {
       marker = Marker(
-          markerId: MarkerId("home"),
-          position: latlng,
-          rotation: newLocalData.heading as double,
-          draggable: false,
-          zIndex: 2,
-          flat: true,
-          anchor: Offset(0.5, 0.5),
-          // icon: BitmapDescriptor.fromBytes(imageData)
-          );
+        markerId: MarkerId("home"),
+        position: latlng,
+        rotation: newLocalData.heading as double,
+        draggable: false,
+        zIndex: 2,
+        flat: true,
+        anchor: Offset(0.5, 0.5),
+        visible: false,
+        // icon: BitmapDescriptor.fromBytes(imageData)
+      );
       // circle = Circle(
       //     circleId: CircleId("car"),
       //     radius: newLocalData.accuracy as double,
@@ -915,7 +916,7 @@ class _MapPageState extends State<MapPage> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Material(
-                            elevation: 3,                     
+                            elevation: 3,
                             shadowColor: Colors.black,
                             borderRadius: BorderRadius.circular(30),
                             child: TextFormField(
@@ -970,8 +971,9 @@ class _MapPageState extends State<MapPage> {
                 heroTag: 'asd',
                 backgroundColor: Colors.white,
                 child: click == true
-                  ? const Icon(MdiIcons.crosshairs, color: Colors.black45)
-                  : const Icon(MdiIcons.crosshairsGps, color: Color(0xff8b82ff)),
+                    ? const Icon(MdiIcons.crosshairs, color: Colors.black45)
+                    : const Icon(MdiIcons.crosshairsGps,
+                        color: Color(0xff8b82ff)),
                 onPressed: () {
                   getCurrentLocation();
                   click = !click;

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:diown/pages/diary/gallery.dart';
@@ -61,6 +62,87 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
             .format(DateTime.parse(diary['date']));
         // isFav = diary['favorite'];
       });
+      if (like == false && likeCount >= 1) {
+        var check = await checkAchievement(11);
+        if (check['message'] == 'success') {
+          AwesomeDialog(
+                  context: context,
+                  dismissOnTouchOutside: false,
+                  dialogType: DialogType.SUCCES,
+                  customHeader: Container(
+                    height: 100,
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.asset('images/someone_interesting.png')),
+                  ),
+                  title: 'congratulations',
+                  body: Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 0, 10, 10),
+                      child: Column(
+                        children: const [
+                          Text(
+                            'congratulations',
+                            style: TextStyle(
+                              fontSize: 20,
+                              height: 1.5,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            'Congratulations to unlock this achievement (someone_interest).',
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      )),
+                  btnOk: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Ok')))
+              .show();
+        }
+      } else if (like == true && likeCount > 1) {
+        var check = await checkAchievement(11);
+        if (check['message'] == 'success') {
+          AwesomeDialog(
+                  context: context,
+                  dismissOnTouchOutside: false,
+                  dialogType: DialogType.SUCCES,
+                  customHeader: Container(
+                    height: 100,
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.asset('images/someone_interesting.png')),
+                  ),
+                  title: 'congratulations',
+                  body: Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 0, 10, 10),
+                      child: Column(
+                        children: const [
+                          Text(
+                            'congratulations',
+                            style: TextStyle(
+                              fontSize: 20,
+                              height: 1.5,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            'Congratulations to unlock this achievement (someone_interest).',
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      )),
+                  btnOk: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Ok')))
+              .show();
+        }
+      } else {}
     }
   }
 
@@ -123,6 +205,52 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                                   iconSize: 40,
                                   isFavorite: like,
                                   valueChanged: (value) async {
+                                    var check = await checkAchievement(10);
+                                    if (check['message'] == 'success') {
+                                      AwesomeDialog(
+                                              context: context,
+                                              dismissOnTouchOutside: false,
+                                              dialogType: DialogType.SUCCES,
+                                              customHeader: Container(
+                                                height: 100,
+                                                child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            50),
+                                                    child: Image.asset(
+                                                        'images/first_like.png')),
+                                              ),
+                                              title: 'congratulations',
+                                              body: Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          15, 0, 10, 10),
+                                                  child: Column(
+                                                    children: const [
+                                                      Text(
+                                                        'congratulations',
+                                                        style: TextStyle(
+                                                          fontSize: 20,
+                                                          height: 1.5,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 10),
+                                                      Text(
+                                                        'Congratulations to unlock this achievement (first_like).',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                    ],
+                                                  )),
+                                              btnOk: ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text('Ok')))
+                                          .show();
+                                    }
                                     if (value) {
                                       setState(() {
                                         likeCount += 1;
@@ -378,6 +506,21 @@ removeLike(id) async {
       },
       body: jsonEncode(
         <String, dynamic>{'token': token, 'diary_id': id},
+      ));
+  var result = jsonDecode(response.body);
+  return result;
+}
+
+checkAchievement(index) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var token = prefs.getString('token');
+  var url = 'http://10.0.2.2:3000/achievement/checkSuccess';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{'token': token, 'index': index},
       ));
   var result = jsonDecode(response.body);
   return result;

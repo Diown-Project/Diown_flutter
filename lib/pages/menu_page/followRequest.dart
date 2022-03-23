@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -57,12 +59,65 @@ class _FollowRequest_PageState extends State<FollowRequest_Page> {
                             children: [
                               TextButton(
                                   onPressed: () async {
-                                    var c = await addToFollow(
-                                        e['user_detail'][0]['_id']);
-                                    request.removeWhere((element) =>
-                                        element['user_detail'][0]['_id'] ==
-                                        e['user_detail'][0]['_id']);
-                                    setState(() {});
+                                    var check = await checkAchievement(5);
+                                    if (check['message'] == 'success') {
+                                      AwesomeDialog(
+                                              context: context,
+                                              dismissOnTouchOutside: false,
+                                              dialogType: DialogType.SUCCES,
+                                              customHeader: Container(
+                                                height: 100,
+                                                child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            50),
+                                                    child: Image.asset(
+                                                        'images/Starlight.png')),
+                                              ),
+                                              title: 'congratulations',
+                                              body: Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          15, 0, 10, 10),
+                                                  child: Column(
+                                                    children: const [
+                                                      Text(
+                                                        'congratulations',
+                                                        style: TextStyle(
+                                                          fontSize: 20,
+                                                          height: 1.5,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 10),
+                                                      Text(
+                                                        'Congratulations to unlock this achievement (Starlight).',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                    ],
+                                                  )),
+                                              btnOk: ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text('Ok')))
+                                          .show();
+                                      var c = await addToFollow(
+                                          e['user_detail'][0]['_id']);
+                                      request.removeWhere((element) =>
+                                          element['user_detail'][0]['_id'] ==
+                                          e['user_detail'][0]['_id']);
+                                      setState(() {});
+                                    } else {
+                                      var c = await addToFollow(
+                                          e['user_detail'][0]['_id']);
+                                      request.removeWhere((element) =>
+                                          element['user_detail'][0]['_id'] ==
+                                          e['user_detail'][0]['_id']);
+                                      setState(() {});
+                                    }
                                   },
                                   child: const Text('confirm')),
                               TextButton(
@@ -129,6 +184,21 @@ remove(rb) async {
       },
       body: jsonEncode(
         <String, dynamic>{'token': token, 'request_by': rb},
+      ));
+  var result = jsonDecode(response.body);
+  return result;
+}
+
+checkAchievement(index) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var token = prefs.getString('token');
+  var url = 'http://10.0.2.2:3000/achievement/checkSuccess';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{'token': token, 'index': index},
       ));
   var result = jsonDecode(response.body);
   return result;
