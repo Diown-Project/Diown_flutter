@@ -154,70 +154,76 @@ class _HomeState extends State<Home> {
                   },
                 ),
 
-          bottomNavigationBar: AnimatedBottomNavigationBar.builder(
-            backgroundColor: const Color.fromRGBO(255, 248, 248, 1),
-            elevation: 0,
-            height: 60,
-            itemCount: iconList.length,
-            tabBuilder: (int index, bool isActive) {
-              final color = isActive ? const Color(0xff8a7efd) : Colors.black;
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  index == 3
-                      ? request != null
-                          ? request != 0
-                              ? Badge(
-                                  child: Icon(
+          bottomNavigationBar: Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              border: Border(top: BorderSide(color: Color(0xfff5f5f5), width: 3)
+            )),
+            child: AnimatedBottomNavigationBar.builder(
+              backgroundColor: const Color.fromRGBO(255, 248, 248, 1),
+              elevation: 0,
+              height: 60,
+              itemCount: iconList.length,
+              tabBuilder: (int index, bool isActive) {
+                final color = isActive ? const Color(0xff8a7efd) : Colors.black;
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    index == 3
+                        ? request != null
+                            ? request != 0
+                                ? Badge(
+                                    child: Icon(
+                                      iconList[index],
+                                      size: 24,
+                                      color: color,
+                                    ),
+                                  )
+                                : Icon(
                                     iconList[index],
                                     size: 24,
                                     color: color,
-                                  ),
-                                )
-                              : Icon(
-                                  iconList[index],
-                                  size: 24,
-                                  color: color,
-                                )
-                          : Icon(
-                              iconList[index],
-                              size: 24,
-                              color: color,
-                            )
-                      : Icon(
-                          iconList[index],
-                          size: 24,
-                          color: color,
-                        ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Text(
-                      textList[index],
-                      style: TextStyle(color: color, fontSize: 11),
-                    ),
-                  )
-                ],
-              );
-            },
-            activeIndex: _bottomNavIndex,
-            gapLocation: GapLocation.center,
-            notchSmoothness: NotchSmoothness.defaultEdge,
-            onTap: (index) {
-              if (index == 3) {
-                _drawerKey.currentState!.openEndDrawer();
-                setRequest();
-                setState(() {});
-              } else {
-                setRequest();
-                setState(() {
-                  _bottomNavIndex = index;
-                  _saveindex = index;
-                });
-              }
-            },
-
-            //other params
+                                  )
+                            : Icon(
+                                iconList[index],
+                                size: 24,
+                                color: color,
+                              )
+                        : Icon(
+                            iconList[index],
+                            size: 24,
+                            color: color,
+                          ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
+                        textList[index],
+                        style: TextStyle(color: color, fontSize: 11),
+                      ),
+                    )
+                  ],
+                );
+              },
+              activeIndex: _bottomNavIndex,
+              gapLocation: GapLocation.center,
+              notchSmoothness: NotchSmoothness.defaultEdge,
+              onTap: (index) {
+                if (index == 3) {
+                  _drawerKey.currentState!.openEndDrawer();
+                  setRequest();
+                  setState(() {});
+                } else {
+                  setRequest();
+                  setState(() {
+                    _bottomNavIndex = index;
+                    _saveindex = index;
+                  });
+                }
+              },
+          
+              //other params
+            ),
           )),
     );
   }
