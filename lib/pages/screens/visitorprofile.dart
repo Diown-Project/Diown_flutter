@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:diown/pages/mainpage/map.dart';
 import 'package:diown/pages/screens/editprofile.dart';
+import 'package:diown/pages/screens/visitorachiement.dart';
 import 'package:diown/pages/screens/widgets/mood_chart.dart';
 import 'package:diown/pages/screens/widgets/tab_sliver_delegate.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class VisitorProfile extends StatefulWidget {
 }
 
 class _VisitorProfileState extends State<VisitorProfile> {
-  final tabs = ['put down'];
+  final tabs = ['put down', 'achieve'];
   var user, isRequest, isFollowing;
   findForUser() async {
     user = await findUser(widget.user_id);
@@ -68,7 +69,7 @@ class _VisitorProfileState extends State<VisitorProfile> {
             )),
         body: user != null
             ? DefaultTabController(
-                length: 1,
+                length: 2,
                 child: NestedScrollView(
                   headerSliverBuilder:
                       (BuildContext context, bool innerBoxIsScrolled) {
@@ -298,6 +299,7 @@ class _VisitorProfileState extends State<VisitorProfile> {
                           CustomScrollView(
                             slivers: [_builderList(30)],
                           ),
+                          visitorAchieve('achieve')
                         ])
                       : Padding(
                           padding: const EdgeInsets.fromLTRB(15, 30, 15, 0),
