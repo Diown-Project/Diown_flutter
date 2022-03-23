@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:diown/pages/screens/visitorprofile.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -17,6 +18,47 @@ class _FollowingPageState extends State<FollowingPage> {
 
   moveResultToFollow() async {
     following = await findFollowing();
+    if (following != null) {
+      var check = await checkAchievement(6);
+      if (check['message'] == 'success') {
+        AwesomeDialog(
+                context: context,
+                dismissOnTouchOutside: false,
+                dialogType: DialogType.SUCCES,
+                customHeader: Container(
+                  height: 100,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Image.asset('images/Satellite.png')),
+                ),
+                title: 'congratulations',
+                body: Padding(
+                    padding: const EdgeInsets.fromLTRB(15, 0, 10, 10),
+                    child: Column(
+                      children: const [
+                        Text(
+                          'congratulations',
+                          style: TextStyle(
+                            fontSize: 20,
+                            height: 1.5,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          'Congratulations to unlock this achievement (Satellite).',
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    )),
+                btnOk: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Ok')))
+            .show();
+      } else {}
+    }
     setState(() {});
   }
 
@@ -71,7 +113,8 @@ class _FollowingPageState extends State<FollowingPage> {
                             children: [
                               TextButton(
                                   onPressed: () async {
-                                    var c = await deleteFollowing(e['user_detail'][0]['_id']);
+                                    var c = await deleteFollowing(
+                                        e['user_detail'][0]['_id']);
                                     following.removeWhere((element) =>
                                         element['user_detail'][0]['_id'] ==
                                         e['user_detail'][0]['_id']);
@@ -118,6 +161,21 @@ deleteFollowing(id) async {
       },
       body: jsonEncode(
         <String, dynamic>{'token': token, 'target': id},
+      ));
+  var result = jsonDecode(response.body);
+  return result;
+}
+
+checkAchievement(index) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var token = prefs.getString('token');
+  var url = 'http://10.0.2.2:3000/achievement/checkSuccess';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{'token': token, 'index': index},
       ));
   var result = jsonDecode(response.body);
   return result;
