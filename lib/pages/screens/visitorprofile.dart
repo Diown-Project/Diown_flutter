@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:diown/pages/mainpage/map.dart';
+import 'package:diown/pages/putdowndiary/diarydetailputdown.dart';
 import 'package:diown/pages/screens/editprofile.dart';
 import 'package:diown/pages/screens/visitorachiement.dart';
 import 'package:diown/pages/screens/widgets/mood_chart.dart';
@@ -24,11 +25,15 @@ class VisitorProfile extends StatefulWidget {
 
 class _VisitorProfileState extends State<VisitorProfile> {
   final tabs = ['put down', 'achieve'];
-  var user, isRequest, isFollowing;
+  var user, isRequest, isFollowing, allPutdown;
   findForUser() async {
     user = await findUser(widget.user_id);
     var d = await checkRequest(widget.user_id);
     var f = await findFollow(widget.user_id);
+    allPutdown = await findAllPutdownUser(widget.user_id);
+    for (int i = 0; i < allPutdown.length; i++) {
+      allPutdown[i]['date'] = allPutdown[i]['date'].toString().substring(0, 10);
+    }
     if (d['message'] == 'true') {
       isRequest = true;
     } else {
@@ -41,6 +46,7 @@ class _VisitorProfileState extends State<VisitorProfile> {
     }
     setState(() {
       user;
+      allPutdown;
     });
   }
 
@@ -296,10 +302,101 @@ class _VisitorProfileState extends State<VisitorProfile> {
                   },
                   body: isFollowing
                       ? TabBarView(children: [
-                          CustomScrollView(
-                            slivers: [_builderList(30)],
-                          ),
-                          visitorAchieve('achieve')
+                          allPutdown != null
+                              ? Container(
+                                  margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
+                                  child: ListView.builder(
+                                    itemCount: allPutdown.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return ListTile(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              PageTransition(
+                                                  child: DiaryDetailPutdown(
+                                                      id: allPutdown[index]
+                                                          ['_id']),
+                                                  type: PageTransitionType
+                                                      .rightToLeft));
+                                        },
+                                        leading: Text(
+                                          '${allPutdown[index]['mood_emoji']}',
+                                          style: TextStyle(fontSize: 24),
+                                        ),
+                                        trailing: allPutdown[index]['date'] !=
+                                                null
+                                            ? Text(allPutdown[index]['date'])
+                                            : null,
+                                        title: allPutdown[index]['topic'] !=
+                                                null
+                                            ? Text(
+                                                "${allPutdown[index]['topic']}")
+                                            : Text(
+                                                '${allPutdown[index]['mood_detail']}'),
+                                        subtitle: allPutdown[index]
+                                                    ['activity'] !=
+                                                null
+                                            ? Row(
+                                                children: [
+                                                  Flexible(
+                                                    child: Text(
+                                                      '${allPutdown[index]['activity']} ',
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                  Flexible(
+                                                    child: Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons
+                                                              .pin_drop_rounded,
+                                                          color: Colors.blue,
+                                                          size: 14,
+                                                        ),
+                                                        Text(
+                                                            '${allPutdown[index]['marker_detail'][0]['marker_id']}',
+                                                            style:
+                                                                const TextStyle(
+                                                                    color: Colors
+                                                                        .blue))
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            : Row(
+                                                children: [
+                                                  Flexible(
+                                                    child: Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons
+                                                              .pin_drop_rounded,
+                                                          color: Colors.blue,
+                                                          size: 14,
+                                                        ),
+                                                        Text(
+                                                            '${allPutdown[index]['marker_detail'][0]['marker_id']}',
+                                                            style:
+                                                                const TextStyle(
+                                                                    color: Colors
+                                                                        .blue))
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                      );
+                                    },
+                                  ))
+                              : Container(
+                                  child: const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                ),
+                          visitorAchieve('Achieve', user_id: user['_id'])
                         ])
                       : Padding(
                           padding: const EdgeInsets.fromLTRB(15, 30, 15, 0),
@@ -415,6 +512,20 @@ unFollow(target_id) async {
       },
       body: jsonEncode(
         <String, dynamic>{'token': token, 'target': target_id},
+      ));
+
+  var result = jsonDecode(response.body);
+  return result;
+}
+
+findAllPutdownUser(id) async {
+  var url = 'http://10.0.2.2:3000/putdown/findAllPutdownUser';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{'user_id': id},
       ));
 
   var result = jsonDecode(response.body);

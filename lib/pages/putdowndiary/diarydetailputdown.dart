@@ -33,6 +33,16 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
           <String, String>{'token': token!, 'diary_id': id},
         ));
     var result2 = jsonDecode(response2.body);
+    var url = 'http://10.0.2.2:3000/auth/rememberMe';
+    final http.Response response = await http.post(Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: jsonEncode(
+          <String, dynamic>{'token': token},
+        ));
+    user = jsonDecode(response.body);
+    setState(() {});
     if (result2['message'] == 'true') {
       like = true;
       setState(() {});
@@ -40,15 +50,15 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
       like = false;
       setState(() {});
     }
-    var url = 'http://10.0.2.2:3000/putdown/findDetail';
-    final http.Response response = await http.post(Uri.parse(url),
+    var url1 = 'http://10.0.2.2:3000/putdown/findDetail';
+    final http.Response response1 = await http.post(Uri.parse(url1),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         },
         body: jsonEncode(
           <String, String>{'id': id},
         ));
-    var result = jsonDecode(response.body);
+    var result = jsonDecode(response1.body);
     if (result == null) {
       diary = {};
       diary['message'] = 'This diary was deleted.';
@@ -56,13 +66,13 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
       setState(() {});
     } else {
       setState(() {
-        diary = result;
+        diary = result[0];
         likeCount = diary['like'];
         time = DateFormat('EEE. MMM d / yyyy')
             .format(DateTime.parse(diary['date']));
         // isFav = diary['favorite'];
       });
-      if (like == false && likeCount >= 1) {
+      if (like == false && likeCount >= 1 && diary['user_id'] == user['_id']) {
         var check = await checkAchievement(11);
         if (check['message'] == 'success') {
           AwesomeDialog(
@@ -102,7 +112,9 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                       child: const Text('Ok')))
               .show();
         }
-      } else if (like == true && likeCount > 1) {
+      } else if (like == true &&
+          likeCount > 1 &&
+          diary['user_id'] == user['_id']) {
         var check = await checkAchievement(11);
         if (check['message'] == 'success') {
           AwesomeDialog(
@@ -146,27 +158,11 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
     }
   }
 
-  findUser() async {
-    var url = 'http://10.0.2.2:3000/auth/rememberMe';
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('token');
-    final http.Response response = await http.post(Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8'
-        },
-        body: jsonEncode(
-          <String, dynamic>{'token': token},
-        ));
-    user = jsonDecode(response.body);
-    setState(() {});
-  }
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     findDetail(widget.id);
-    findUser();
   }
 
   @override
@@ -405,7 +401,7 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                   )
                 : Container(),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 5, 0, 5),
+              padding: const EdgeInsets.fromLTRB(20, 5, 0, 2),
               child: Row(
                 children: [
                   Flexible(
@@ -435,15 +431,34 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                 ],
               ),
             ),
+            diary != null
+                ? Padding(
+                    padding: const EdgeInsets.fromLTRB(23, 0, 8, 1),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.pin_drop_rounded,
+                          color: Colors.blue,
+                          size: 14,
+                        ),
+                        Text(diary['marker_detail'][0]['marker_id'],
+                            style: const TextStyle(
+                                fontSize: 14, color: Colors.blue)),
+                      ],
+                    ),
+                  )
+                : Container(),
+            SizedBox(
+              height: 10,
+            ),
             diary != null && diary['topic'] != null
                 ? Padding(
                     padding: const EdgeInsets.fromLTRB(23, 0, 8, 5),
                     child: Container(
                       alignment: Alignment.topLeft,
-                      child: Text(
-                        '${diary['topic']}',
-                        style: TextStyle(fontSize: 16),
-                      ),
+                      child: Text('${diary['topic']}',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold)),
                     ),
                   )
                 : Container(),
@@ -454,7 +469,7 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         '${diary['detail']}',
-                        style: TextStyle(fontSize: 14),
+                        style: TextStyle(fontSize: 15),
                       ),
                     ),
                   )

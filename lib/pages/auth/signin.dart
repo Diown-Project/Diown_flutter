@@ -167,6 +167,7 @@ class _SignInState extends State<SignIn> {
                                   await SharedPreferences.getInstance();
                               String? msg = prefs.getString('msg');
                               if (msg == 'success') {
+                                Navigator.pop(context);
                                 Navigator.of(context)
                                     .pushReplacement(PageTransition(
                                   child: const Home(),
