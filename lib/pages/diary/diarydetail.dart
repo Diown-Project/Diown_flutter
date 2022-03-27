@@ -257,7 +257,8 @@ class _DiaryDetailState extends State<DiaryDetail> {
                         alignment: Alignment.topLeft,
                         child: Text(
                           '${diary['topic']}',
-                          style: TextStyle(fontSize: 16),
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ),
                     )
@@ -269,7 +270,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           '${diary['detail']}',
-                          style: TextStyle(fontSize: 14),
+                          style: TextStyle(fontSize: 15),
                         ),
                       ),
                     )

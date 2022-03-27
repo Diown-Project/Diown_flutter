@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:diown/pages/putdowndiary/diarydetailputdown.dart';
 import 'package:diown/pages/screens/editprofile.dart';
 import 'package:diown/pages/screens/widgets/mood_chart.dart';
 
@@ -20,11 +21,15 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  dynamic pro;
+  dynamic pro, allPutdown;
   findUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.get('token');
     pro = await callUser(token);
+    allPutdown = await findAllPutdownDiary();
+    for (int i = 0; i < allPutdown.length; i++) {
+      allPutdown[i]['date'] = allPutdown[i]['date'].toString().substring(0, 10);
+    }
     setState(() {});
   }
 
@@ -55,7 +60,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
           centerTitle: true,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black),
+            icon: const Icon(Icons.arrow_back_ios_new_rounded,
+                color: Colors.black),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
@@ -176,43 +182,40 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),
                                     )
                                   : Container(),
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(18, 5, 15, 0),
-                                  child: GestureDetector(
-                                    onTap: () async {
-                                      Navigator.push(
-                                              context,
-                                              PageTransition(
-                                                  child: EditProfile(
-                                                      pro: pro),
-                                                  type:
-                                                      PageTransitionType
-                                                          .rightToLeft))
-                                          .then((_) async {
-                                        await findUser();
-                                        setState(() {});
-                                      });
-                                    },
-                                    child: Container(
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.black54
-                                        ),
-                                        borderRadius: BorderRadius.circular(4.0)
-                                      ),
-                                      child: const Center(
-                                        child: Text(
-                                          'Edit Profile',
-                                          style: TextStyle(
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(18, 5, 15, 0),
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                child: EditProfile(pro: pro),
+                                                type: PageTransitionType
+                                                    .rightToLeft))
+                                        .then((_) async {
+                                      await findUser();
+                                      setState(() {});
+                                    });
+                                  },
+                                  child: Container(
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                        border:
+                                            Border.all(color: Colors.black54),
+                                        borderRadius:
+                                            BorderRadius.circular(4.0)),
+                                    child: const Center(
+                                      child: Text(
+                                        'Edit Profile',
+                                        style: TextStyle(
                                             fontSize: 16,
-                                            color: Colors.black87
-                                          ),
-                                        ),
+                                            color: Colors.black87),
                                       ),
                                     ),
                                   ),
-                                )
+                                ),
+                              )
                             ],
                           ),
                         ),
@@ -249,9 +252,87 @@ class _ProfilePageState extends State<ProfilePage> {
                     ];
                   },
                   body: TabBarView(children: [
-                    CustomScrollView(
-                      slivers: [_builderList(30)],
-                    ),
+                    allPutdown != null
+                        ? Container(
+                            margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
+                            child: ListView.builder(
+                              itemCount: allPutdown.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return ListTile(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        PageTransition(
+                                            child: DiaryDetailPutdown(
+                                                id: allPutdown[index]['_id']),
+                                            type: PageTransitionType
+                                                .rightToLeft));
+                                  },
+                                  leading: Text(
+                                    '${allPutdown[index]['mood_emoji']}',
+                                    style: TextStyle(fontSize: 24),
+                                  ),
+                                  trailing: allPutdown[index]['date'] != null
+                                      ? Text(allPutdown[index]['date'])
+                                      : null,
+                                  title: allPutdown[index]['topic'] != null
+                                      ? Text("${allPutdown[index]['topic']}")
+                                      : Text(
+                                          '${allPutdown[index]['mood_detail']}'),
+                                  subtitle: allPutdown[index]['activity'] !=
+                                          null
+                                      ? Row(
+                                          children: [
+                                            Flexible(
+                                              child: Text(
+                                                '${allPutdown[index]['activity']} ',
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            Flexible(
+                                              child: Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.pin_drop_rounded,
+                                                    color: Colors.blue,
+                                                    size: 14,
+                                                  ),
+                                                  Text(
+                                                      '${allPutdown[index]['marker_detail'][0]['marker_id']}',
+                                                      style: const TextStyle(
+                                                          color: Colors.blue))
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : Row(
+                                          children: [
+                                            Flexible(
+                                              child: Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.pin_drop_rounded,
+                                                    color: Colors.blue,
+                                                    size: 14,
+                                                  ),
+                                                  Text(
+                                                      '${allPutdown[index]['marker_detail'][0]['marker_id']}',
+                                                      style: const TextStyle(
+                                                          color: Colors.blue))
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                );
+                              },
+                            ))
+                        : Container(
+                            child: const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
                     BarChartOne(),
                     Achieve('achieve')
                   ]),
@@ -285,7 +366,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           );
         },
-        childCount: items,
+        childCount: 11,
       ),
       itemExtent: 50,
     );
@@ -316,6 +397,21 @@ checkAchievement4() async {
       },
       body: jsonEncode(
         <String, dynamic>{'token': token, 'index': 4},
+      ));
+  var result = jsonDecode(response.body);
+  return result;
+}
+
+findAllPutdownDiary() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var token = prefs.getString('token');
+  var url = 'http://10.0.2.2:3000/putdown/findAllputDown';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{'token': token},
       ));
   var result = jsonDecode(response.body);
   return result;

@@ -6,8 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class visitorAchieve extends StatefulWidget {
   final String scrollKey;
-  const visitorAchieve(this.scrollKey, { Key? key }) : super(key: key);
-  
+  const visitorAchieve(this.scrollKey, {Key? key, required this.user_id})
+      : super(key: key);
+  final user_id;
   @override
   State<visitorAchieve> createState() => _visitorAchieveState();
 }
@@ -19,7 +20,7 @@ class _visitorAchieveState extends State<visitorAchieve> {
     numForAch = [];
     ach_data = await findAch();
     ach_data.sort((a, b) => a['ach_id'].compareTo(b['ach_id']) as int);
-    successAch = await findSuccessAch();
+    successAch = await findSuccessAchId(widget.user_id);
     for (int i = 0; i < ach_data.length; i++) {
       for (int j = 0; j < successAch.length; j++) {
         if (successAch[j]['ach_id'] == ach_data[i]['ach_id']) {
@@ -29,48 +30,6 @@ class _visitorAchieveState extends State<visitorAchieve> {
       }
       if (numForAch.length != i + 1) {
         numForAch.add(0);
-      }
-    }
-    if (numForAch.where((e) => e == 1).toList().length == 11) {
-      var check = await checkAchievement(7);
-      if (check['message'] == 'success') {
-        AwesomeDialog(
-                context: context,
-                dismissOnTouchOutside: false,
-                dialogType: DialogType.SUCCES,
-                customHeader: Container(
-                  height: 100,
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Image.asset('images/Superb.png')),
-                ),
-                title: 'congratulations',
-                body: Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 0, 10, 10),
-                    child: Column(
-                      children: const [
-                        Text(
-                          'congratulations',
-                          style: TextStyle(
-                            fontSize: 20,
-                            height: 1.5,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          'Congratulations to unlock this achievement (Superb).',
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    )),
-                btnOk: ElevatedButton(
-                    onPressed: () async {
-                      await asd();
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Ok')))
-            .show();
       }
     }
 
@@ -188,30 +147,13 @@ findAch() async {
   return result;
 }
 
-findSuccessAch() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/achievement/allSuccess';
+findSuccessAchId(id) async {
+  var url = 'http://10.0.2.2:3000/achievement/allSuccessUser';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
       },
-      body: jsonEncode(<String, dynamic>{'token': token}));
-  var result = jsonDecode(response.body);
-  return result;
-}
-
-checkAchievement(index) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/achievement/checkSuccess';
-  final http.Response response = await http.post(Uri.parse(url),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8'
-      },
-      body: jsonEncode(
-        <String, dynamic>{'token': token, 'index': index},
-      ));
+      body: jsonEncode(<String, dynamic>{'user_id': id}));
   var result = jsonDecode(response.body);
   return result;
 }

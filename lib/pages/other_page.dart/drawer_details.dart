@@ -215,6 +215,7 @@ class _DrawerDetailsState extends State<DrawerDetails> {
                         await SharedPreferences.getInstance();
                     prefs.remove('token');
                     prefs.remove('passcode');
+                    Navigator.pop(context);
                     Navigator.pushReplacement(
                         context,
                         PageTransition(
