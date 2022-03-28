@@ -24,7 +24,8 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
   findDetail(id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
-    var url2 = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/checkLike';
+    var url2 =
+        'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/checkLike';
     final http.Response response2 = await http.post(Uri.parse(url2),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
@@ -33,7 +34,8 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
           <String, String>{'token': token!, 'diary_id': id},
         ));
     var result2 = jsonDecode(response2.body);
-    var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/auth/rememberMe';
+    var url =
+        'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/auth/rememberMe';
     final http.Response response = await http.post(Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
@@ -50,7 +52,8 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
       like = false;
       setState(() {});
     }
-    var url1 = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/findDetail';
+    var url1 =
+        'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/findDetail';
     final http.Response response1 = await http.post(Uri.parse(url1),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
@@ -281,7 +284,52 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                                     iconSize: 40,
                                     isFavorite: like,
                                     valueChanged: (value) async {
-                                      print(value);
+                                      var check = await checkAchievement(10);
+                                      if (check['message'] == 'success') {
+                                        AwesomeDialog(
+                                                context: context,
+                                                dismissOnTouchOutside: false,
+                                                dialogType: DialogType.SUCCES,
+                                                customHeader: Container(
+                                                  height: 100,
+                                                  child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50),
+                                                      child: Image.asset(
+                                                          'images/first_like.png')),
+                                                ),
+                                                title: 'congratulations',
+                                                body: Padding(
+                                                    padding: const EdgeInsets
+                                                            .fromLTRB(
+                                                        15, 0, 10, 10),
+                                                    child: Column(
+                                                      children: const [
+                                                        Text(
+                                                          'congratulations',
+                                                          style: TextStyle(
+                                                            fontSize: 20,
+                                                            height: 1.5,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 10),
+                                                        Text(
+                                                          'Congratulations to unlock this achievement (first_like).',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                        ),
+                                                      ],
+                                                    )),
+                                                btnOk: ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text('Ok')))
+                                            .show();
+                                      }
                                       if (value) {
                                         setState(() {
                                           likeCount += 1;
@@ -484,7 +532,8 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
 deletePutdowndiary(diary) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/deletePutdownDiary';
+  var url =
+      'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/deletePutdownDiary';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -499,7 +548,8 @@ deletePutdowndiary(diary) async {
 addLike(id) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/addLike';
+  var url =
+      'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/addLike';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -514,7 +564,8 @@ addLike(id) async {
 removeLike(id) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/removeLike';
+  var url =
+      'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/removeLike';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -529,7 +580,8 @@ removeLike(id) async {
 checkAchievement(index) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/achievement/checkSuccess';
+  var url =
+      'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/achievement/checkSuccess';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
