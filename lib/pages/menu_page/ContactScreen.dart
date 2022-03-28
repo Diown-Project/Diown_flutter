@@ -177,7 +177,7 @@ class _ContactScreenState extends State<ContactScreen> {
 }
 
 sendToSupportTeam(topic, detail) async {
-  var url = 'http://10.0.2.2:3000/support/add';
+  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/support/add';
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var id = prefs.getString('token');
   final http.Response response = await http.post(Uri.parse(url),

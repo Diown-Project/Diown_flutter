@@ -167,7 +167,7 @@ class _PictureDiaryState extends State<PictureDiary> {
 findAllYourDiary1() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/localDiary/findAllDiaryHaveImage';
+  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/localDiary/findAllDiaryHaveImage';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -182,7 +182,7 @@ findAllYourDiary1() async {
 findPicDiaryBySearch(value) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/localDiary/findPicDiaryWithSearch';
+  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/localDiary/findPicDiaryWithSearch';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

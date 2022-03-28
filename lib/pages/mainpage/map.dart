@@ -705,8 +705,7 @@ class _MapPageState extends State<MapPage> {
           zIndex: 2,
           flat: true,
           anchor: Offset(0.5, 0.5),
-          visible: false
-          );
+          visible: false);
 
       // circle = Circle(
       //     circleId: CircleId("car"),
@@ -774,227 +773,240 @@ class _MapPageState extends State<MapPage> {
     return SafeArea(
       child: GestureDetector(
         onTap: FocusScope.of(context).unfocus,
-          child: Scaffold(
-            appBar: AppBar(
-              foregroundColor: Colors.black,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              centerTitle: true,
-              title: const Text(
-                'Put down your memory',
-                style: TextStyle(color: Colors.black),
-              ),
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: IconButton(
-                      onPressed: () async {
-                        Navigator.push(
-                                context,
-                                PageTransition(
-                                    child: OwnerPin(newlocation: newlocation),
-                                    type: PageTransitionType.rightToLeft))
-                            .then((_) {
-                          allPin();
-                          setState(() {});
-                        });
-                        // print(initlaglng);
-                        // await DirectionsRepository().getDirections(
-                        //     origin: initlaglng,
-                        //     destination:
-                        //         LatLng(13.697630703230097, 100.34083452967317));
-                      },
-                      icon: const Icon(
-                        Icons.pin_drop_sharp,
-                        color: Colors.black,
-                      )),
-                )
-              ],
+        child: Scaffold(
+          appBar: AppBar(
+            foregroundColor: Colors.black,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            centerTitle: true,
+            title: const Text(
+              'Put down your memory',
+              style: TextStyle(color: Colors.black),
             ),
-            body: SlidingUpPanel(
-              controller: panelController,
-              minHeight: MediaQuery.of(context).size.height * 0.15,
-              maxHeight: MediaQuery.of(context).size.height * 0.6,
-              parallaxEnabled: true,
-              parallaxOffset: .85,
-              body: initlaglng != null
-                  ? Stack(
-                      children: [
-                        GoogleMap(
-                          markers: marker != null
-                              ? allpin != null
-                                  ? {
-                                      for (int i = 0; i < allPinShow.length; i++)
-                                        allPinShow[i],
-                                      marker!
-                                    }
-                                  : {marker!}
-                              : {
-                                  Marker(
-                                      markerId: const MarkerId('_ku'),
-                                      icon: BitmapDescriptor.defaultMarkerWithHue(
-                                          BitmapDescriptor.hueCyan),
-                                      position: const LatLng(
-                                          13.697630703230097, 100.34083452967317),
-                                      infoWindow: const InfoWindow(
-                                          title: 'บ้านกูไอแม่เย็ด'),
-                                      onTap: () {
-                                        Future.delayed(const Duration(seconds: 0),
-                                            () {
-                                          showModalBottomSheet(
-                                              context: context,
-                                              builder: (context) {
-                                                return Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Container(
-                                                      color: Colors.transparent,
-                                                      height: 220,
-                                                      child: ListView(
-                                                        children: [
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(8.0),
-                                                            child: ListTile(
-                                                                title: const Text(
-                                                                  'Diary',
-                                                                  style: TextStyle(
-                                                                      fontSize: 25),
-                                                                ),
-                                                                trailing:
-                                                                    IconButton(
-                                                                  icon: const Icon(Icons
-                                                                      .highlight_remove_rounded),
-                                                                  onPressed: () {
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                  },
-                                                                )),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: IconButton(
+                    onPressed: () async {
+                      Navigator.push(
+                              context,
+                              PageTransition(
+                                  child: OwnerPin(newlocation: newlocation),
+                                  type: PageTransitionType.rightToLeft))
+                          .then((_) {
+                        allPin();
+                        setState(() {});
+                      });
+                      // print(initlaglng);
+                      // await DirectionsRepository().getDirections(
+                      //     origin: initlaglng,
+                      //     destination:
+                      //         LatLng(13.697630703230097, 100.34083452967317));
+                    },
+                    icon: const Icon(
+                      Icons.pin_drop_sharp,
+                      color: Colors.black,
+                    )),
+              )
+            ],
+          ),
+          body: SlidingUpPanel(
+            controller: panelController,
+            minHeight: MediaQuery.of(context).size.height * 0.15,
+            maxHeight: MediaQuery.of(context).size.height * 0.6,
+            parallaxEnabled: true,
+            parallaxOffset: .85,
+            body: initlaglng != null
+                ? Stack(
+                    children: [
+                      GoogleMap(
+                        markers: marker != null
+                            ? allpin != null
+                                ? {
+                                    for (int i = 0; i < allPinShow.length; i++)
+                                      allPinShow[i],
+                                    marker!
+                                  }
+                                : {marker!}
+                            : {
+                                Marker(
+                                    markerId: const MarkerId('_ku'),
+                                    icon: BitmapDescriptor.defaultMarkerWithHue(
+                                        BitmapDescriptor.hueCyan),
+                                    position: const LatLng(
+                                        13.697630703230097, 100.34083452967317),
+                                    infoWindow: const InfoWindow(
+                                        title: 'บ้านกูไอแม่เย็ด'),
+                                    onTap: () {
+                                      Future.delayed(const Duration(seconds: 0),
+                                          () {
+                                        showModalBottomSheet(
+                                            context: context,
+                                            builder: (context) {
+                                              return Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Container(
+                                                    color: Colors.transparent,
+                                                    height: 220,
+                                                    child: ListView(
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: ListTile(
+                                                              title: const Text(
+                                                                'Diary',
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        25),
+                                                              ),
+                                                              trailing:
+                                                                  IconButton(
+                                                                icon: const Icon(
+                                                                    Icons
+                                                                        .highlight_remove_rounded),
+                                                                onPressed: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                              )),
+                                                        ),
+                                                        const Divider(
+                                                          thickness: 0.8,
+                                                        ),
+                                                        ListTile(
+                                                          leading: const Icon(
+                                                            Icons.book,
+                                                            color:
+                                                                Color.fromRGBO(
+                                                                    148,
+                                                                    92,
+                                                                    254,
+                                                                    1),
                                                           ),
-                                                          const Divider(
-                                                            thickness: 0.8,
+                                                          title: const Text(
+                                                              'Write your diary.'),
+                                                          trailing: const Icon(Icons
+                                                              .navigate_next_rounded),
+                                                          onTap: () async {},
+                                                        ),
+                                                        ListTile(
+                                                          leading: const Icon(
+                                                            Icons.pin_drop,
+                                                            color:
+                                                                Color.fromRGBO(
+                                                                    148,
+                                                                    92,
+                                                                    254,
+                                                                    1),
                                                           ),
-                                                          ListTile(
-                                                            leading: const Icon(
-                                                              Icons.book,
-                                                              color: Color.fromRGBO(
-                                                                  148, 92, 254, 1),
-                                                            ),
-                                                            title: const Text(
-                                                                'Write your diary.'),
-                                                            trailing: const Icon(Icons
-                                                                .navigate_next_rounded),
-                                                            onTap: () async {},
-                                                          ),
-                                                          ListTile(
-                                                            leading: const Icon(
-                                                              Icons.pin_drop,
-                                                              color: Color.fromRGBO(
-                                                                  148, 92, 254, 1),
-                                                            ),
-                                                            title: const Text(
-                                                                'Write your diary for putdown.'),
-                                                            trailing: const Icon(Icons
-                                                                .navigate_next_rounded),
-                                                            onTap: () {},
-                                                          )
-                                                        ],
-                                                      )),
-                                                );
-                                              });
-                                        });
-                                      })
+                                                          title: const Text(
+                                                              'Write your diary for putdown.'),
+                                                          trailing: const Icon(Icons
+                                                              .navigate_next_rounded),
+                                                          onTap: () {},
+                                                        )
+                                                      ],
+                                                    )),
+                                              );
+                                            });
+                                      });
+                                    })
+                              },
+                        circles: Set.of((circle != null) ? [circle!] : []),
+                        mapType: MapType.terrain,
+                        initialCameraPosition:
+                            CameraPosition(target: initlaglng, zoom: 12),
+                        onMapCreated: (GoogleMapController controller) {
+                          mapController = controller;
+                        },
+                        zoomControlsEnabled: true,
+                        myLocationEnabled: true,
+                        myLocationButtonEnabled: false,
+                        mapToolbarEnabled: false,
+                        // myLocationButtonEnabled: true,
+                      ),
+                      Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Material(
+                              elevation: 3,
+                              shadowColor: Colors.black,
+                              borderRadius: BorderRadius.circular(30),
+                              child: TextFormField(
+                                controller: _searchController,
+                                onChanged: (value) {
+                                  setState(() {
+                                    input = value;
+                                  });
                                 },
-                          circles: Set.of((circle != null) ? [circle!] : []),
-                          mapType: MapType.terrain,
-                          initialCameraPosition:
-                              CameraPosition(target: initlaglng, zoom: 12),
-                          onMapCreated: (GoogleMapController controller) {
-                            mapController = controller;
-                          },
-                          zoomControlsEnabled: true,
-                          myLocationEnabled: true,
-                          myLocationButtonEnabled: false,
-                          mapToolbarEnabled: false,
-                          // myLocationButtonEnabled: true,
-                        ),
-                        Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Material(
-                                elevation: 3,                     
-                                shadowColor: Colors.black,
-                                borderRadius: BorderRadius.circular(30),
-                                child: TextFormField(
-                                  controller: _searchController,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      input = value;
-                                    });
-                                  },
-                                  onEditingComplete: () async {
-                                    var place = await LocationService()
-                                        .getPlace(_searchController.text);
-                                    if (place.isNotEmpty) {
-                                      _goToPlace(place);
-                                    }
-                                  },
-                                  textCapitalization: TextCapitalization.words,
-                                  decoration: InputDecoration(
-                                    suffixIcon: IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(Icons.search),
-                                      color: Colors.black54,
-                                    ),
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    hintText: 'search Location',
-                                    hintStyle: const TextStyle(
-                                        color: Colors.black38,
-                                        fontWeight: FontWeight.w200),
-                                    focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide.none,
-                                        borderRadius: BorderRadius.circular(30)),
-                                    enabledBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide.none,
-                                        borderRadius: BorderRadius.circular(30)),
+                                onEditingComplete: () async {
+                                  var place = await LocationService()
+                                      .getPlace(_searchController.text);
+                                  if (place.isNotEmpty) {
+                                    _goToPlace(place);
+                                  }
+                                },
+                                textCapitalization: TextCapitalization.words,
+                                decoration: InputDecoration(
+                                  suffixIcon: IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(Icons.search),
+                                    color: Colors.black54,
                                   ),
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  hintText: 'search Location',
+                                  hintStyle: const TextStyle(
+                                      color: Colors.black38,
+                                      fontWeight: FontWeight.w200),
+                                  focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.circular(30)),
+                                  enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.circular(30)),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      ],
-                    )
-                  : const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-              panelBuilder: (controller) => PanelWidget(controller, panelController),
-              borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
-            ),
-            floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
-            floatingActionButton: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 200, 0, 0),
-              child: FloatingActionButton(
-                  elevation: 3,
-                  heroTag: 'asd',
-                  backgroundColor: Colors.white,
-                  child: click == true
-                    ? const Icon(MdiIcons.crosshairs, color: Colors.black45)
-                    : const Icon(MdiIcons.crosshairsGps, color: Color(0xff8b82ff)),
-                  onPressed: () {
-                    getCurrentLocation();
-                    click = !click;
-                  }),
-            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  )
+                : const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+            panelBuilder: (controller) =>
+                PanelWidget(controller, panelController),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
           ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 200, 0, 0),
+            child: FloatingActionButton(
+                elevation: 3,
+                heroTag: 'asd',
+                backgroundColor: Colors.white,
+                child: click == true
+                    ? const Icon(MdiIcons.crosshairs, color: Colors.black45)
+                    : const Icon(MdiIcons.crosshairsGps,
+                        color: Color(0xff8b82ff)),
+                onPressed: () {
+                  getCurrentLocation();
+                  click = !click;
+                }),
+          ),
+        ),
       ),
     );
   }
 
-  Widget PanelWidget(ScrollController controller, PanelController panelController) {
+  Widget PanelWidget(
+      ScrollController controller, PanelController panelController) {
     return ListView(
       padding: EdgeInsets.zero,
       controller: controller,
@@ -1009,9 +1021,8 @@ class _MapPageState extends State<MapPage> {
               width: 50,
               height: 5,
               decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(12)
-              ),
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(12)),
             ),
           ),
         ),
@@ -1025,7 +1036,7 @@ class _MapPageState extends State<MapPage> {
   Widget buildPinDetail() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 24),
-      child: Text('Select location to put down your diary'),    
+      child: Text('Select location to put down your diary'),
     );
   }
 
@@ -1051,7 +1062,7 @@ class _MapPageState extends State<MapPage> {
 }
 
 findDiaryInPin(token, pin) async {
-  var url = 'http://10.0.2.2:3000/putdown/findDiaryInPin';
+  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/findDiaryInPin';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -1067,7 +1078,7 @@ findDiaryInPin(token, pin) async {
 }
 
 findMyself(token) async {
-  var url = 'http://10.0.2.2:3000/auth/rememberMe';
+  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/auth/rememberMe';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -1096,7 +1107,7 @@ distance(lagcurrent, lagpin, lngcurrent, lngpin) {
 }
 
 findAllPin() async {
-  var url = 'http://10.0.2.2:3000/putdown/findAllMarker';
+  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/findAllMarker';
   final http.Response response = await http.get(
     Uri.parse(url),
   );
@@ -1107,7 +1118,7 @@ findAllPin() async {
 findFollow(target_id) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/follow/checkFollowing';
+  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/follow/checkFollowing';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -1119,4 +1130,3 @@ findFollow(target_id) async {
   var result = jsonDecode(response.body);
   return result;
 }
-

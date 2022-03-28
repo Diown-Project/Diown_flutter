@@ -163,7 +163,7 @@ class _LoaddingPageState extends State<LoaddingPage> {
 }
 
 rememberMe(String tokenId) async {
-  var url = 'http://10.0.2.2:3000/auth/rememberMe';
+  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/auth/rememberMe';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
