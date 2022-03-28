@@ -18,7 +18,7 @@ class _FollowingPageState extends State<FollowingPage> {
 
   moveResultToFollow() async {
     following = await findFollowing();
-    if (following != null) {
+    if (following.length != 0) {
       var check = await checkAchievement(6);
       if (check['message'] == 'success') {
         AwesomeDialog(
