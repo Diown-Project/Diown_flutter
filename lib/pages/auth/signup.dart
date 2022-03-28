@@ -24,322 +24,302 @@ class _SignUpState extends State<SignUp> {
     return SafeArea(
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
-          child: Scaffold(
-              appBar: AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                foregroundColor: Colors.black,
-              ),
-              body: SingleChildScrollView(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.topLeft,
-                      child: const Text(
-                        'Create your',
-                        style: TextStyle(
-                            fontSize: 25.0,
-                            fontWeight: FontWeight.normal,
-                        ),
+        child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              foregroundColor: Colors.black,
+            ),
+            body: SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: const Text(
+                      'Create your',
+                      style: TextStyle(
+                        fontSize: 25.0,
+                        fontWeight: FontWeight.normal,
                       ),
                     ),
-                    Container(
-                      alignment: Alignment.topLeft,
-                      child: const Text(
-                        'account',
-                        style: TextStyle(
-                            fontSize: 25.0,
-                            fontWeight: FontWeight.normal,
-                        ),
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: const Text(
+                      'account',
+                      style: TextStyle(
+                        fontSize: 25.0,
+                        fontWeight: FontWeight.normal,
                       ),
                     ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Form(
-                        key: _formkey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Username',
-                              style: TextStyle(
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Form(
+                      key: _formkey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Username',
+                            style: TextStyle(
                                 color: Color(0xff8fa1b6),
                                 fontSize: 18,
-                                fontWeight: FontWeight.w400
-                              ), 
-                            ),
-                            const SizedBox(height: 5),
-                            TextFormField(
-                              maxLength: 20,
-                              keyboardType: TextInputType.text,
-                              cursorColor: Color(0xff8a7efd),
-                              decoration: const InputDecoration(
+                                fontWeight: FontWeight.w400),
+                          ),
+                          const SizedBox(height: 5),
+                          TextFormField(
+                            maxLength: 20,
+                            keyboardType: TextInputType.text,
+                            cursorColor: Color(0xff8a7efd),
+                            decoration: const InputDecoration(
                               filled: true,
                               fillColor: Color(0xfff1f3f4),
                               hintText: 'yourusername',
                               hintStyle: TextStyle(
-                                color: Color(0xffc5d2e1),
-                                fontWeight: FontWeight.w200
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide.none
-                              ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide.none
-                              ),
-                             ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'You must to fill this field.';
-                                }
-                                return null;
-                              },
-                              onSaved: (value) {
-                                username = value;
-                              },
-                            ),
-                            
-                            const Text(
-                              'Email',
-                              style: TextStyle(
-                                color: Color(0xff8fa1b6),
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400
-                              ), 
-                            ),
-                            const SizedBox(height: 5),
-                            TextFormField(
-                              keyboardType: TextInputType.emailAddress,
-                              cursorColor: Color(0xff8a7efd),
-                              decoration: const InputDecoration(
-                                filled: true,
-                                fillColor: Color(0xfff1f3f4),
-                                hintText: 'yourname@example.com',
-                                hintStyle: TextStyle(
                                   color: Color(0xffc5d2e1),
-                                  fontWeight: FontWeight.w200
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide.none
-                                ),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide.none
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'You must to fill this field.';
-                                } else if (!value.contains('@')) {
-                                  return 'Your input must be email.';
-                                }
-                                return null;
-                              },
-                              onSaved: (value) {
-                                email = value;
-                              },
+                                  fontWeight: FontWeight.w200),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide.none),
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide.none),
                             ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            const Text(
-                              'Password',
-                              style: TextStyle(
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'You must to fill this field.';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              username = value;
+                            },
+                          ),
+                          const Text(
+                            'Email',
+                            style: TextStyle(
                                 color: Color(0xff8fa1b6),
                                 fontSize: 18,
-                                fontWeight: FontWeight.w400
-                              ), 
+                                fontWeight: FontWeight.w400),
+                          ),
+                          const SizedBox(height: 5),
+                          TextFormField(
+                            keyboardType: TextInputType.emailAddress,
+                            cursorColor: Color(0xff8a7efd),
+                            decoration: const InputDecoration(
+                              filled: true,
+                              fillColor: Color(0xfff1f3f4),
+                              hintText: 'yourname@example.com',
+                              hintStyle: TextStyle(
+                                  color: Color(0xffc5d2e1),
+                                  fontWeight: FontWeight.w200),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide.none),
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide.none),
                             ),
-                            const SizedBox(height: 5),
-                            TextFormField(
-                              keyboardType: TextInputType.text,
-                              cursorColor: Color(0xff8a7efd),
-                              decoration: InputDecoration(
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'You must to fill this field.';
+                              } else if (!value.contains('@')) {
+                                return 'Your input must be email.';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              email = value;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          const Text(
+                            'Password',
+                            style: TextStyle(
+                                color: Color(0xff8fa1b6),
+                                fontSize: 18,
+                                fontWeight: FontWeight.w400),
+                          ),
+                          const SizedBox(height: 5),
+                          TextFormField(
+                            keyboardType: TextInputType.text,
+                            cursorColor: Color(0xff8a7efd),
+                            decoration: InputDecoration(
                               filled: true,
                               fillColor: Color(0xfff1f3f4),
                               hintText: 'yourpassword',
                               hintStyle: const TextStyle(
-                                color: Color(0xffc5d2e1),
-                                fontWeight: FontWeight.w200
-                              ),
+                                  color: Color(0xffc5d2e1),
+                                  fontWeight: FontWeight.w200),
                               focusedBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide.none
-                              ),
+                                  borderSide: BorderSide.none),
                               enabledBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide.none
-                              ),
+                                  borderSide: BorderSide.none),
                               // prefixIcon: const Icon(Icons.lock),
                               suffixIcon: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      see1 = !see1;
-                                    });
-                                  },
-                                  icon: Icon(see1
-                                      ? Icons.visibility
-                                      : Icons.visibility_off),
-                                  color: Color(0xff8fa1b6),
-                                  focusColor: Color(0xff8fa1b6),
+                                onPressed: () {
+                                  setState(() {
+                                    see1 = !see1;
+                                  });
+                                },
+                                icon: Icon(see1
+                                    ? Icons.visibility
+                                    : Icons.visibility_off),
+                                color: Color(0xff8fa1b6),
+                                focusColor: Color(0xff8fa1b6),
                               ),
                             ),
-                              obscureText: see1,
-                              onSaved: (value) {
-                                password = value;
-                              },
-                              validator: (value) {
-                                setState(() {
-                                  checkPassword1 = value;
-                                });
-                                if (value == null || value.isEmpty) {
-                                  return 'You must to fill this field.';
-                                } else if (value.length <= 8) {
-                                  return 'Your password must be greater than 8';
-                                }
-    
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 15),
-                            const Text(
-                              'Confirm password',
-                              style: TextStyle(
+                            obscureText: see1,
+                            onSaved: (value) {
+                              password = value;
+                            },
+                            validator: (value) {
+                              setState(() {
+                                checkPassword1 = value;
+                              });
+                              if (value == null || value.isEmpty) {
+                                return 'You must to fill this field.';
+                              } else if (value.length <= 8) {
+                                return 'Your password must be greater than 8';
+                              }
+
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 15),
+                          const Text(
+                            'Confirm password',
+                            style: TextStyle(
                                 color: Color(0xff8fa1b6),
                                 fontSize: 18,
-                                fontWeight: FontWeight.w400
-                              ), 
-                            ),
-                            const SizedBox(height: 5),
-                            TextFormField(
-                              keyboardType: TextInputType.text,
-                              cursorColor: Color(0xff8a7efd),
-                              decoration: InputDecoration(
+                                fontWeight: FontWeight.w400),
+                          ),
+                          const SizedBox(height: 5),
+                          TextFormField(
+                            keyboardType: TextInputType.text,
+                            cursorColor: Color(0xff8a7efd),
+                            decoration: InputDecoration(
                               filled: true,
                               fillColor: Color(0xfff1f3f4),
                               hintText: 'confirm yourpassword',
                               hintStyle: const TextStyle(
-                                color: Color(0xffc5d2e1),
-                                fontWeight: FontWeight.w200
-                              ),
+                                  color: Color(0xffc5d2e1),
+                                  fontWeight: FontWeight.w200),
                               focusedBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide.none
-                              ),
+                                  borderSide: BorderSide.none),
                               enabledBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide.none
-                              ),
+                                  borderSide: BorderSide.none),
                               // prefixIcon: const Icon(Icons.lock),
                               suffixIcon: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      see1 = !see1;
-                                    });
-                                  },
-                                  icon: Icon(see1
-                                      ? Icons.visibility
-                                      : Icons.visibility_off),
-                                  color: Color(0xff8fa1b6),
-                                  focusColor: Color(0xff8fa1b6),
-                              ),
-                            ),
-                              obscureText: see1,
-                              onSaved: (value) {
-                                password = value;
-                              },
-                              validator: (value) {
-                                setState(() {
-                                  checkPassword2 = value;
-                                });
-                                if (value == null || value.isEmpty) {
-                                  return 'You must to fill this field.';
-                                }
-                                if (checkPassword1 != checkPassword2) {
-                                  return 'your password not match each other.';
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(
-                              height: 30,
-                            ),
-                            GestureDetector(
-                              onTap: () async {
+                                onPressed: () {
                                   setState(() {
-                                    if (_formkey.currentState!.validate()) {
-                                      _formkey.currentState!.save();
-                                    }
+                                    see1 = !see1;
                                   });
-                                  if (email != null &&
-                                      password != null &&
-                                      username != null) {
-                                    CoolAlert.show(
-                                      barrierDismissible: false,
-                                      context: context,
-                                      type: CoolAlertType.loading,
-                                    );
-                                    await signup(username, email, password);
-                                    SharedPreferences prefs =
-                                        await SharedPreferences.getInstance();
-                                    String? msg = prefs.getString('msg');
-                                    if (msg == 'success') {
-                                      CoolAlert.show(
-                                        barrierDismissible: false,
-                                        context: context,
-                                        type: CoolAlertType.success,
-                                        title: msg,
-                                        text:
-                                            "Your registeration was successful!",
-                                        onConfirmBtnTap: () {
-                                          prefs.remove('msg');
-                                          Navigator.of(context).pop();
-                                          Navigator.of(context).pop();
-                                          Navigator.of(context).pop();
-                                        },
-                                      );
-                                    } else {
-                                      CoolAlert.show(
-                                        barrierDismissible: false,
-                                        context: context,
-                                        type: CoolAlertType.error,
-                                        text: msg,
-                                        onConfirmBtnTap: () {
-                                          prefs.remove('msg');
-                                          Navigator.of(context).pop();
-                                          Navigator.of(context).pop();
-                                        },
-                                      );
-                                    }
-                                  }
                                 },
-                              child: Container(
-                                width: double.infinity,
-                                height: 60,
-                                decoration: const BoxDecoration(
+                                icon: Icon(see1
+                                    ? Icons.visibility
+                                    : Icons.visibility_off),
+                                color: Color(0xff8fa1b6),
+                                focusColor: Color(0xff8fa1b6),
+                              ),
+                            ),
+                            obscureText: see1,
+                            onSaved: (value) {
+                              password = value;
+                            },
+                            validator: (value) {
+                              setState(() {
+                                checkPassword2 = value;
+                              });
+                              if (value == null || value.isEmpty) {
+                                return 'You must to fill this field.';
+                              }
+                              if (checkPassword1 != checkPassword2) {
+                                return 'your password not match each other.';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+                              setState(() {
+                                if (_formkey.currentState!.validate()) {
+                                  _formkey.currentState!.save();
+                                }
+                              });
+                              if (email != null &&
+                                  password != null &&
+                                  username != null) {
+                                CoolAlert.show(
+                                  barrierDismissible: false,
+                                  context: context,
+                                  type: CoolAlertType.loading,
+                                );
+                                await signup(username, email, password);
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                String? msg = prefs.getString('msg');
+                                if (msg == 'success') {
+                                  CoolAlert.show(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    type: CoolAlertType.success,
+                                    title: msg,
+                                    text: "Your registeration was successful!",
+                                    onConfirmBtnTap: () {
+                                      prefs.remove('msg');
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                    },
+                                  );
+                                } else {
+                                  CoolAlert.show(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    type: CoolAlertType.error,
+                                    text: msg,
+                                    onConfirmBtnTap: () {
+                                      prefs.remove('msg');
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                    },
+                                  );
+                                }
+                              }
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              height: 60,
+                              decoration: const BoxDecoration(
                                   color: Color(0xff8b82ff),
-                                  borderRadius: BorderRadius.all(Radius.circular(10))
-                                ),
-                                child: const Center(
-                                  child: Text(
-                                      'REGISTER',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.white
-                                      ),                                      
-                                    ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              child: const Center(
+                                child: Text(
+                                  'REGISTER',
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.white),
                                 ),
                               ),
+                            ),
                           ),
-                          ],
-                        )),
-                  ],
-                ),
-              )),
+                        ],
+                      )),
+                ],
+              ),
+            )),
       ),
     );
   }
 }
 
 signup(username, email, password) async {
-  var url = 'http://10.0.2.2:3000/auth/signup';
+  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/auth/signup';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

@@ -24,7 +24,7 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
   findDetail(id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
-    var url2 = 'http://10.0.2.2:3000/putdown/checkLike';
+    var url2 = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/checkLike';
     final http.Response response2 = await http.post(Uri.parse(url2),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
@@ -33,7 +33,7 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
           <String, String>{'token': token!, 'diary_id': id},
         ));
     var result2 = jsonDecode(response2.body);
-    var url = 'http://10.0.2.2:3000/auth/rememberMe';
+    var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/auth/rememberMe';
     final http.Response response = await http.post(Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
@@ -50,7 +50,7 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
       like = false;
       setState(() {});
     }
-    var url1 = 'http://10.0.2.2:3000/putdown/findDetail';
+    var url1 = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/findDetail';
     final http.Response response1 = await http.post(Uri.parse(url1),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
@@ -484,7 +484,7 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
 deletePutdowndiary(diary) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/putdown/deletePutdownDiary';
+  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/deletePutdownDiary';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -499,7 +499,7 @@ deletePutdowndiary(diary) async {
 addLike(id) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/putdown/addLike';
+  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/addLike';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -514,7 +514,7 @@ addLike(id) async {
 removeLike(id) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/putdown/removeLike';
+  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/removeLike';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -529,7 +529,7 @@ removeLike(id) async {
 checkAchievement(index) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/achievement/checkSuccess';
+  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/achievement/checkSuccess';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

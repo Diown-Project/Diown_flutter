@@ -169,7 +169,7 @@ class _EditLocalDiaryState extends State<EditLocalDiary> {
   }
 
   findDetail(id) async {
-    var url = 'http://10.0.2.2:3000/localDiary/findDetail';
+    var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/localDiary/findDetail';
     final http.Response response = await http.post(Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
@@ -1086,7 +1086,7 @@ class _EditLocalDiaryState extends State<EditLocalDiary> {
 
 updateDiary(id, mood_emoji, mood_detail, resultAct, _imageNameList, topic,
     detail, imageLocation) async {
-  var url = 'http://10.0.2.2:3000/localDiary/update';
+  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/localDiary/update';
   if (topic == '') {
     topic = null;
   }

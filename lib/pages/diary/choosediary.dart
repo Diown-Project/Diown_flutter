@@ -48,29 +48,26 @@ class _ChooseDiaryState extends State<ChooseDiary> {
                     ],
                   ),
                   title: e['topic'] == null
-                      ? Text(
-                        '${e['mood_detail']}',
-                        style: TextStyle(fontSize: 16)
-                        )
+                      ? Text('${e['mood_detail']}',
+                          style: TextStyle(fontSize: 16))
                       : RichText(
                           overflow: TextOverflow.ellipsis,
                           text: TextSpan(
-                            text: '${e['topic']}',
-                            style: const TextStyle(color: Colors.black, fontSize: 16)
-                          ),
+                              text: '${e['topic']}',
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 16)),
                         ),
                   subtitle:
                       e['activity'] == null ? null : Text('${e['activity']}'),
                   trailing: Text('${e['date'].toString().substring(0, 10)}'),
                   tileColor: Color(0xfff1f3f4),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15)
-                  ),
+                      borderRadius: BorderRadius.circular(15)),
                   onTap: () {
                     Navigator.push(
                         context,
                         PageTransition(
-                            child:  DiaryDetail(id:e['_id']),
+                            child: DiaryDetail(id: e['_id']),
                             type: PageTransitionType.rightToLeft));
                   },
                 ),
@@ -90,7 +87,7 @@ class _ChooseDiaryState extends State<ChooseDiary> {
 findAllYourDiary1() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/localDiary/findAllDiary';
+  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/localDiary/findAllDiary';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
