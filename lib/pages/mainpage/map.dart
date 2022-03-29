@@ -47,6 +47,7 @@ class _MapPageState extends State<MapPage> {
       allpin,
       allPinShow;
   bool focus = false;
+  bool selectPin = false;
   GoogleMapController? mapController;
   Completer<GoogleMapController> _controller = Completer();
   String? searchaddr;
@@ -54,6 +55,7 @@ class _MapPageState extends State<MapPage> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   final panelController = PanelController();
+  bool open = false;
 
   allPin() async {
     allpin = await findAllPin();
@@ -71,21 +73,25 @@ class _MapPageState extends State<MapPage> {
             print(pin_id);
             Future.delayed(const Duration(seconds: 0), () async {
               var dis = distance(newlocation.latitude as double, lag,
-                  newlocation.longitude as double, lng);
+                newlocation.longitude as double, lng);
               showModalBottomSheet(
+                backgroundColor: Colors.transparent,
+                  isScrollControlled: true,
                   context: context,
                   builder: (context) {
                     return makeDismissible(
                       child: DraggableScrollableSheet(
-                        initialChildSize: 1,
+                        initialChildSize: 0.85,
                         builder: (_, controller) => Scaffold(
-                          backgroundColor: Colors.transparent,
+                          backgroundColor: Colors.white,
                           appBar: AppBar(
                             backgroundColor: Colors.transparent,
                             elevation: 0,
                             foregroundColor: Colors.black,
                             centerTitle: true,
                             title: Text(pin),
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
                           ),
                           body: FutureBuilder(
                             future: forDiarypinFunc(pin_id),
@@ -775,48 +781,49 @@ class _MapPageState extends State<MapPage> {
       child: GestureDetector(
         onTap: FocusScope.of(context).unfocus,
           child: Scaffold(
-            appBar: AppBar(
-              foregroundColor: Colors.black,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              centerTitle: true,
-              title: const Text(
-                'Put down your memory',
-                style: TextStyle(color: Colors.black),
-              ),
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: IconButton(
-                      onPressed: () async {
-                        Navigator.push(
-                                context,
-                                PageTransition(
-                                    child: OwnerPin(newlocation: newlocation),
-                                    type: PageTransitionType.rightToLeft))
-                            .then((_) {
-                          allPin();
-                          setState(() {});
-                        });
-                        // print(initlaglng);
-                        // await DirectionsRepository().getDirections(
-                        //     origin: initlaglng,
-                        //     destination:
-                        //         LatLng(13.697630703230097, 100.34083452967317));
-                      },
-                      icon: const Icon(
-                        Icons.pin_drop_sharp,
-                        color: Colors.black,
-                      )),
-                )
-              ],
-            ),
+            // extendBodyBehindAppBar: true,
+            // appBar: AppBar(
+            //   foregroundColor: Colors.black,
+            //   backgroundColor: Colors.white,
+            //   elevation: 0,
+            //   centerTitle: true,
+            //   title: const Text(
+            //     'Put down your memory',
+            //     style: TextStyle(color: Colors.black),
+            //   ),
+            //   actions: [
+            //     Padding(
+            //       padding: const EdgeInsets.all(8.0),
+            //       child: IconButton(
+            //           onPressed: () async {
+            //             Navigator.push(
+            //                     context,
+            //                     PageTransition(
+            //                         child: OwnerPin(newlocation: newlocation),
+            //                         type: PageTransitionType.rightToLeft))
+            //                 .then((_) {
+            //               allPin();
+            //               setState(() {});
+            //             });
+            //             // print(initlaglng);
+            //             // await DirectionsRepository().getDirections(
+            //             //     origin: initlaglng,
+            //             //     destination:
+            //             //         LatLng(13.697630703230097, 100.34083452967317));
+            //           },
+            //           icon: const Icon(
+            //             Icons.pin_drop_sharp,
+            //             color: Colors.black,
+            //           )),
+            //     )
+            //   ],
+            // ),
             body: SlidingUpPanel(
               controller: panelController,
-              minHeight: MediaQuery.of(context).size.height * 0.15,
-              maxHeight: MediaQuery.of(context).size.height * 0.6,
+              minHeight: MediaQuery.of(context).size.height * 0.21,       
+              maxHeight: MediaQuery.of(context).size.height * 0.68,
               parallaxEnabled: true,
-              parallaxOffset: .85,
+              parallaxOffset: .78,
               body: initlaglng != null
                   ? Stack(
                       children: [
@@ -909,20 +916,20 @@ class _MapPageState extends State<MapPage> {
                           circles: Set.of((circle != null) ? [circle!] : []),
                           mapType: MapType.terrain,
                           initialCameraPosition:
-                              CameraPosition(target: initlaglng, zoom: 12),
+                              CameraPosition(target: initlaglng, zoom: 13),
                           onMapCreated: (GoogleMapController controller) {
                             mapController = controller;
                           },
-                          zoomControlsEnabled: true,
+                          zoomControlsEnabled: false,
                           myLocationEnabled: true,
                           myLocationButtonEnabled: false,
                           mapToolbarEnabled: false,
-                          // myLocationButtonEnabled: true,
+                          
                         ),
                         Column(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.fromLTRB(8, 10, 8, 0),
                               child: Material(
                                 elevation: 3,                     
                                 shadowColor: Colors.black,
@@ -971,12 +978,14 @@ class _MapPageState extends State<MapPage> {
                   : const Center(
                       child: CircularProgressIndicator(),
                     ),
-              panelBuilder: (controller) => PanelWidget(controller, panelController),
+              panelBuilder: (controller) {
+                return panelHomeWidget(controller, panelController);
+              },
               borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
             ),
             floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
             floatingActionButton: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 200, 0, 0),
+              padding: const EdgeInsets.fromLTRB(0, 80, 0, 0),
               child: FloatingActionButton(
                   elevation: 3,
                   heroTag: 'asd',
@@ -995,6 +1004,19 @@ class _MapPageState extends State<MapPage> {
   }
 
   Widget PanelWidget(ScrollController controller, PanelController panelController) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        foregroundColor: Colors.black,
+        centerTitle: true,
+        title: Text('pin'),
+      ),
+      body: Text('data'),
+    );
+  }
+
+  Widget panelHomeWidget(ScrollController controller, PanelController panelController) {
     return ListView(
       padding: EdgeInsets.zero,
       controller: controller,
@@ -1002,7 +1024,18 @@ class _MapPageState extends State<MapPage> {
         SizedBox(height: 12),
         GestureDetector(
           onTap: () {
-            print(panelController.isPanelClosed);
+            if (open == false) {
+              panelController.open();
+              setState(() {
+                open = true;
+              });
+            }
+            else if (open == true) {
+              panelController.close();
+              setState(() {
+                open = false;
+              });
+            }
           },
           child: Center(
             child: Container(
@@ -1015,17 +1048,127 @@ class _MapPageState extends State<MapPage> {
             ),
           ),
         ),
-        SizedBox(height: 36),
-        buildPinDetail(),
+        // SizedBox(height: 24),
+        buildHomeDetail(),
         SizedBox(height: 24)
       ],
     );
   }
 
-  Widget buildPinDetail() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 24),
-      child: Text('Select location to put down your diary'),    
+  Widget buildHomeDetail() {
+    return Column(
+      children: [
+        const Padding(
+          padding: EdgeInsets.fromLTRB(0, 10, 0, 15),
+          child: Center(
+            child: Text(
+              'select pin location on map to putdown your diary',
+              style: TextStyle(
+                color: Colors.grey
+              ),
+            ),  
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              height: 70,
+              width: 180,
+              decoration: const BoxDecoration(
+                color: Color(0xfff1f3f4),
+                borderRadius: BorderRadius.all(Radius.circular(10))
+              ),
+              child: Center(
+                child: ListTile(
+                  leading: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 40,
+                        width: 40,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle
+                        ),
+                        child: const Center(
+                          child: Icon(
+                            MdiIcons.mapMarkerPlus,
+                            color: Color(0xff8b82ff),
+                          ),
+                        ),
+                      ),
+                    ]
+                  ),
+                  title: const Text(
+                    'Create new pin location',
+                    style: TextStyle(
+                      fontSize: 14
+                    ),
+                  ),
+                  subtitle: const Text(
+                    'amount 1/1',
+                    style: TextStyle(
+                      fontSize: 12
+                    ),
+                  )
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                        context,
+                        PageTransition(
+                            child: OwnerPin(newlocation: newlocation),
+                            type: PageTransitionType.rightToLeft))
+                    .then((_) {
+                  allPin();
+                  setState(() {});
+                });
+              },
+              child: Container(
+                height: 70,
+                width: 180,
+                decoration: const BoxDecoration(
+                  color: Color(0xfff1f3f4),
+                  borderRadius: BorderRadius.all(Radius.circular(10))
+                ),
+                child: Center(
+                  child: ListTile(
+                    leading: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 40,
+                          width: 40,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              MdiIcons.bookMarker,
+                              color: Color(0xff8b82ff) ,
+                            ),
+                          ),
+                        ),
+                      ]
+                    ),
+                    title: const Text(
+                      'Your own pin location',
+                      style: TextStyle(
+                        fontSize: 14
+                      ),
+                    ),
+                    // subtitle: Text('pin amount 1/1'),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        )
+      ]
     );
   }
 

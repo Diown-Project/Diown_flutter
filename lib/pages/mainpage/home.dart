@@ -63,7 +63,7 @@ class _HomeState extends State<Home> {
               ? pageList[_bottomNavIndex]
               : pageList[_saveindex],
           floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
+              FloatingActionButtonLocation.miniCenterDocked,
           floatingActionButton: keyboardIsOpened
               ? null
               : FloatingActionButton(
