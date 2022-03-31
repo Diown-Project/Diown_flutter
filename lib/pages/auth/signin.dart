@@ -238,7 +238,7 @@ class _SignInState extends State<SignIn> {
 }
 
 signin(email, password) async {
-  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/auth/signin';
+  var url = 'http://10.0.2.2:3000/auth/signin';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

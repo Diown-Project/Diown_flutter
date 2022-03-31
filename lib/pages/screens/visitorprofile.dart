@@ -441,8 +441,7 @@ class _VisitorProfileState extends State<VisitorProfile> {
 }
 
 findUser(id) async {
-  var url =
-      'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/auth/findUser';
+  var url = 'http://10.0.2.2:3000/auth/findUser';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -458,8 +457,7 @@ findUser(id) async {
 checkRequest(target_id) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url =
-      'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/follow/checkRequest';
+  var url = 'http://10.0.2.2:3000/follow/checkRequest';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -475,8 +473,7 @@ checkRequest(target_id) async {
 addRequest(target_id) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url =
-      'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/follow/addRequest';
+  var url = 'http://10.0.2.2:3000/follow/addRequest';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -492,8 +489,7 @@ addRequest(target_id) async {
 deleteRequest(target_id) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url =
-      'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/follow/deleteRequest';
+  var url = 'http://10.0.2.2:3000/follow/deleteRequest';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -509,8 +505,7 @@ deleteRequest(target_id) async {
 unFollow(target_id) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url =
-      'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/follow/deleteFollowing';
+  var url = 'http://10.0.2.2:3000/follow/deleteFollowing';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -524,8 +519,7 @@ unFollow(target_id) async {
 }
 
 findAllPutdownUser(id) async {
-  var url =
-      'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/findAllPutdownUser';
+  var url = 'http://10.0.2.2:3000/putdown/findAllPutdownUser';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

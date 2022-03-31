@@ -86,17 +86,20 @@ class BarChartOneState extends State<BarChartOne> {
                                 padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                                 // width: 110,
                                 decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.all(Radius.circular(20))
-                                ),
+                                    color: Colors.white,
+                                    shape: BoxShape.rectangle,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButton<String>(
                                     focusColor: Colors.black,
                                     isDense: true,
                                     // isExpanded: true,
                                     value: dropdownvalue,
-                                    icon: const Icon(Icons.keyboard_arrow_down, color: Color(0xff6559ff),),
+                                    icon: const Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: Color(0xff6559ff),
+                                    ),
                                     iconSize: 28,
                                     // elevation: 100,
                                     onChanged: (String? newval) {
@@ -104,8 +107,15 @@ class BarChartOneState extends State<BarChartOne> {
                                         dropdownvalue = newval;
                                       });
                                     },
-                                    items: <String>['7', '30', '60', '90', '180', '365']
-                                        .map<DropdownMenuItem<String>>((String value) {
+                                    items: <String>[
+                                      '7',
+                                      '30',
+                                      '60',
+                                      '90',
+                                      '180',
+                                      '365'
+                                    ].map<DropdownMenuItem<String>>(
+                                        (String value) {
                                       return DropdownMenuItem<String>(
                                         value: value,
                                         onTap: () {
@@ -116,14 +126,14 @@ class BarChartOneState extends State<BarChartOne> {
                                         },
                                         child: Text(
                                           '${dropDownList[value]}',
-                                          style: TextStyle(color: Color(0xff6559ff)),
+                                          style: TextStyle(
+                                              color: Color(0xff6559ff)),
                                         ),
                                       );
                                     }).toList(),
                                   ),
                                 ),
-                              ),  
-                            
+                              ),
                             ],
                           ),
                           const SizedBox(
@@ -328,7 +338,7 @@ class BarChartOneState extends State<BarChartOne> {
 findEmoji(period) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/mood_router/findAll';
+  var url = 'http://10.0.2.2:3000/mood_router/findAll';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

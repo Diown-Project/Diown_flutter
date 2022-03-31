@@ -181,7 +181,7 @@ class _AchieveState extends State<Achieve> {
 }
 
 findAch() async {
-  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/achievement/getAll';
+  var url = 'http://10.0.2.2:3000/achievement/getAll';
   final http.Response response = await http.get(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -193,7 +193,7 @@ findAch() async {
 findSuccessAch() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/achievement/allSuccess';
+  var url = 'http://10.0.2.2:3000/achievement/allSuccess';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -206,7 +206,7 @@ findSuccessAch() async {
 checkAchievement(index) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/achievement/checkSuccess';
+  var url = 'http://10.0.2.2:3000/achievement/checkSuccess';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

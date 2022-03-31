@@ -24,36 +24,7 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
   findDetail(id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
-    var url2 =
-        'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/checkLike';
-    final http.Response response2 = await http.post(Uri.parse(url2),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8'
-        },
-        body: jsonEncode(
-          <String, String>{'token': token!, 'diary_id': id},
-        ));
-    var result2 = jsonDecode(response2.body);
-    var url =
-        'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/auth/rememberMe';
-    final http.Response response = await http.post(Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8'
-        },
-        body: jsonEncode(
-          <String, dynamic>{'token': token},
-        ));
-    user = jsonDecode(response.body);
-    setState(() {});
-    if (result2['message'] == 'true') {
-      like = true;
-      setState(() {});
-    } else {
-      like = false;
-      setState(() {});
-    }
-    var url1 =
-        'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/findDetail';
+    var url1 = 'http://10.0.2.2:3000/putdown/findDetail';
     final http.Response response1 = await http.post(Uri.parse(url1),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
@@ -62,12 +33,39 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
           <String, String>{'id': id},
         ));
     var result = jsonDecode(response1.body);
-    if (result == null) {
+    print(result.isEmpty);
+    if (result.isEmpty) {
       diary = {};
       diary['message'] = 'This diary was deleted.';
       // isFav = false;
       setState(() {});
     } else {
+      var url2 = 'http://10.0.2.2:3000/putdown/checkLike';
+      final http.Response response2 = await http.post(Uri.parse(url2),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8'
+          },
+          body: jsonEncode(
+            <String, String>{'token': token!, 'diary_id': id},
+          ));
+      var result2 = jsonDecode(response2.body);
+      var url = 'http://10.0.2.2:3000/auth/rememberMe';
+      final http.Response response = await http.post(Uri.parse(url),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8'
+          },
+          body: jsonEncode(
+            <String, dynamic>{'token': token},
+          ));
+      user = jsonDecode(response.body);
+      setState(() {});
+      if (result2['message'] == 'true') {
+        like = true;
+        setState(() {});
+      } else {
+        like = false;
+        setState(() {});
+      }
       setState(() {
         diary = result[0];
         likeCount = diary['like'];
@@ -480,21 +478,23 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
               ),
             ),
             diary != null
-                ? Padding(
-                    padding: const EdgeInsets.fromLTRB(23, 0, 8, 1),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.pin_drop_rounded,
-                          color: Colors.blue,
-                          size: 14,
+                ? diary.containsKey('message')
+                    ? Container()
+                    : Padding(
+                        padding: const EdgeInsets.fromLTRB(23, 0, 8, 1),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.pin_drop_rounded,
+                              color: Colors.blue,
+                              size: 14,
+                            ),
+                            Text(diary['marker_detail'][0]['marker_id'],
+                                style: const TextStyle(
+                                    fontSize: 14, color: Colors.blue)),
+                          ],
                         ),
-                        Text(diary['marker_detail'][0]['marker_id'],
-                            style: const TextStyle(
-                                fontSize: 14, color: Colors.blue)),
-                      ],
-                    ),
-                  )
+                      )
                 : Container(),
             SizedBox(
               height: 10,
@@ -532,8 +532,7 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
 deletePutdowndiary(diary) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url =
-      'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/deletePutdownDiary';
+  var url = 'http://10.0.2.2:3000/putdown/deletePutdownDiary';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -548,8 +547,7 @@ deletePutdowndiary(diary) async {
 addLike(id) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url =
-      'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/addLike';
+  var url = 'http://10.0.2.2:3000/putdown/addLike';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -564,8 +562,7 @@ addLike(id) async {
 removeLike(id) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url =
-      'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/removeLike';
+  var url = 'http://10.0.2.2:3000/putdown/removeLike';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -580,8 +577,7 @@ removeLike(id) async {
 checkAchievement(index) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url =
-      'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/achievement/checkSuccess';
+  var url = 'http://10.0.2.2:3000/achievement/checkSuccess';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

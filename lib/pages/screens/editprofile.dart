@@ -32,7 +32,7 @@ class _EditProfileState extends State<EditProfile> {
   findUserForEditProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
-    var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/auth/rememberMe';
+    var url = 'http://10.0.2.2:3000/auth/rememberMe';
     final http.Response response = await http.post(Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
@@ -366,10 +366,9 @@ class _EditProfileState extends State<EditProfile> {
                               const Text(
                                 'Username',
                                 style: TextStyle(
-                                  color: Color(0xff8fa1b6),
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w400
-                                ),                     
+                                    color: Color(0xff8fa1b6),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w400),
                               ),
                               const SizedBox(height: 5),
                               TextFormField(
@@ -379,14 +378,14 @@ class _EditProfileState extends State<EditProfile> {
                                 decoration: const InputDecoration(
                                   contentPadding: EdgeInsets.fromLTRB(
                                       20.0, 10.0, 20.0, 10.0),
-                                  counterStyle: TextStyle(color: Color(0xff8fa1b6)),
+                                  counterStyle:
+                                      TextStyle(color: Color(0xff8fa1b6)),
                                   filled: true,
                                   fillColor: Color(0xfff1f3f4),
                                   hintText: 'usernaem',
                                   hintStyle: TextStyle(
-                                    color: Color(0xffc5d2e1),
-                                    fontWeight: FontWeight.w200
-                                  ),
+                                      color: Color(0xffc5d2e1),
+                                      fontWeight: FontWeight.w200),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide.none,
                                   ),
@@ -412,10 +411,9 @@ class _EditProfileState extends State<EditProfile> {
                               const Text(
                                 'Bio',
                                 style: TextStyle(
-                                  color: Color(0xff8fa1b6),
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w400
-                                ),                     
+                                    color: Color(0xff8fa1b6),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w400),
                               ),
                               const SizedBox(height: 5),
                               LayoutBuilder(builder: (context, constraints) {
@@ -427,16 +425,16 @@ class _EditProfileState extends State<EditProfile> {
                                     initialValue: user['bio'],
                                     cursorColor: const Color(0xff8a7efd),
                                     decoration: const InputDecoration(
-                                      counterStyle: TextStyle(color: Color(0xff8fa1b6)),
+                                      counterStyle:
+                                          TextStyle(color: Color(0xff8fa1b6)),
                                       contentPadding: EdgeInsets.fromLTRB(
                                           20.0, 10.0, 20.0, 10.0),
                                       filled: true,
                                       fillColor: Color(0xfff1f3f4),
                                       hintText: 'Describe yourself here.',
                                       hintStyle: TextStyle(
-                                        color: Color(0xffc5d2e1),
-                                        fontWeight: FontWeight.w200
-                                      ),
+                                          color: Color(0xffc5d2e1),
+                                          fontWeight: FontWeight.w200),
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide.none,
                                       ),
@@ -465,7 +463,7 @@ class _EditProfileState extends State<EditProfile> {
 }
 
 updateUser(token, username, bio, _imageName) async {
-  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/auth/update';
+  var url = 'http://10.0.2.2:3000/auth/update';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -485,7 +483,7 @@ updateUser(token, username, bio, _imageName) async {
 checkAchievement(index) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/achievement/checkSuccess';
+  var url = 'http://10.0.2.2:3000/achievement/checkSuccess';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

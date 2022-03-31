@@ -193,8 +193,7 @@ class _OwnerPinState extends State<OwnerPin> {
 }
 
 deletePin(id) async {
-  var url =
-      'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/deletePin';
+  var url = 'http://10.0.2.2:3000/putdown/deletePin';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -209,8 +208,7 @@ deletePin(id) async {
 }
 
 findAllOwnMarker(token) async {
-  var url =
-      'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/findAllOwnMarker';
+  var url = 'http://10.0.2.2:3000/putdown/findAllOwnMarker';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -225,8 +223,7 @@ findAllOwnMarker(token) async {
 }
 
 addUserMarker(token, pin, lag, lng) async {
-  var url =
-      'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/addPin';
+  var url = 'http://10.0.2.2:3000/putdown/addPin';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -239,8 +236,7 @@ addUserMarker(token, pin, lag, lng) async {
 }
 
 checkDelayPin(token) async {
-  var url =
-      'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/delay/addOrDeleteDelay';
+  var url = 'http://10.0.2.2:3000/delay/addOrDeleteDelay';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
