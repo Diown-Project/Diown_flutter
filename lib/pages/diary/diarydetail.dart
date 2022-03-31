@@ -30,7 +30,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
   var time;
   var isFav;
   findDetail(id) async {
-    var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/localDiary/findDetail';
+    var url = 'http://10.0.2.2:3000/localDiary/findDetail';
     final http.Response response = await http.post(Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
@@ -283,7 +283,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
   }
 
   favorite(id, isFav) async {
-    var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/localDiary/fav';
+    var url = 'http://10.0.2.2:3000/localDiary/fav';
     final http.Response response = await http.post(Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
@@ -296,7 +296,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
   }
 
   deleteLocaldiary(diary) async {
-    var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/localDiary/deleteLocalDiary';
+    var url = 'http://10.0.2.2:3000/localDiary/deleteLocalDiary';
     final http.Response response = await http.post(Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'

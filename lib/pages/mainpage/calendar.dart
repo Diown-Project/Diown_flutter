@@ -424,7 +424,7 @@ class _CalendarPageState extends State<CalendarPage> {
 findAllYourDiary1() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/localDiary/findAllDiary';
+  var url = 'http://10.0.2.2:3000/localDiary/findAllDiary';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

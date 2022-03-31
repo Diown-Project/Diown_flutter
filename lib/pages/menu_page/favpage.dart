@@ -63,7 +63,8 @@ class _FavPageState extends State<FavPage> {
             backgroundColor: Colors.transparent,
             foregroundColor: Colors.black,
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black),
+              icon: const Icon(Icons.arrow_back_ios_new_rounded,
+                  color: Colors.black),
               onPressed: () => Navigator.of(context).pop(),
             ),
           ),
@@ -179,7 +180,8 @@ class _FavPageState extends State<FavPage> {
                               : [
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       const SizedBox(height: 20),
                                       Icon(
@@ -191,8 +193,7 @@ class _FavPageState extends State<FavPage> {
                                       const Text(
                                         'Dont have favorite diary',
                                         style: TextStyle(
-                                            fontSize: 20,
-                                            color: Colors.grey),
+                                            fontSize: 20, color: Colors.grey),
                                       )
                                     ],
                                   )
@@ -215,7 +216,7 @@ class _FavPageState extends State<FavPage> {
 findAllFav() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/localDiary/findAllFav';
+  var url = 'http://10.0.2.2:3000/localDiary/findAllFav';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -232,7 +233,7 @@ findAllFav() async {
 favSearch(value) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/localDiary/favSearch';
+  var url = 'http://10.0.2.2:3000/localDiary/favSearch';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

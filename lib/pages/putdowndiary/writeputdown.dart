@@ -20,10 +20,12 @@ import 'package:http/http.dart' as http;
 import 'package:dropdown_button2/dropdown_button2.dart';
 
 class WritePutdownDiary extends StatefulWidget {
-  const WritePutdownDiary({Key? key, required this.pin, required this.pin_name})
+  const WritePutdownDiary(
+      {Key? key, required this.pin, required this.pin_name, required this.deal})
       : super(key: key);
   final pin_name;
   final pin;
+  final deal;
   @override
   State<WritePutdownDiary> createState() => _WritePutdownDiaryState();
 }
@@ -205,7 +207,8 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                                     topic,
                                     write_detail,
                                     widget.pin,
-                                    selectedValue);
+                                    selectedValue,
+                                    widget.deal);
                                 var check = await checkAchievement(1);
                                 if (check['message'] == 'success') {
                                   AwesomeDialog(
@@ -271,7 +274,8 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                                     topic,
                                     write_detail,
                                     widget.pin,
-                                    selectedValue);
+                                    selectedValue,
+                                    widget.deal);
                                 var check = await checkAchievement(1);
                                 if (check['message'] == 'success') {
                                   AwesomeDialog(
@@ -979,8 +983,8 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
 }
 
 saveDiary(token, mood_emoji, mood_detail, resultAct, _imageNameList, topic,
-    write_detail, pin, selectedValue) async {
-  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/putdown/saveDiary';
+    write_detail, pin, selectedValue, deal) async {
+  var url = 'http://10.0.2.2:3000/putdown/saveDiary';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -997,6 +1001,7 @@ saveDiary(token, mood_emoji, mood_detail, resultAct, _imageNameList, topic,
           'like': 0,
           'marker_id': pin,
           'status': selectedValue,
+          'deal': deal
         },
       ));
   var result = jsonDecode(response.body);
@@ -1006,7 +1011,7 @@ saveDiary(token, mood_emoji, mood_detail, resultAct, _imageNameList, topic,
 checkAchievement(index) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/achievement/checkSuccess';
+  var url = 'http://10.0.2.2:3000/achievement/checkSuccess';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

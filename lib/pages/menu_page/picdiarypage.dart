@@ -43,7 +43,8 @@ class _PictureDiaryState extends State<PictureDiary> {
           centerTitle: true,
           title: const Text('Picture Diary'),
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black),
+            icon: const Icon(Icons.arrow_back_ios_new_rounded,
+                color: Colors.black),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
@@ -60,103 +61,102 @@ class _PictureDiaryState extends State<PictureDiary> {
               ),
             ),
             Expanded(
-                child: 
-                allDiary != null
-                  ? allDiary.length != 0
-                    ? MasonryGridView.count(
-                    padding: EdgeInsets.all(8.0),
-                    mainAxisSpacing: 4,
-                    crossAxisSpacing: 4,
-                    itemCount: allDiary != null ? allDiary.length : 0,
-                    crossAxisCount: 2,
-                    itemBuilder: (context, index) {
-                      return 
-                      Stack(
-                          alignment: Alignment.bottomCenter,
-                          children: [
-                            InkWidget(
-                                onTap: () {
-                                  Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              child: DiaryDetail(
-                                                  id: allDiary[index]
-                                                      ['_id']),
-                                              type: PageTransitionType
-                                                  .rightToLeft))
-                                      .then((_) async {
-                                    await findAllYourDiary2();
-                                    setState(() {});
-                                  });
-                                },
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  child: Image.network(
-                                      'https://storage.googleapis.com/noseason/${allDiary[index]['imageLocation'][0]}'),
-                                )),
-                            Positioned(
-                                left: 6,
-                                bottom: 5,
-                                child: Text(
-                                  '${allDiary![index]['date'].substring(0, 10)}',
-                                  style: const TextStyle(
-                                      shadows: [
-                                        Shadow(
-                                          blurRadius: 10.0,
-                                          color: Colors.black,
-                                          offset: Offset(1.0, 2.0),
-                                        ),
-                                      ],
-                                      fontSize: 12,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                )),
-                            allDiary[index]['topic'] != null
-                                ? Positioned(
-                                    left: 6,
-                                    bottom: 21,
-                                    child: RichText(
-                                      overflow: TextOverflow.ellipsis,
-                                      text: TextSpan(
-                                        text: '${allDiary[index]['topic']}',
-                                        style: const TextStyle(
-                                            shadows: [
-                                              Shadow(
-                                                blurRadius: 10.0,
-                                                color: Colors.black,
-                                                offset: Offset(1.0, 2.0),
+                child: allDiary != null
+                    ? allDiary.length != 0
+                        ? MasonryGridView.count(
+                            padding: EdgeInsets.all(8.0),
+                            mainAxisSpacing: 4,
+                            crossAxisSpacing: 4,
+                            itemCount: allDiary != null ? allDiary.length : 0,
+                            crossAxisCount: 2,
+                            itemBuilder: (context, index) {
+                              return Stack(
+                                  alignment: Alignment.bottomCenter,
+                                  children: [
+                                    InkWidget(
+                                        onTap: () {
+                                          Navigator.push(
+                                                  context,
+                                                  PageTransition(
+                                                      child: DiaryDetail(
+                                                          id: allDiary[index]
+                                                              ['_id']),
+                                                      type: PageTransitionType
+                                                          .rightToLeft))
+                                              .then((_) async {
+                                            await findAllYourDiary2();
+                                            setState(() {});
+                                          });
+                                        },
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          child: Image.network(
+                                              'https://storage.googleapis.com/noseason/${allDiary[index]['imageLocation'][0]}'),
+                                        )),
+                                    Positioned(
+                                        left: 6,
+                                        bottom: 5,
+                                        child: Text(
+                                          '${allDiary![index]['date'].substring(0, 10)}',
+                                          style: const TextStyle(
+                                              shadows: [
+                                                Shadow(
+                                                  blurRadius: 10.0,
+                                                  color: Colors.black,
+                                                  offset: Offset(1.0, 2.0),
+                                                ),
+                                              ],
+                                              fontSize: 12,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        )),
+                                    allDiary[index]['topic'] != null
+                                        ? Positioned(
+                                            left: 6,
+                                            bottom: 21,
+                                            child: RichText(
+                                              overflow: TextOverflow.ellipsis,
+                                              text: TextSpan(
+                                                text:
+                                                    '${allDiary[index]['topic']}',
+                                                style: const TextStyle(
+                                                    shadows: [
+                                                      Shadow(
+                                                        blurRadius: 10.0,
+                                                        color: Colors.black,
+                                                        offset:
+                                                            Offset(1.0, 2.0),
+                                                      ),
+                                                    ],
+                                                    fontSize: 13,
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
-                                            ],
-                                            fontSize: 13,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ))
-                                : Container()
-                          ]);
-                    })
-                    : Column(
-                        // mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(height: 40),
-                          Icon(
-                            MdiIcons.imageOff,
-                            size: 100,
-                            color: Colors.grey[300],
-                          ),
-                          const SizedBox(height: 20),
-                          const Text(
-                            'Dont have Picture diary',
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.grey),
+                                            ))
+                                        : Container()
+                                  ]);
+                            })
+                        : Column(
+                            // mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const SizedBox(height: 40),
+                              Icon(
+                                MdiIcons.imageOff,
+                                size: 100,
+                                color: Colors.grey[300],
+                              ),
+                              const SizedBox(height: 20),
+                              const Text(
+                                'Dont have Picture diary',
+                                style:
+                                    TextStyle(fontSize: 20, color: Colors.grey),
+                              )
+                            ],
                           )
-                        ],
-                      )
-                  : Container()
-                
-            ),
+                    : Container()),
           ],
         ),
       ),
@@ -167,7 +167,7 @@ class _PictureDiaryState extends State<PictureDiary> {
 findAllYourDiary1() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/localDiary/findAllDiaryHaveImage';
+  var url = 'http://10.0.2.2:3000/localDiary/findAllDiaryHaveImage';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -182,7 +182,7 @@ findAllYourDiary1() async {
 findPicDiaryBySearch(value) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/localDiary/findPicDiaryWithSearch';
+  var url = 'http://10.0.2.2:3000/localDiary/findPicDiaryWithSearch';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

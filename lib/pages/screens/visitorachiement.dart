@@ -138,7 +138,7 @@ class _visitorAchieveState extends State<visitorAchieve> {
 }
 
 findAch() async {
-  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/achievement/getAll';
+  var url = 'http://10.0.2.2:3000/achievement/getAll';
   final http.Response response = await http.get(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -148,7 +148,7 @@ findAch() async {
 }
 
 findSuccessAchId(id) async {
-  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/achievement/allSuccessUser';
+  var url = 'http://10.0.2.2:3000/achievement/allSuccessUser';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

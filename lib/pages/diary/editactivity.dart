@@ -180,7 +180,7 @@ class _EditActState extends State<EditAct> {
 }
 
 removeYourAct(token, act_emo, act_detail) async {
-  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/activity/remove';
+  var url = 'http://10.0.2.2:3000/activity/remove';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -197,7 +197,7 @@ removeYourAct(token, act_emo, act_detail) async {
 }
 
 findOnlyYouAct(token) async {
-  var url = 'http://ec2-175-41-169-93.ap-southeast-1.compute.amazonaws.com:3000/activity/onlyYourActivity';
+  var url = 'http://10.0.2.2:3000/activity/onlyYourActivity';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
