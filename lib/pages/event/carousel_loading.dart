@@ -1,179 +1,267 @@
+import 'dart:convert';
+
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:diown/pages/event/EventPage.dart';
+import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:http/http.dart' as http;
 
 class CarouselLoading extends StatefulWidget {
-  const CarouselLoading({ Key? key }) : super(key: key);
+  const CarouselLoading({Key? key}) : super(key: key);
 
   @override
   _CarouselLoadingState createState() => _CarouselLoadingState();
 }
 
 class _CarouselLoadingState extends State<CarouselLoading> {
+  var _event;
   int activeIndex = 0;
-  final event = [
-    'images/event.png',
-    'images/event.png',
-    'images/event.png',
-    'images/event.png',
-    'images/event.png'
-  ];
+
+  findevent() async {
+    _event = await findEventOnTime();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    findevent();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Padding(
-          padding: EdgeInsets.fromLTRB(15, 15, 15, 0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return _event != null
+        ? Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                'Event',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w500
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                      type: PageTransitionType.rightToLeft,
-                      child: EventPage(),
-                    ),
-                  );
-                },
-                child: Container(
-                  width: 80,
-                  height: 30,
-                  decoration: const BoxDecoration(
-                    color: Color(0xff8b82ff),
-                    borderRadius: BorderRadius.all(Radius.circular(25))
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        const Text(
-                          'More',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white
-                          ),
-                        ),
-                        const Icon(
-                          MdiIcons.chevronRight,
-                          color: Colors.white,
-                        )
-                      ]
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        CarouselSlider.builder(
-          itemCount: event.length,
-          options: CarouselOptions(
-            viewportFraction: 1,
-            height: 270,
-            enableInfiniteScroll: false,
-            onPageChanged: (index , reason) =>
-              setState(() => activeIndex = index)
-          ),
-          itemBuilder: (context, index, realIndex) {
-            return Container(
-              margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
-              decoration: const BoxDecoration(
-                color: Color(0xfff1f3f4),
-                borderRadius: BorderRadius.all(Radius.circular(15))
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              Padding(
+                padding: EdgeInsets.fromLTRB(15, 15, 15, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: Image.asset(
-                        event[index],
-                        // fit: BoxFit.cover,
-                        height: 150,
-                        width: double.infinity,
-                      )
+                    Text(
+                      'Event',
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
                     ),
-                    const SizedBox(height: 6),
-                    const Text(
-                      'San, Dec 25',
-                      style: TextStyle(
-                        fontSize: 16,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            type: PageTransitionType.rightToLeft,
+                            child: EventPage(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: 80,
+                        height: 30,
+                        decoration: const BoxDecoration(
+                            color: Color(0xff8b82ff),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(25))),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                const Text(
+                                  'More',
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.white),
+                                ),
+                                const Icon(
+                                  MdiIcons.chevronRight,
+                                  color: Colors.white,
+                                )
+                              ]),
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 6),
-                    const Text(
-                      'Christmas & thanksgiving event',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
+                  ],
+                ),
+              ),
+              CarouselSlider.builder(
+                itemCount: _event.length,
+                options: CarouselOptions(
+                    viewportFraction: 1,
+                    height: 280,
+                    enableInfiniteScroll: false,
+                    onPageChanged: (index, reason) =>
+                        setState(() => activeIndex = index)),
+                itemBuilder: (context, index, realIndex) {
+                  return Container(
+                      margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                      decoration: const BoxDecoration(
+                          color: Color(0xfff1f3f4),
+                          borderRadius: BorderRadius.all(Radius.circular(15))),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(
-                              MdiIcons.mapMarker,
-                              color: Colors.black54,
-                            ),
-                            const Text(
-                              'central world',
+                            ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: Image.network(
+                                  'https://storage.googleapis.com/noseason/${_event[index]['imageLocation']}',
+                                  // fit: BoxFit.cover,
+                                  height: 150,
+                                  width: double.infinity,
+                                )),
+                            const SizedBox(height: 6),
+                            Text(
+                              DateFormat('EEE. MMM d / yyyy').format(
+                                      DateTime.parse(
+                                          _event[index]['start_date'])) +
+                                  ' - ' +
+                                  DateFormat('EEE. MMM d / yyyy').format(
+                                      DateTime.parse(
+                                          _event[index]['end_date'])),
                               style: TextStyle(
-                                color: Colors.black54
+                                fontSize: 16,
                               ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              _event[index]['topic'],
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      MdiIcons.mapMarker,
+                                      color: Colors.black54,
+                                    ),
+                                    Text(
+                                      _event[index]['marker_id'],
+                                      style: TextStyle(color: Colors.black54),
+                                    )
+                                  ],
+                                ),
+                                Flexible(
+                                  child: TextButton(
+                                    child: Text(
+                                      'Details',
+                                      style: TextStyle(
+                                          color: Colors.greenAccent,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                                scrollable: true,
+                                                title: Center(
+                                                  child: Text(
+                                                      _event[index]['topic']),
+                                                ),
+                                                content: Column(
+                                                  children: [
+                                                    Image.network(
+                                                        'https://storage.googleapis.com/noseason/${_event[index]['imageLocation']}'),
+                                                    SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    Text(
+                                                      DateFormat('EEE. MMM d / yyyy')
+                                                              .format(DateTime
+                                                                  .parse(_event[
+                                                                          index]
+                                                                      [
+                                                                      'start_date'])) +
+                                                          ' - ' +
+                                                          DateFormat(
+                                                                  'EEE. MMM d / yyyy')
+                                                              .format(DateTime
+                                                                  .parse(_event[
+                                                                          index]
+                                                                      [
+                                                                      'end_date'])),
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                      ),
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        Icon(
+                                                          MdiIcons.mapMarker,
+                                                          color: Colors.black54,
+                                                        ),
+                                                        Text(
+                                                          _event[index]
+                                                              ['marker_id'],
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .black54),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    Text(
+                                                      _event[index]['detail'],
+                                                      style: TextStyle(
+                                                          fontSize: 15),
+                                                    ),
+                                                    ElevatedButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                                minimumSize:
+                                                                    Size(280,
+                                                                        30)),
+                                                        child: Text('ok'))
+                                                  ],
+                                                ),
+                                              ));
+                                    },
+                                  ),
+                                )
+                              ],
                             )
                           ],
                         ),
-                        const Text(
-                          '200+ putdown',
-                          style: TextStyle(
-                            color: Colors.black54
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              )
-            );
-          }, 
-        ),
-        const SizedBox(height: 10),
-        buildIndicator(),
-      ],
-    );
-  } 
+                      ));
+                },
+              ),
+              const SizedBox(height: 10),
+              buildIndicator(),
+            ],
+          )
+        : Center(
+            child: CircularProgressIndicator(),
+          );
+  }
 
   Widget buildIndicator() => AnimatedSmoothIndicator(
-    activeIndex: activeIndex,
-    count: event.length,
-    effect: const SlideEffect(
-      dotWidth: 10,
-      dotHeight: 10,
-      activeDotColor: Colors.black54,
-      dotColor: Colors.black12
-    ),
-  );
-
+        activeIndex: activeIndex,
+        count: _event.length,
+        effect: const SlideEffect(
+            dotWidth: 10,
+            dotHeight: 10,
+            activeDotColor: Colors.black54,
+            dotColor: Colors.black12),
+      );
 }
 
-
+findEventOnTime() async {
+  var url = 'http://10.0.2.2:3000/putdown/findEventOnTime';
+  final http.Response response = await http.get(
+    Uri.parse(url),
+  );
+  var result = jsonDecode(response.body);
+  return result;
+}

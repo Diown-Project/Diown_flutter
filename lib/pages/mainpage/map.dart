@@ -1437,7 +1437,7 @@ class _MapPageState extends State<MapPage> {
                                     position: const LatLng(
                                         13.697630703230097, 100.34083452967317),
                                     infoWindow: const InfoWindow(
-                                        title: 'บ้านกูไอแม่เย็ด'),
+                                        title: 'บ้าน'),
                                     onTap: () {
                                       Future.delayed(const Duration(seconds: 0),
                                           () {
