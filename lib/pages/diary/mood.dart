@@ -39,7 +39,7 @@ class _MoodSelectedState extends State<MoodSelected> {
               backgroundColor: Colors.white,
               shape: const RoundedRectangleBorder(
                   borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(25))),
+                      BorderRadius.vertical(top: Radius.circular(10))),
               foregroundColor: Colors.black,
               title: const Text(
                 'Feeling',
