@@ -49,7 +49,7 @@ class _ActivityPageState extends State<ActivityPage> {
               title: const Text('Activity'),
               shape: const RoundedRectangleBorder(
                   borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(25))),
+                      BorderRadius.vertical(top: Radius.circular(10))),
               backgroundColor: Colors.white,
               foregroundColor: Colors.black,
               actions: [

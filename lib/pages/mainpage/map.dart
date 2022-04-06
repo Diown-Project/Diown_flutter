@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:math';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:diown/pages/allmap/ownerpin.dart';
 import 'package:diown/pages/mainpage/direction/direction_repository.dart';
 import 'package:diown/pages/mainpage/searchmap/location_service.dart';
@@ -35,6 +36,8 @@ class _MapPageState extends State<MapPage> {
   Location _locationTracker = Location();
   bool create = false;
   bool click = true;
+  bool selectmaker = false;
+  bool selectevent = false;
   Marker? marker;
   Circle? circle;
   String? input;
@@ -47,7 +50,14 @@ class _MapPageState extends State<MapPage> {
       allpin,
       allPinShow,
       allEvent,
-      allEventShow;
+      allEventShow,
+      lag,
+      lng,
+      pin,
+      pin_id,
+      dis,
+      ownMarker,
+      textInput;
   bool focus = false;
   GoogleMapController? mapController;
   Completer<GoogleMapController> _controller = Completer();
@@ -67,587 +77,15 @@ class _MapPageState extends State<MapPage> {
           position: LatLng(e['lag'], e['lng']),
           infoWindow: InfoWindow(title: '${e['marker_id']}'),
           onTap: () {
-            var lag = e['lag'];
-            var lng = e['lng'];
-            var pin = e['marker_id'];
-            var pin_id = e['_id'];
-            print(pin_id);
-            Future.delayed(const Duration(seconds: 0), () async {
-              var dis = distance(newlocation.latitude as double, lag,
-                  newlocation.longitude as double, lng);
-              showModalBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    return makeDismissible(
-                      child: DraggableScrollableSheet(
-                        initialChildSize: 1,
-                        builder: (_, controller) => Scaffold(
-                          backgroundColor: Colors.transparent,
-                          appBar: AppBar(
-                            backgroundColor: Colors.transparent,
-                            elevation: 0,
-                            foregroundColor: Colors.black,
-                            centerTitle: true,
-                            title: Text(pin),
-                          ),
-                          body: FutureBuilder(
-                            future: forDiarypinFunc(pin_id),
-                            builder:
-                                (BuildContext context, AsyncSnapshot snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.done) {
-                                return SingleChildScrollView(
-                                  child: Container(
-                                      color: Colors.transparent,
-                                      child: Column(
-                                        children: [
-                                          ListTile(
-                                            onTap: () {
-                                              // if (dis > 0.050) {
-                                              //   AwesomeDialog(
-                                              //           context: context,
-                                              //           dialogType:
-                                              //               DialogType.WARNING,
-                                              //           desc:
-                                              //               'Distance is to long.\nYou must to go closely on pin.\n Go closely on pin less than 50 meters.',
-                                              //           btnOk: ElevatedButton(
-                                              //               onPressed: () {
-                                              //                 Navigator.pop(
-                                              //                     context);
-                                              //               },
-                                              //               child: const Text(
-                                              //                   'ok')))
-                                              //       .show();
-                                              // } else {
-                                              Navigator.push(
-                                                  context,
-                                                  PageTransition(
-                                                      child: WritePutdownDiary(
-                                                        deal: 'event',
-                                                        pin: pin_id,
-                                                        pin_name: pin,
-                                                      ),
-                                                      type: PageTransitionType
-                                                          .rightToLeft));
-                                              // }
-                                            },
-                                            leading: Padding(
-                                              padding: EdgeInsets.all(8.0),
-                                              child: CircleAvatar(
-                                                radius: 30,
-                                                backgroundImage: NetworkImage(
-                                                    'https://storage.googleapis.com/noseason/${user['profile_image']}'),
-                                              ),
-                                            ),
-                                            title: const Text(
-                                              'Put down your diary.',
-                                              style: TextStyle(fontSize: 18),
-                                            ),
-                                            subtitle: Text(
-                                                'distance: ${dis.toStringAsFixed(3)} km.'),
-                                            trailing: const Icon(
-                                                Icons.navigate_next_rounded),
-                                          ),
-                                          const Divider(
-                                            thickness: 0.8,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                20.0, 10.0, 20.0, 0),
-                                            child: Row(
-                                              children: [
-                                                const Text('My diary: '),
-                                                const Spacer(),
-                                                TextButton(
-                                                    onPressed: () async {
-                                                      var c =
-                                                          await Navigator.push(
-                                                              context,
-                                                              PageTransition(
-                                                                  child:
-                                                                      ListDiaryPutdown(
-                                                                    diary: 2,
-                                                                    pin: pin_id,
-                                                                  ),
-                                                                  type: PageTransitionType
-                                                                      .rightToLeft));
-
-                                                      setState(() {
-                                                        print('asd');
-                                                      });
-                                                    },
-                                                    child: Text(
-                                                      'view more',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    )),
-                                              ],
-                                            ),
-                                          ),
-                                          Column(
-                                            children: putdownDiary[2].length <=
-                                                    2
-                                                ? putdownDiary[2]
-                                                    .map<Widget>(
-                                                      (e) => ListTile(
-                                                        leading: CircleAvatar(
-                                                          backgroundImage:
-                                                              NetworkImage(
-                                                                  'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                                                        ),
-                                                        title: e['topic'] !=
-                                                                null
-                                                            ? Text(e['topic'])
-                                                            : Text(
-                                                                '${e['mood_emoji']} ${e['mood_detail']}'),
-                                                        subtitle: Text(
-                                                            '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
-                                                        trailing: e['status'] ==
-                                                                'Public'
-                                                            ? Icon(Icons.public)
-                                                            : e['status'] ==
-                                                                    'Follower'
-                                                                ? Icon(Icons
-                                                                    .people)
-                                                                : Icon(
-                                                                    Icons.lock),
-                                                        onTap: () async {
-                                                          Navigator.push(
-                                                                  context,
-                                                                  PageTransition(
-                                                                      child: DiaryDetailPutdown(
-                                                                          id: e[
-                                                                              '_id']),
-                                                                      type: PageTransitionType
-                                                                          .rightToLeft))
-                                                              .then((_) {
-                                                            setState(() {});
-                                                          });
-                                                        },
-                                                      ),
-                                                    )
-                                                    .toList()
-                                                : ownPutdown
-                                                    .map<Widget>(
-                                                      (e) => ListTile(
-                                                        leading: CircleAvatar(
-                                                          backgroundImage:
-                                                              NetworkImage(
-                                                                  'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                                                        ),
-                                                        title: e['topic'] !=
-                                                                null
-                                                            ? Text(e['topic'])
-                                                            : Text(
-                                                                '${e['mood_emoji']} ${e['mood_detail']}'),
-                                                        subtitle: Text(
-                                                            '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
-                                                        trailing: e['status'] ==
-                                                                'Public'
-                                                            ? Icon(Icons.public)
-                                                            : e['status'] ==
-                                                                    'Follower'
-                                                                ? Icon(Icons
-                                                                    .people)
-                                                                : Icon(
-                                                                    Icons.lock),
-                                                        onTap: () async {
-                                                          Navigator.push(
-                                                                  context,
-                                                                  PageTransition(
-                                                                      child: DiaryDetailPutdown(
-                                                                          id: e[
-                                                                              '_id']),
-                                                                      type: PageTransitionType
-                                                                          .rightToLeft))
-                                                              .then((_) {
-                                                            setState(() {});
-                                                          });
-                                                        },
-                                                      ),
-                                                    )
-                                                    .toList(),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                20.0, 10.0, 20.0, 0),
-                                            child: Row(
-                                              children: [
-                                                Text('For following: '),
-                                                Spacer(),
-                                                TextButton(
-                                                    onPressed: () {
-                                                      Navigator.push(
-                                                              context,
-                                                              PageTransition(
-                                                                  child:
-                                                                      ListDiaryPutdown(
-                                                                    diary: 1,
-                                                                    pin: pin_id,
-                                                                  ),
-                                                                  type: PageTransitionType
-                                                                      .rightToLeft))
-                                                          .then((_) {
-                                                        setState(() {});
-                                                      });
-                                                    },
-                                                    child: Text(
-                                                      'view more',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    )),
-                                              ],
-                                            ),
-                                          ),
-                                          Column(
-                                            children:
-                                                putdownDiary[1].length <= 2
-                                                    ? putdownDiary[1]
-                                                        .map<Widget>(
-                                                          (e) => ListTile(
-                                                            leading:
-                                                                CircleAvatar(
-                                                              backgroundImage:
-                                                                  NetworkImage(
-                                                                      'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                                                            ),
-                                                            title: e['topic'] !=
-                                                                    null
-                                                                ? Text(
-                                                                    e['topic'])
-                                                                : Text(
-                                                                    '${e['mood_emoji']} ${e['mood_detail']}'),
-                                                            subtitle: Text(
-                                                                '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
-                                                            trailing: e['status'] ==
-                                                                    'Public'
-                                                                ? Icon(Icons
-                                                                    .public)
-                                                                : e['status'] ==
-                                                                        'Follower'
-                                                                    ? Icon(Icons
-                                                                        .people)
-                                                                    : Icon(Icons
-                                                                        .lock),
-                                                            onTap: () async {
-                                                              if (e['status'] ==
-                                                                  'Follower') {
-                                                                var check = await findFollow(
-                                                                    e['user_detail']
-                                                                            [0][
-                                                                        '_id']);
-                                                                if (check[
-                                                                        'message'] ==
-                                                                    'true') {
-                                                                  Navigator.push(
-                                                                          context,
-                                                                          PageTransition(
-                                                                              child: DiaryDetailPutdown(id: e['_id']),
-                                                                              type: PageTransitionType.rightToLeft))
-                                                                      .then((_) {
-                                                                    setState(
-                                                                        () {});
-                                                                  });
-                                                                } else if (check[
-                                                                        'message'] ==
-                                                                    'false') {
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      PageTransition(
-                                                                          child: VisitorProfile(
-                                                                            user_id:
-                                                                                e['user_id'],
-                                                                          ),
-                                                                          type: PageTransitionType.rightToLeft));
-                                                                } else {}
-                                                              } else {
-                                                                Navigator.push(
-                                                                        context,
-                                                                        PageTransition(
-                                                                            child:
-                                                                                DiaryDetailPutdown(id: e['_id']),
-                                                                            type: PageTransitionType.rightToLeft))
-                                                                    .then((_) {
-                                                                  setState(
-                                                                      () {});
-                                                                });
-                                                              }
-                                                            },
-                                                          ),
-                                                        )
-                                                        .toList()
-                                                    : followingPutdown
-                                                        .map<Widget>(
-                                                          (e) => ListTile(
-                                                            leading:
-                                                                CircleAvatar(
-                                                              backgroundImage:
-                                                                  NetworkImage(
-                                                                      'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                                                            ),
-                                                            title: e['topic'] !=
-                                                                    null
-                                                                ? Text(
-                                                                    e['topic'])
-                                                                : Text(
-                                                                    '${e['mood_emoji']} ${e['mood_detail']}'),
-                                                            subtitle: Text(
-                                                                '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
-                                                            trailing: e['status'] ==
-                                                                    'Public'
-                                                                ? Icon(Icons
-                                                                    .public)
-                                                                : e['status'] ==
-                                                                        'Follower'
-                                                                    ? Icon(Icons
-                                                                        .people)
-                                                                    : Icon(Icons
-                                                                        .lock),
-                                                            onTap: () async {
-                                                              if (e['status'] ==
-                                                                  'Follower') {
-                                                                print('heeloo');
-                                                                var check = await findFollow(
-                                                                    e['user_detail']
-                                                                            [0][
-                                                                        '_id']);
-                                                                if (check[
-                                                                        'message'] ==
-                                                                    'true') {
-                                                                  Navigator.push(
-                                                                          context,
-                                                                          PageTransition(
-                                                                              child: DiaryDetailPutdown(id: e['_id']),
-                                                                              type: PageTransitionType.rightToLeft))
-                                                                      .then((_) {
-                                                                    setState(
-                                                                        () {});
-                                                                  });
-                                                                } else if (check[
-                                                                        'message'] ==
-                                                                    'false') {
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      PageTransition(
-                                                                          child:
-                                                                              VisitorProfile(user_id: e['user_id']),
-                                                                          type: PageTransitionType.rightToLeft));
-                                                                } else {}
-                                                              } else {
-                                                                Navigator.push(
-                                                                        context,
-                                                                        PageTransition(
-                                                                            child:
-                                                                                DiaryDetailPutdown(id: e['_id']),
-                                                                            type: PageTransitionType.rightToLeft))
-                                                                    .then((_) {
-                                                                  setState(
-                                                                      () {});
-                                                                });
-                                                              }
-                                                            },
-                                                          ),
-                                                        )
-                                                        .toList(),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                20.0, 10.0, 20.0, 0),
-                                            child: Row(
-                                              children: [
-                                                Text('General: '),
-                                                Spacer(),
-                                                TextButton(
-                                                    onPressed: () {
-                                                      Navigator.push(
-                                                              context,
-                                                              PageTransition(
-                                                                  child:
-                                                                      ListDiaryPutdown(
-                                                                    diary: 0,
-                                                                    pin: pin_id,
-                                                                  ),
-                                                                  type: PageTransitionType
-                                                                      .rightToLeft))
-                                                          .then((_) {
-                                                        setState(() {});
-                                                      });
-                                                    },
-                                                    child: Text(
-                                                      'view more',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    )),
-                                              ],
-                                            ),
-                                          ),
-                                          Column(
-                                            children:
-                                                putdownDiary[0].length <= 2
-                                                    ? putdownDiary[0]
-                                                        .map<Widget>(
-                                                          (e) => ListTile(
-                                                            leading:
-                                                                CircleAvatar(
-                                                              backgroundImage:
-                                                                  NetworkImage(
-                                                                      'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                                                            ),
-                                                            title: e['topic'] !=
-                                                                    null
-                                                                ? Text(
-                                                                    e['topic'])
-                                                                : Text(
-                                                                    '${e['mood_emoji']} ${e['mood_detail']}'),
-                                                            subtitle: Text(
-                                                                '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
-                                                            trailing: e['status'] ==
-                                                                    'Public'
-                                                                ? Icon(Icons
-                                                                    .public)
-                                                                : e['status'] ==
-                                                                        'Follower'
-                                                                    ? Icon(Icons
-                                                                        .people)
-                                                                    : Icon(Icons
-                                                                        .lock),
-                                                            onTap: () async {
-                                                              if (e['status'] ==
-                                                                  'Follower') {
-                                                                print('heeloo');
-                                                                var check = await findFollow(
-                                                                    e['user_detail']
-                                                                            [0][
-                                                                        '_id']);
-                                                                if (check[
-                                                                        'message'] ==
-                                                                    'true') {
-                                                                  Navigator.push(
-                                                                          context,
-                                                                          PageTransition(
-                                                                              child: DiaryDetailPutdown(id: e['_id']),
-                                                                              type: PageTransitionType.rightToLeft))
-                                                                      .then((_) {
-                                                                    setState(
-                                                                        () {});
-                                                                  });
-                                                                } else if (check[
-                                                                        'message'] ==
-                                                                    'false') {
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      PageTransition(
-                                                                          child:
-                                                                              VisitorProfile(user_id: e['user_id']),
-                                                                          type: PageTransitionType.rightToLeft));
-                                                                } else {}
-                                                              } else {
-                                                                Navigator.push(
-                                                                        context,
-                                                                        PageTransition(
-                                                                            child:
-                                                                                DiaryDetailPutdown(id: e['_id']),
-                                                                            type: PageTransitionType.rightToLeft))
-                                                                    .then((_) {
-                                                                  setState(
-                                                                      () {});
-                                                                });
-                                                              }
-                                                            },
-                                                          ),
-                                                        )
-                                                        .toList()
-                                                    : generalPutdown
-                                                        .map<Widget>(
-                                                          (e) => ListTile(
-                                                            leading:
-                                                                CircleAvatar(
-                                                              backgroundImage:
-                                                                  NetworkImage(
-                                                                      'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                                                            ),
-                                                            title: e['topic'] !=
-                                                                    null
-                                                                ? Text(
-                                                                    e['topic'])
-                                                                : Text(
-                                                                    '${e['mood_emoji']} ${e['mood_detail']}'),
-                                                            subtitle: Text(
-                                                                '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
-                                                            trailing: e['status'] ==
-                                                                    'Public'
-                                                                ? Icon(Icons
-                                                                    .public)
-                                                                : e['status'] ==
-                                                                        'Follower'
-                                                                    ? Icon(Icons
-                                                                        .people)
-                                                                    : Icon(Icons
-                                                                        .lock),
-                                                            onTap: () async {
-                                                              if (e['status'] ==
-                                                                  'Follower') {
-                                                                print('heeloo');
-                                                                var check = await findFollow(
-                                                                    e['user_detail']
-                                                                            [0][
-                                                                        '_id']);
-                                                                if (check[
-                                                                        'message'] ==
-                                                                    'true') {
-                                                                  Navigator.push(
-                                                                          context,
-                                                                          PageTransition(
-                                                                              child: DiaryDetailPutdown(id: e['_id']),
-                                                                              type: PageTransitionType.rightToLeft))
-                                                                      .then((_) {
-                                                                    setState(
-                                                                        () {});
-                                                                  });
-                                                                } else if (check[
-                                                                        'message'] ==
-                                                                    'false') {
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      PageTransition(
-                                                                          child:
-                                                                              VisitorProfile(user_id: e['user_id']),
-                                                                          type: PageTransitionType.rightToLeft));
-                                                                } else {}
-                                                              } else {
-                                                                Navigator.push(
-                                                                        context,
-                                                                        PageTransition(
-                                                                            child:
-                                                                                DiaryDetailPutdown(id: e['_id']),
-                                                                            type: PageTransitionType.rightToLeft))
-                                                                    .then((_) {
-                                                                  setState(
-                                                                      () {});
-                                                                });
-                                                              }
-                                                            },
-                                                          ),
-                                                        )
-                                                        .toList(),
-                                          ),
-                                        ],
-                                      )),
-                                );
-                              } else {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                      ),
-                    );
-                  });
+            setState(() {
+              lag = e['lag'];
+              lng = e['lng'];
+              pin = e['marker_id'];
+              pin_id = e['_id'];
+              selectmaker = true;
+              selectevent = true;
+              print(pin_id);
+              dis = distance(newlocation.latitude as double, lag, newlocation.longitude as double, lng);
             });
           });
     }).toList();
@@ -660,588 +98,15 @@ class _MapPageState extends State<MapPage> {
           position: LatLng(e['lag'], e['lng']),
           infoWindow: InfoWindow(title: '${e['marker_id']}'),
           onTap: () {
-            var lag = e['lag'];
-            var lng = e['lng'];
-            var pin = e['marker_id'];
-            var pin_id = e['_id'];
-            print(pin_id);
-            Future.delayed(const Duration(seconds: 0), () async {
-              var dis = distance(newlocation.latitude as double, lag,
-                  newlocation.longitude as double, lng);
-              showModalBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    return makeDismissible(
-                      child: DraggableScrollableSheet(
-                        initialChildSize: 1,
-                        builder: (_, controller) => Scaffold(
-                          backgroundColor: Colors.transparent,
-                          appBar: AppBar(
-                            backgroundColor: Colors.transparent,
-                            elevation: 0,
-                            foregroundColor: Colors.black,
-                            centerTitle: true,
-                            title: Text(pin),
-                          ),
-                          body: FutureBuilder(
-                            future: forDiarypinFunc(pin_id),
-                            builder:
-                                (BuildContext context, AsyncSnapshot snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.done) {
-                                return SingleChildScrollView(
-                                  child: Container(
-                                      color: Colors.transparent,
-                                      child: Column(
-                                        children: [
-                                          ListTile(
-                                            onTap: () {
-                                              if (dis > 0.050) {
-                                                AwesomeDialog(
-                                                        context: context,
-                                                        dialogType:
-                                                            DialogType.WARNING,
-                                                        desc:
-                                                            'Distance is to long.\nYou must to go closely on pin.\n Go closely on pin less than 50 meters.',
-                                                        btnOk: ElevatedButton(
-                                                            onPressed: () {
-                                                              Navigator.pop(
-                                                                  context);
-                                                            },
-                                                            child: const Text(
-                                                                'ok')))
-                                                    .show();
-                                              } else {
-                                                Navigator.push(
-                                                    context,
-                                                    PageTransition(
-                                                        child:
-                                                            WritePutdownDiary(
-                                                          deal: 'general',
-                                                          pin: pin_id,
-                                                          pin_name: pin,
-                                                        ),
-                                                        type: PageTransitionType
-                                                            .rightToLeft));
-                                              }
-                                            },
-                                            leading: Padding(
-                                              padding: EdgeInsets.all(8.0),
-                                              child: CircleAvatar(
-                                                radius: 30,
-                                                backgroundImage: NetworkImage(
-                                                    'https://storage.googleapis.com/noseason/${user['profile_image']}'),
-                                              ),
-                                            ),
-                                            title: const Text(
-                                              'Put down your diary.',
-                                              style: TextStyle(fontSize: 18),
-                                            ),
-                                            subtitle: Text(
-                                                'distance: ${dis.toStringAsFixed(3)} km.'),
-                                            trailing: const Icon(
-                                                Icons.navigate_next_rounded),
-                                          ),
-                                          const Divider(
-                                            thickness: 0.8,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                20.0, 10.0, 20.0, 0),
-                                            child: Row(
-                                              children: [
-                                                const Text('My diary: '),
-                                                const Spacer(),
-                                                TextButton(
-                                                    onPressed: () async {
-                                                      var c =
-                                                          await Navigator.push(
-                                                              context,
-                                                              PageTransition(
-                                                                  child:
-                                                                      ListDiaryPutdown(
-                                                                    diary: 2,
-                                                                    pin: pin_id,
-                                                                  ),
-                                                                  type: PageTransitionType
-                                                                      .rightToLeft));
-
-                                                      setState(() {
-                                                        print('asd');
-                                                      });
-                                                    },
-                                                    child: Text(
-                                                      'view more',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    )),
-                                              ],
-                                            ),
-                                          ),
-                                          Column(
-                                            children: putdownDiary[2].length <=
-                                                    2
-                                                ? putdownDiary[2]
-                                                    .map<Widget>(
-                                                      (e) => ListTile(
-                                                        leading: CircleAvatar(
-                                                          backgroundImage:
-                                                              NetworkImage(
-                                                                  'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                                                        ),
-                                                        title: e['topic'] !=
-                                                                null
-                                                            ? Text(e['topic'])
-                                                            : Text(
-                                                                '${e['mood_emoji']} ${e['mood_detail']}'),
-                                                        subtitle: Text(
-                                                            '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
-                                                        trailing: e['status'] ==
-                                                                'Public'
-                                                            ? Icon(Icons.public)
-                                                            : e['status'] ==
-                                                                    'Follower'
-                                                                ? Icon(Icons
-                                                                    .people)
-                                                                : Icon(
-                                                                    Icons.lock),
-                                                        onTap: () async {
-                                                          Navigator.push(
-                                                                  context,
-                                                                  PageTransition(
-                                                                      child: DiaryDetailPutdown(
-                                                                          id: e[
-                                                                              '_id']),
-                                                                      type: PageTransitionType
-                                                                          .rightToLeft))
-                                                              .then((_) {
-                                                            setState(() {});
-                                                          });
-                                                        },
-                                                      ),
-                                                    )
-                                                    .toList()
-                                                : ownPutdown
-                                                    .map<Widget>(
-                                                      (e) => ListTile(
-                                                        leading: CircleAvatar(
-                                                          backgroundImage:
-                                                              NetworkImage(
-                                                                  'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                                                        ),
-                                                        title: e['topic'] !=
-                                                                null
-                                                            ? Text(e['topic'])
-                                                            : Text(
-                                                                '${e['mood_emoji']} ${e['mood_detail']}'),
-                                                        subtitle: Text(
-                                                            '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
-                                                        trailing: e['status'] ==
-                                                                'Public'
-                                                            ? Icon(Icons.public)
-                                                            : e['status'] ==
-                                                                    'Follower'
-                                                                ? Icon(Icons
-                                                                    .people)
-                                                                : Icon(
-                                                                    Icons.lock),
-                                                        onTap: () async {
-                                                          Navigator.push(
-                                                                  context,
-                                                                  PageTransition(
-                                                                      child: DiaryDetailPutdown(
-                                                                          id: e[
-                                                                              '_id']),
-                                                                      type: PageTransitionType
-                                                                          .rightToLeft))
-                                                              .then((_) {
-                                                            setState(() {});
-                                                          });
-                                                        },
-                                                      ),
-                                                    )
-                                                    .toList(),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                20.0, 10.0, 20.0, 0),
-                                            child: Row(
-                                              children: [
-                                                Text('For following: '),
-                                                Spacer(),
-                                                TextButton(
-                                                    onPressed: () {
-                                                      Navigator.push(
-                                                              context,
-                                                              PageTransition(
-                                                                  child:
-                                                                      ListDiaryPutdown(
-                                                                    diary: 1,
-                                                                    pin: pin_id,
-                                                                  ),
-                                                                  type: PageTransitionType
-                                                                      .rightToLeft))
-                                                          .then((_) {
-                                                        setState(() {});
-                                                      });
-                                                    },
-                                                    child: Text(
-                                                      'view more',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    )),
-                                              ],
-                                            ),
-                                          ),
-                                          Column(
-                                            children:
-                                                putdownDiary[1].length <= 2
-                                                    ? putdownDiary[1]
-                                                        .map<Widget>(
-                                                          (e) => ListTile(
-                                                            leading:
-                                                                CircleAvatar(
-                                                              backgroundImage:
-                                                                  NetworkImage(
-                                                                      'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                                                            ),
-                                                            title: e['topic'] !=
-                                                                    null
-                                                                ? Text(
-                                                                    e['topic'])
-                                                                : Text(
-                                                                    '${e['mood_emoji']} ${e['mood_detail']}'),
-                                                            subtitle: Text(
-                                                                '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
-                                                            trailing: e['status'] ==
-                                                                    'Public'
-                                                                ? Icon(Icons
-                                                                    .public)
-                                                                : e['status'] ==
-                                                                        'Follower'
-                                                                    ? Icon(Icons
-                                                                        .people)
-                                                                    : Icon(Icons
-                                                                        .lock),
-                                                            onTap: () async {
-                                                              if (e['status'] ==
-                                                                  'Follower') {
-                                                                var check = await findFollow(
-                                                                    e['user_detail']
-                                                                            [0][
-                                                                        '_id']);
-                                                                if (check[
-                                                                        'message'] ==
-                                                                    'true') {
-                                                                  Navigator.push(
-                                                                          context,
-                                                                          PageTransition(
-                                                                              child: DiaryDetailPutdown(id: e['_id']),
-                                                                              type: PageTransitionType.rightToLeft))
-                                                                      .then((_) {
-                                                                    setState(
-                                                                        () {});
-                                                                  });
-                                                                } else if (check[
-                                                                        'message'] ==
-                                                                    'false') {
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      PageTransition(
-                                                                          child: VisitorProfile(
-                                                                            user_id:
-                                                                                e['user_id'],
-                                                                          ),
-                                                                          type: PageTransitionType.rightToLeft));
-                                                                } else {}
-                                                              } else {
-                                                                Navigator.push(
-                                                                        context,
-                                                                        PageTransition(
-                                                                            child:
-                                                                                DiaryDetailPutdown(id: e['_id']),
-                                                                            type: PageTransitionType.rightToLeft))
-                                                                    .then((_) {
-                                                                  setState(
-                                                                      () {});
-                                                                });
-                                                              }
-                                                            },
-                                                          ),
-                                                        )
-                                                        .toList()
-                                                    : followingPutdown
-                                                        .map<Widget>(
-                                                          (e) => ListTile(
-                                                            leading:
-                                                                CircleAvatar(
-                                                              backgroundImage:
-                                                                  NetworkImage(
-                                                                      'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                                                            ),
-                                                            title: e['topic'] !=
-                                                                    null
-                                                                ? Text(
-                                                                    e['topic'])
-                                                                : Text(
-                                                                    '${e['mood_emoji']} ${e['mood_detail']}'),
-                                                            subtitle: Text(
-                                                                '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
-                                                            trailing: e['status'] ==
-                                                                    'Public'
-                                                                ? Icon(Icons
-                                                                    .public)
-                                                                : e['status'] ==
-                                                                        'Follower'
-                                                                    ? Icon(Icons
-                                                                        .people)
-                                                                    : Icon(Icons
-                                                                        .lock),
-                                                            onTap: () async {
-                                                              if (e['status'] ==
-                                                                  'Follower') {
-                                                                print('heeloo');
-                                                                var check = await findFollow(
-                                                                    e['user_detail']
-                                                                            [0][
-                                                                        '_id']);
-                                                                if (check[
-                                                                        'message'] ==
-                                                                    'true') {
-                                                                  Navigator.push(
-                                                                          context,
-                                                                          PageTransition(
-                                                                              child: DiaryDetailPutdown(id: e['_id']),
-                                                                              type: PageTransitionType.rightToLeft))
-                                                                      .then((_) {
-                                                                    setState(
-                                                                        () {});
-                                                                  });
-                                                                } else if (check[
-                                                                        'message'] ==
-                                                                    'false') {
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      PageTransition(
-                                                                          child:
-                                                                              VisitorProfile(user_id: e['user_id']),
-                                                                          type: PageTransitionType.rightToLeft));
-                                                                } else {}
-                                                              } else {
-                                                                Navigator.push(
-                                                                        context,
-                                                                        PageTransition(
-                                                                            child:
-                                                                                DiaryDetailPutdown(id: e['_id']),
-                                                                            type: PageTransitionType.rightToLeft))
-                                                                    .then((_) {
-                                                                  setState(
-                                                                      () {});
-                                                                });
-                                                              }
-                                                            },
-                                                          ),
-                                                        )
-                                                        .toList(),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                20.0, 10.0, 20.0, 0),
-                                            child: Row(
-                                              children: [
-                                                Text('General: '),
-                                                Spacer(),
-                                                TextButton(
-                                                    onPressed: () {
-                                                      Navigator.push(
-                                                              context,
-                                                              PageTransition(
-                                                                  child:
-                                                                      ListDiaryPutdown(
-                                                                    diary: 0,
-                                                                    pin: pin_id,
-                                                                  ),
-                                                                  type: PageTransitionType
-                                                                      .rightToLeft))
-                                                          .then((_) {
-                                                        setState(() {});
-                                                      });
-                                                    },
-                                                    child: Text(
-                                                      'view more',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    )),
-                                              ],
-                                            ),
-                                          ),
-                                          Column(
-                                            children:
-                                                putdownDiary[0].length <= 2
-                                                    ? putdownDiary[0]
-                                                        .map<Widget>(
-                                                          (e) => ListTile(
-                                                            leading:
-                                                                CircleAvatar(
-                                                              backgroundImage:
-                                                                  NetworkImage(
-                                                                      'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                                                            ),
-                                                            title: e['topic'] !=
-                                                                    null
-                                                                ? Text(
-                                                                    e['topic'])
-                                                                : Text(
-                                                                    '${e['mood_emoji']} ${e['mood_detail']}'),
-                                                            subtitle: Text(
-                                                                '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
-                                                            trailing: e['status'] ==
-                                                                    'Public'
-                                                                ? Icon(Icons
-                                                                    .public)
-                                                                : e['status'] ==
-                                                                        'Follower'
-                                                                    ? Icon(Icons
-                                                                        .people)
-                                                                    : Icon(Icons
-                                                                        .lock),
-                                                            onTap: () async {
-                                                              if (e['status'] ==
-                                                                  'Follower') {
-                                                                print('heeloo');
-                                                                var check = await findFollow(
-                                                                    e['user_detail']
-                                                                            [0][
-                                                                        '_id']);
-                                                                if (check[
-                                                                        'message'] ==
-                                                                    'true') {
-                                                                  Navigator.push(
-                                                                          context,
-                                                                          PageTransition(
-                                                                              child: DiaryDetailPutdown(id: e['_id']),
-                                                                              type: PageTransitionType.rightToLeft))
-                                                                      .then((_) {
-                                                                    setState(
-                                                                        () {});
-                                                                  });
-                                                                } else if (check[
-                                                                        'message'] ==
-                                                                    'false') {
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      PageTransition(
-                                                                          child:
-                                                                              VisitorProfile(user_id: e['user_id']),
-                                                                          type: PageTransitionType.rightToLeft));
-                                                                } else {}
-                                                              } else {
-                                                                Navigator.push(
-                                                                        context,
-                                                                        PageTransition(
-                                                                            child:
-                                                                                DiaryDetailPutdown(id: e['_id']),
-                                                                            type: PageTransitionType.rightToLeft))
-                                                                    .then((_) {
-                                                                  setState(
-                                                                      () {});
-                                                                });
-                                                              }
-                                                            },
-                                                          ),
-                                                        )
-                                                        .toList()
-                                                    : generalPutdown
-                                                        .map<Widget>(
-                                                          (e) => ListTile(
-                                                            leading:
-                                                                CircleAvatar(
-                                                              backgroundImage:
-                                                                  NetworkImage(
-                                                                      'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                                                            ),
-                                                            title: e['topic'] !=
-                                                                    null
-                                                                ? Text(
-                                                                    e['topic'])
-                                                                : Text(
-                                                                    '${e['mood_emoji']} ${e['mood_detail']}'),
-                                                            subtitle: Text(
-                                                                '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
-                                                            trailing: e['status'] ==
-                                                                    'Public'
-                                                                ? Icon(Icons
-                                                                    .public)
-                                                                : e['status'] ==
-                                                                        'Follower'
-                                                                    ? Icon(Icons
-                                                                        .people)
-                                                                    : Icon(Icons
-                                                                        .lock),
-                                                            onTap: () async {
-                                                              if (e['status'] ==
-                                                                  'Follower') {
-                                                                print('heeloo');
-                                                                var check = await findFollow(
-                                                                    e['user_detail']
-                                                                            [0][
-                                                                        '_id']);
-                                                                if (check[
-                                                                        'message'] ==
-                                                                    'true') {
-                                                                  Navigator.push(
-                                                                          context,
-                                                                          PageTransition(
-                                                                              child: DiaryDetailPutdown(id: e['_id']),
-                                                                              type: PageTransitionType.rightToLeft))
-                                                                      .then((_) {
-                                                                    setState(
-                                                                        () {});
-                                                                  });
-                                                                } else if (check[
-                                                                        'message'] ==
-                                                                    'false') {
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      PageTransition(
-                                                                          child:
-                                                                              VisitorProfile(user_id: e['user_id']),
-                                                                          type: PageTransitionType.rightToLeft));
-                                                                } else {}
-                                                              } else {
-                                                                Navigator.push(
-                                                                        context,
-                                                                        PageTransition(
-                                                                            child:
-                                                                                DiaryDetailPutdown(id: e['_id']),
-                                                                            type: PageTransitionType.rightToLeft))
-                                                                    .then((_) {
-                                                                  setState(
-                                                                      () {});
-                                                                });
-                                                              }
-                                                            },
-                                                          ),
-                                                        )
-                                                        .toList(),
-                                          ),
-                                        ],
-                                      )),
-                                );
-                              } else {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                      ),
-                    );
-                  });
+            setState(() {
+              lag = e['lag'];
+              lng = e['lng'];
+              pin = e['marker_id'];
+              pin_id = e['_id'];
+              selectmaker = true;
+              selectevent = false;
+              print(pin_id);
+              dis = distance(newlocation.latitude as double, lag, newlocation.longitude as double, lng);
             });
           });
     }).toList();
@@ -1275,12 +140,20 @@ class _MapPageState extends State<MapPage> {
     return byteData.buffer.asUint8List();
   }
 
+  findOwn() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    ownMarker = await findAllOwnMarker(token);
+    setState(() {});
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getCurrentLocation();
     allPin();
+    findOwn();
     setState(() {
       focus = true;
     });
@@ -1371,49 +244,7 @@ class _MapPageState extends State<MapPage> {
       child: GestureDetector(
         onTap: FocusScope.of(context).unfocus,
         child: Scaffold(
-          appBar: AppBar(
-            foregroundColor: Colors.black,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            centerTitle: true,
-            title: const Text(
-              'Put down your memory',
-              style: TextStyle(color: Colors.black),
-            ),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: IconButton(
-                    onPressed: () async {
-                      Navigator.push(
-                              context,
-                              PageTransition(
-                                  child: OwnerPin(newlocation: newlocation),
-                                  type: PageTransitionType.rightToLeft))
-                          .then((_) {
-                        allPin();
-                        setState(() {});
-                      });
-                      // print(initlaglng);
-                      // await DirectionsRepository().getDirections(
-                      //     origin: initlaglng,
-                      //     destination:
-                      //         LatLng(13.697630703230097, 100.34083452967317));
-                    },
-                    icon: const Icon(
-                      Icons.pin_drop_sharp,
-                      color: Colors.black,
-                    )),
-              )
-            ],
-          ),
-          body: SlidingUpPanel(
-            controller: panelController,
-            minHeight: MediaQuery.of(context).size.height * 0.15,
-            maxHeight: MediaQuery.of(context).size.height * 0.6,
-            parallaxEnabled: true,
-            parallaxOffset: .85,
-            body: initlaglng != null
+          body: initlaglng != null
                 ? Stack(
                     children: [
                       GoogleMap(
@@ -1523,7 +354,7 @@ class _MapPageState extends State<MapPage> {
                         onMapCreated: (GoogleMapController controller) {
                           mapController = controller;
                         },
-                        zoomControlsEnabled: true,
+                        zoomControlsEnabled: false,
                         myLocationEnabled: true,
                         myLocationButtonEnabled: false,
                         mapToolbarEnabled: false,
@@ -1576,18 +407,1693 @@ class _MapPageState extends State<MapPage> {
                           ),
                         ],
                       ),
+                      selectevent
+                      ? Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                            child: Container(
+                              width: 370,
+                              height: 120,
+                              decoration: BoxDecoration(
+                                color: Color(0xfff5f5f5),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(5)
+                                ),
+                                border: Border.all(
+                                  color: Color(0xffe5e5e6),
+                                  width: 1
+                                )
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          pin,
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                              selectmaker = false;
+                                              selectevent = false;
+                                            },
+                                          child: Icon(Icons.close,
+                                              color: Colors.black),
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text('Distance ∙ ${dis.toStringAsFixed(3)} km.'),
+                                        Text('Putdown ∙ '),
+                                        const SizedBox(height: 5),
+                                        GestureDetector(
+                                          onTap: (){
+                                            Future.delayed(const Duration(seconds: 0), () async {
+                                              dis = distance(newlocation.latitude as double, lag,
+                                                  newlocation.longitude as double, lng);
+                                              showModalBottomSheet(
+                                                isScrollControlled: true,
+                                                backgroundColor: Colors.transparent,
+                                                shape: const RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.only(
+                                                      topLeft: Radius.circular(10),
+                                                      topRight: Radius.circular(10)),
+                                                ),
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return makeDismissible(
+                                                      child: DraggableScrollableSheet(
+                                                        initialChildSize: 0.85,
+                                                        builder: (_, controller) => Scaffold(
+                                                          backgroundColor: Colors.transparent,
+                                                          appBar: AppBar(
+                                                          backgroundColor: Color(0xfff5f5f5),
+                                                          elevation: 0,
+                                                          foregroundColor: Colors.black,
+                                                          title: Text(pin),
+                                                          
+                                                          shape: const RoundedRectangleBorder(
+                                                            borderRadius:BorderRadius.only(
+                                                              topLeft: Radius.circular(10),
+                                                              topRight: Radius.circular(10)),
+                                                          ),
+                                                          actions: [
+                                                            IconButton(
+                                                              icon:  Container(
+                                                                width: 45,
+                                                                height: 45,
+                                                                decoration: const BoxDecoration(
+                                                                  color: Color(0xffe5e5e6),
+                                                                  shape: BoxShape.circle
+                                                                ),
+                                                                child: Center(
+                                                                  child: Icon(MdiIcons.close,
+                                                                    color: Color(0xff7f8084)),
+                                                                ),
+                                                              ),
+                                                                onPressed: () {
+                                                                  Navigator.of(context).pop();
+                                                                },
+                                                            ),
+                                                          ],
+                                                          automaticallyImplyLeading: false,
+                                                        ),
+                                                          body: FutureBuilder(
+                                                            future: forDiarypinFunc(pin_id),
+                                                            builder:
+                                                                (BuildContext context, AsyncSnapshot snapshot) {
+                                                              if (snapshot.connectionState ==
+                                                                  ConnectionState.done) {
+                                                                return SingleChildScrollView(
+                                                                  child: Container(
+                                                                    height: 607,
+                                                                      color: Color(0xfff5f5f5),
+                                                                      child: Padding(
+                                                                        padding: const EdgeInsets.all(10.0),
+                                                                        child: Column(
+                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            Text('Distance ∙ ${dis.toStringAsFixed(3)} km.'),
+                                                                            Text('Putdown ∙ '),
+                                                                            const SizedBox(height: 10),
+                                                                            GestureDetector(
+                                                                              onTap: () {
+                                                                                Navigator.push(
+                                                                                  context,
+                                                                                  PageTransition(
+                                                                                      child: WritePutdownDiary(
+                                                                                        deal: 'event',
+                                                                                        pin: pin_id,
+                                                                                        pin_name: pin,
+                                                                                      ),
+                                                                                      type: PageTransitionType
+                                                                                          .rightToLeft));
+                                                                              },
+                                                                              child: Container(
+                                                                                width: double.infinity,
+                                                                                height: 40,
+                                                                                decoration: const BoxDecoration(
+                                                                                  color: Color(0xff8b82ff),
+                                                                                  borderRadius:BorderRadius.all(Radius.circular(5))
+                                                                                ),
+                                                                                child: const Center(
+                                                                                  child: Text(
+                                                                                    'Putdown your diary here',
+                                                                                    style: TextStyle(
+                                                                                      color: Colors.white,
+                                                                                      fontSize: 16,
+                                                                                    )
+                                                                                  ),
+                                                                                )
+                                                                              ),
+                                                                            ),
+                                                                            const SizedBox(height: 20),
+                                                                            const Divider(
+                                                                              thickness: 0.8,
+                                                                            ),
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.fromLTRB(
+                                                                                  10.0, 10.0, 10.0, 0),
+                                                                              child: Row(
+                                                                                children: [
+                                                                                  const Text(
+                                                                                    'My diary: ',
+                                                                                    style: TextStyle(
+                                                                                      color: Color(0xff858585)
+                                                                                    )
+                                                                                  ),
+                                                                                  const Spacer(),
+                                                                                  TextButton(
+                                                                                      onPressed: () async {
+                                                                                        var c =
+                                                                                            await Navigator.push(
+                                                                                                context,
+                                                                                                PageTransition(
+                                                                                                    child:
+                                                                                                        ListDiaryPutdown(
+                                                                                                      diary: 2,
+                                                                                                      pin: pin_id,
+                                                                                                    ),
+                                                                                                    type: PageTransitionType
+                                                                                                        .rightToLeft));
+
+                                                                                        setState(() {
+                                                                                          print('asd');
+                                                                                        });
+                                                                                      },
+                                                                                      child: const Text(
+                                                                                        'view more',
+                                                                                        style: TextStyle(
+                                                                                          color: Color(0xff8b82ff)
+                                                                                        ),
+                                                                                      )),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                            Container(
+                                                                              decoration: const BoxDecoration(
+                                                                                color: Colors.white,
+                                                                                borderRadius:BorderRadius.all(Radius.circular(10))
+                                                                              ),
+                                                                              child: Column(
+                                                                                children: putdownDiary[2].length <=
+                                                                                        2
+                                                                                    ? putdownDiary[2]
+                                                                                        .map<Widget>(
+                                                                                          (e) => ListTile(
+                                                                                            leading: CircleAvatar(
+                                                                                              backgroundImage:
+                                                                                                  NetworkImage(
+                                                                                                      'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                                                            ),
+                                                                                            title: e['topic'] !=
+                                                                                                    null
+                                                                                                ? Text(e['topic'])
+                                                                                                : Text(
+                                                                                                    '${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                            subtitle: Text(
+                                                                                                '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                            trailing: e['status'] ==
+                                                                                                    'Public'
+                                                                                                ? Icon(Icons.public)
+                                                                                                : e['status'] ==
+                                                                                                        'Follower'
+                                                                                                    ? Icon(Icons
+                                                                                                        .people)
+                                                                                                    : Icon(
+                                                                                                        Icons.lock),
+                                                                                            onTap: () async {
+                                                                                              Navigator.push(
+                                                                                                      context,
+                                                                                                      PageTransition(
+                                                                                                          child: DiaryDetailPutdown(
+                                                                                                              id: e[
+                                                                                                                  '_id']),
+                                                                                                          type: PageTransitionType
+                                                                                                              .rightToLeft))
+                                                                                                  .then((_) {
+                                                                                                setState(() {});
+                                                                                              });
+                                                                                            },
+                                                                                          ),
+                                                                                        )
+                                                                                        .toList()
+                                                                                    : ownPutdown
+                                                                                        .map<Widget>(
+                                                                                          (e) => ListTile(
+                                                                                            leading: CircleAvatar(
+                                                                                              backgroundImage:
+                                                                                                  NetworkImage(
+                                                                                                      'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                                                            ),
+                                                                                            title: e['topic'] !=
+                                                                                                    null
+                                                                                                ? Text(e['topic'])
+                                                                                                : Text(
+                                                                                                    '${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                            subtitle: Text(
+                                                                                                '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                            trailing: e['status'] ==
+                                                                                                    'Public'
+                                                                                                ? Icon(Icons.public)
+                                                                                                : e['status'] ==
+                                                                                                        'Follower'
+                                                                                                    ? Icon(Icons
+                                                                                                        .people)
+                                                                                                    : Icon(
+                                                                                                        Icons.lock),
+                                                                                            onTap: () async {
+                                                                                              Navigator.push(
+                                                                                                      context,
+                                                                                                      PageTransition(
+                                                                                                          child: DiaryDetailPutdown(
+                                                                                                              id: e[
+                                                                                                                  '_id']),
+                                                                                                          type: PageTransitionType
+                                                                                                              .rightToLeft))
+                                                                                                  .then((_) {
+                                                                                                setState(() {});
+                                                                                              });
+                                                                                            },
+                                                                                          ),
+                                                                                        )
+                                                                                        .toList(),
+                                                                              ),
+                                                                            ),
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.fromLTRB(
+                                                                                  10.0, 10.0, 10.0, 0),
+                                                                              child: Row(
+                                                                                children: [
+                                                                                  const Text(
+                                                                                    'For following: ',
+                                                                                    style: TextStyle(
+                                                                                      color: Color(0xff858585)
+                                                                                    )
+                                                                                  ),
+                                                                                  Spacer(),
+                                                                                  TextButton(
+                                                                                      onPressed: () {
+                                                                                        Navigator.push(
+                                                                                                context,
+                                                                                                PageTransition(
+                                                                                                    child:
+                                                                                                        ListDiaryPutdown(
+                                                                                                      diary: 1,
+                                                                                                      pin: pin_id,
+                                                                                                    ),
+                                                                                                    type: PageTransitionType
+                                                                                                        .rightToLeft))
+                                                                                            .then((_) {
+                                                                                          setState(() {});
+                                                                                        });
+                                                                                      },
+                                                                                      child: const Text(
+                                                                                        'view more',
+                                                                                        style: TextStyle(
+                                                                                          color: Color(0xff8b82ff)
+                                                                                        ),
+                                                                                      )),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                            Container(
+                                                                              decoration: const BoxDecoration(
+                                                                                color: Colors.white,
+                                                                                borderRadius:BorderRadius.all(Radius.circular(10))
+                                                                              ),
+                                                                              child: Column(
+                                                                                children:
+                                                                                    putdownDiary[1].length <= 2
+                                                                                        ? putdownDiary[1]
+                                                                                            .map<Widget>(
+                                                                                              (e) => ListTile(
+                                                                                                leading:
+                                                                                                    CircleAvatar(
+                                                                                                  backgroundImage:
+                                                                                                      NetworkImage(
+                                                                                                          'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                                                                ),
+                                                                                                title: e['topic'] !=
+                                                                                                        null
+                                                                                                    ? Text(
+                                                                                                        e['topic'])
+                                                                                                    : Text(
+                                                                                                        '${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                                subtitle: Text(
+                                                                                                    '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                                trailing: e['status'] ==
+                                                                                                        'Public'
+                                                                                                    ? Icon(Icons
+                                                                                                        .public)
+                                                                                                    : e['status'] ==
+                                                                                                            'Follower'
+                                                                                                        ? Icon(Icons
+                                                                                                            .people)
+                                                                                                        : Icon(Icons
+                                                                                                            .lock),
+                                                                                                onTap: () async {
+                                                                                                  if (e['status'] ==
+                                                                                                      'Follower') {
+                                                                                                    var check = await findFollow(
+                                                                                                        e['user_detail']
+                                                                                                                [0][
+                                                                                                            '_id']);
+                                                                                                    if (check[
+                                                                                                            'message'] ==
+                                                                                                        'true') {
+                                                                                                      Navigator.push(
+                                                                                                              context,
+                                                                                                              PageTransition(
+                                                                                                                  child: DiaryDetailPutdown(id: e['_id']),
+                                                                                                                  type: PageTransitionType.rightToLeft))
+                                                                                                          .then((_) {
+                                                                                                        setState(
+                                                                                                            () {});
+                                                                                                      });
+                                                                                                    } else if (check[
+                                                                                                            'message'] ==
+                                                                                                        'false') {
+                                                                                                      Navigator.push(
+                                                                                                          context,
+                                                                                                          PageTransition(
+                                                                                                              child: VisitorProfile(
+                                                                                                                user_id:
+                                                                                                                    e['user_id'],
+                                                                                                              ),
+                                                                                                              type: PageTransitionType.rightToLeft));
+                                                                                                    } else {}
+                                                                                                  } else {
+                                                                                                    Navigator.push(
+                                                                                                            context,
+                                                                                                            PageTransition(
+                                                                                                                child:
+                                                                                                                    DiaryDetailPutdown(id: e['_id']),
+                                                                                                                type: PageTransitionType.rightToLeft))
+                                                                                                        .then((_) {
+                                                                                                      setState(
+                                                                                                          () {});
+                                                                                                    });
+                                                                                                  }
+                                                                                                },
+                                                                                              ),
+                                                                                            )
+                                                                                            .toList()
+                                                                                        : followingPutdown
+                                                                                            .map<Widget>(
+                                                                                              (e) => ListTile(
+                                                                                                leading:
+                                                                                                    CircleAvatar(
+                                                                                                  backgroundImage:
+                                                                                                      NetworkImage(
+                                                                                                          'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                                                                ),
+                                                                                                title: e['topic'] !=
+                                                                                                        null
+                                                                                                    ? Text(
+                                                                                                        e['topic'])
+                                                                                                    : Text(
+                                                                                                        '${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                                subtitle: Text(
+                                                                                                    '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                                trailing: e['status'] ==
+                                                                                                        'Public'
+                                                                                                    ? Icon(Icons
+                                                                                                        .public)
+                                                                                                    : e['status'] ==
+                                                                                                            'Follower'
+                                                                                                        ? Icon(Icons
+                                                                                                            .people)
+                                                                                                        : Icon(Icons
+                                                                                                            .lock),
+                                                                                                onTap: () async {
+                                                                                                  if (e['status'] ==
+                                                                                                      'Follower') {
+                                                                                                    print('heeloo');
+                                                                                                    var check = await findFollow(
+                                                                                                        e['user_detail']
+                                                                                                                [0][
+                                                                                                            '_id']);
+                                                                                                    if (check[
+                                                                                                            'message'] ==
+                                                                                                        'true') {
+                                                                                                      Navigator.push(
+                                                                                                              context,
+                                                                                                              PageTransition(
+                                                                                                                  child: DiaryDetailPutdown(id: e['_id']),
+                                                                                                                  type: PageTransitionType.rightToLeft))
+                                                                                                          .then((_) {
+                                                                                                        setState(
+                                                                                                            () {});
+                                                                                                      });
+                                                                                                    } else if (check[
+                                                                                                            'message'] ==
+                                                                                                        'false') {
+                                                                                                      Navigator.push(
+                                                                                                          context,
+                                                                                                          PageTransition(
+                                                                                                              child:
+                                                                                                                  VisitorProfile(user_id: e['user_id']),
+                                                                                                              type: PageTransitionType.rightToLeft));
+                                                                                                    } else {}
+                                                                                                  } else {
+                                                                                                    Navigator.push(
+                                                                                                            context,
+                                                                                                            PageTransition(
+                                                                                                                child:
+                                                                                                                    DiaryDetailPutdown(id: e['_id']),
+                                                                                                                type: PageTransitionType.rightToLeft))
+                                                                                                        .then((_) {
+                                                                                                      setState(
+                                                                                                          () {});
+                                                                                                    });
+                                                                                                  }
+                                                                                                },
+                                                                                              ),
+                                                                                            )
+                                                                                            .toList(),
+                                                                              ),
+                                                                            ),
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.fromLTRB(
+                                                                                  10.0, 10.0, 10.0, 0),
+                                                                              child: Row(
+                                                                                children: [
+                                                                                  const Text(
+                                                                                    'General: ',
+                                                                                    style: TextStyle(
+                                                                                      color: Color(0xff858585)
+                                                                                    )
+                                                                                  ),
+                                                                                  Spacer(),
+                                                                                  TextButton(
+                                                                                      onPressed: () {
+                                                                                        Navigator.push(
+                                                                                                context,
+                                                                                                PageTransition(
+                                                                                                    child:
+                                                                                                        ListDiaryPutdown(
+                                                                                                      diary: 0,
+                                                                                                      pin: pin_id,
+                                                                                                    ),
+                                                                                                    type: PageTransitionType
+                                                                                                        .rightToLeft))
+                                                                                            .then((_) {
+                                                                                          setState(() {});
+                                                                                        });
+                                                                                      },
+                                                                                      child: const Text(
+                                                                                        'view more',
+                                                                                        style: TextStyle(
+                                                                                          color: Color(0xff8b82ff)
+                                                                                        ),
+                                                                                      )),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                            Container(
+                                                                              decoration: const BoxDecoration(
+                                                                                color: Colors.white,
+                                                                                borderRadius:BorderRadius.all(Radius.circular(10))
+                                                                              ),
+                                                                              child: Column(
+                                                                                children:
+                                                                                    putdownDiary[0].length <= 2
+                                                                                        ? putdownDiary[0]
+                                                                                            .map<Widget>(
+                                                                                              (e) => ListTile(
+                                                                                                leading:
+                                                                                                    CircleAvatar(
+                                                                                                  backgroundImage:
+                                                                                                      NetworkImage(
+                                                                                                          'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                                                                ),
+                                                                                                title: e['topic'] !=
+                                                                                                        null
+                                                                                                    ? Text(
+                                                                                                        e['topic'])
+                                                                                                    : Text(
+                                                                                                        '${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                                subtitle: Text(
+                                                                                                    '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                                trailing: e['status'] ==
+                                                                                                        'Public'
+                                                                                                    ? Icon(Icons
+                                                                                                        .public)
+                                                                                                    : e['status'] ==
+                                                                                                            'Follower'
+                                                                                                        ? Icon(Icons
+                                                                                                            .people)
+                                                                                                        : Icon(Icons
+                                                                                                            .lock),
+                                                                                                onTap: () async {
+                                                                                                  if (e['status'] ==
+                                                                                                      'Follower') {
+                                                                                                    print('heeloo');
+                                                                                                    var check = await findFollow(
+                                                                                                        e['user_detail']
+                                                                                                                [0][
+                                                                                                            '_id']);
+                                                                                                    if (check[
+                                                                                                            'message'] ==
+                                                                                                        'true') {
+                                                                                                      Navigator.push(
+                                                                                                              context,
+                                                                                                              PageTransition(
+                                                                                                                  child: DiaryDetailPutdown(id: e['_id']),
+                                                                                                                  type: PageTransitionType.rightToLeft))
+                                                                                                          .then((_) {
+                                                                                                        setState(
+                                                                                                            () {});
+                                                                                                      });
+                                                                                                    } else if (check[
+                                                                                                            'message'] ==
+                                                                                                        'false') {
+                                                                                                      Navigator.push(
+                                                                                                          context,
+                                                                                                          PageTransition(
+                                                                                                              child:
+                                                                                                                  VisitorProfile(user_id: e['user_id']),
+                                                                                                              type: PageTransitionType.rightToLeft));
+                                                                                                    } else {}
+                                                                                                  } else {
+                                                                                                    Navigator.push(
+                                                                                                            context,
+                                                                                                            PageTransition(
+                                                                                                                child:
+                                                                                                                    DiaryDetailPutdown(id: e['_id']),
+                                                                                                                type: PageTransitionType.rightToLeft))
+                                                                                                        .then((_) {
+                                                                                                      setState(
+                                                                                                          () {});
+                                                                                                    });
+                                                                                                  }
+                                                                                                },
+                                                                                              ),
+                                                                                            )
+                                                                                            .toList()
+                                                                                        : generalPutdown
+                                                                                            .map<Widget>(
+                                                                                              (e) => ListTile(
+                                                                                                leading:
+                                                                                                    CircleAvatar(
+                                                                                                  backgroundImage:
+                                                                                                      NetworkImage(
+                                                                                                          'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                                                                ),
+                                                                                                title: e['topic'] !=
+                                                                                                        null
+                                                                                                    ? Text(
+                                                                                                        e['topic'])
+                                                                                                    : Text(
+                                                                                                        '${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                                subtitle: Text(
+                                                                                                    '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                                trailing: e['status'] ==
+                                                                                                        'Public'
+                                                                                                    ? Icon(Icons
+                                                                                                        .public)
+                                                                                                    : e['status'] ==
+                                                                                                            'Follower'
+                                                                                                        ? Icon(Icons
+                                                                                                            .people)
+                                                                                                        : Icon(Icons
+                                                                                                            .lock),
+                                                                                                onTap: () async {
+                                                                                                  if (e['status'] ==
+                                                                                                      'Follower') {
+                                                                                                    print('heeloo');
+                                                                                                    var check = await findFollow(
+                                                                                                        e['user_detail']
+                                                                                                                [0][
+                                                                                                            '_id']);
+                                                                                                    if (check[
+                                                                                                            'message'] ==
+                                                                                                        'true') {
+                                                                                                      Navigator.push(
+                                                                                                              context,
+                                                                                                              PageTransition(
+                                                                                                                  child: DiaryDetailPutdown(id: e['_id']),
+                                                                                                                  type: PageTransitionType.rightToLeft))
+                                                                                                          .then((_) {
+                                                                                                        setState(
+                                                                                                            () {});
+                                                                                                      });
+                                                                                                    } else if (check[
+                                                                                                            'message'] ==
+                                                                                                        'false') {
+                                                                                                      Navigator.push(
+                                                                                                          context,
+                                                                                                          PageTransition(
+                                                                                                              child:
+                                                                                                                  VisitorProfile(user_id: e['user_id']),
+                                                                                                              type: PageTransitionType.rightToLeft));
+                                                                                                    } else {}
+                                                                                                  } else {
+                                                                                                    Navigator.push(
+                                                                                                            context,
+                                                                                                            PageTransition(
+                                                                                                                child:
+                                                                                                                    DiaryDetailPutdown(id: e['_id']),
+                                                                                                                type: PageTransitionType.rightToLeft))
+                                                                                                        .then((_) {
+                                                                                                      setState(
+                                                                                                          () {});
+                                                                                                    });
+                                                                                                  }
+                                                                                                },
+                                                                                              ),
+                                                                                            )
+                                                                                            .toList(),
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      )),
+                                                                );
+                                                              } else {
+                                                                return const Center(
+                                                                  child: CircularProgressIndicator(),
+                                                                );
+                                                              }
+                                                            },
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  });
+                                            });
+                                          },
+                                          child: Container(
+                                            width: double.infinity,
+                                            height: 35,
+                                            decoration: const BoxDecoration(
+                                              color: Color(0xffebebeb),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(5)
+                                              )
+                                            ),
+                                            child: const Center(
+                                              child: Text(
+                                                'See diary',
+                                                style: TextStyle(
+                                                  color: Color(0xff8b82ff)
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      : selectmaker
+                        ? Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                            child: Container(
+                              width: 370,
+                              height: 120,
+                              decoration: BoxDecoration(
+                                color: Color(0xfff5f5f5),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(5)
+                                ),
+                                border: Border.all(
+                                  color: Color(0xffe5e5e6),
+                                  width: 1
+                                )
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          pin,
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                              selectmaker = false;
+                                            },
+                                          child: Icon(Icons.close,
+                                              color: Colors.black),
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text('Distance ∙ ${dis.toStringAsFixed(3)} km.'),
+                                        Text('Putdown ∙ '),
+                                        const SizedBox(height: 5),
+                                        GestureDetector(
+                                          onTap: (){
+                                            Future.delayed(const Duration(seconds: 0), () async {
+                                            dis = distance(newlocation.latitude as double, lag,
+                                                newlocation.longitude as double, lng);
+                                            showModalBottomSheet(
+                                              backgroundColor: Colors.transparent,
+                                              isScrollControlled: true,
+                                              shape: const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft: Radius.circular(10),
+                                                    topRight: Radius.circular(10)),
+                                              ),
+                                                context: context,
+                                                builder: (context) {
+                                                  return makeDismissible(
+                                                    child: DraggableScrollableSheet(
+                                                      initialChildSize: 0.85,
+                                                      builder: (_, controller) => Scaffold(
+                                                        backgroundColor: Colors.transparent,                     
+                                                        appBar: AppBar(
+                                                          backgroundColor: Color(0xfff5f5f5),
+                                                          elevation: 0,
+                                                          foregroundColor: Colors.black,
+                                                          title: Text(pin),
+                                                          
+                                                          shape: const RoundedRectangleBorder(
+                                                            borderRadius:BorderRadius.only(
+                                                              topLeft: Radius.circular(10),
+                                                              topRight: Radius.circular(10)),
+                                                          ),
+                                                          actions: [
+                                                            IconButton(
+                                                              icon:  Container(
+                                                                width: 45,
+                                                                height: 45,
+                                                                decoration: const BoxDecoration(
+                                                                  color: Color(0xffe5e5e6),
+                                                                  shape: BoxShape.circle
+                                                                ),
+                                                                child: Center(
+                                                                  child: Icon(MdiIcons.close,
+                                                                    color: Color(0xff7f8084)),
+                                                                ),
+                                                              ),
+                                                                onPressed: () => Navigator.of(context).pop(),
+                                                            ),
+                                                          ],
+                                                          automaticallyImplyLeading: false,
+                                                        ),
+                                                        body: FutureBuilder(
+                                                          future: forDiarypinFunc(pin_id),
+                                                          builder:
+                                                              (BuildContext context, AsyncSnapshot snapshot) {
+                                                            if (snapshot.connectionState ==
+                                                                ConnectionState.done) {
+                                                              return SingleChildScrollView(
+                                                                child: Container(
+                                                                  width: double.infinity,
+                                                                  height: 607,
+                                                                    color: Color(0xfff5f5f5),
+                                                                    child: Padding(
+                                                                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                                                      child: Column(
+                                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Text('Distance ∙ ${dis.toStringAsFixed(3)} km.'),
+                                                                          Text('Putdown ∙ '),
+                                                                          const SizedBox(height: 10),
+                                                                          GestureDetector(
+                                                                            onTap: () {
+                                                                              if (dis > 0.050) {
+                                                                                AwesomeDialog(
+                                                                                        context: context,
+                                                                                        dialogType:
+                                                                                            DialogType.WARNING,
+                                                                                        desc:
+                                                                                            'Distance is to long.\nYou must to go closely on pin.\n Go closely on pin less than 50 meters.',
+                                                                                        btnOk: ElevatedButton(
+                                                                                            onPressed: () {
+                                                                                              Navigator.pop(
+                                                                                                  context);
+                                                                                            },
+                                                                                            child: const Text(
+                                                                                                'ok')))
+                                                                                    .show();
+                                                                              } else {
+                                                                                Navigator.push(
+                                                                                    context,
+                                                                                    PageTransition(
+                                                                                        child:
+                                                                                            WritePutdownDiary(
+                                                                                          deal: 'general',
+                                                                                          pin: pin_id,
+                                                                                          pin_name: pin,
+                                                                                        ),
+                                                                                        type: PageTransitionType
+                                                                                            .rightToLeft));
+                                                                              }
+                                                                            },
+                                                                            child: Container(
+                                                                              width: double.infinity,
+                                                                              height: 40,
+                                                                              decoration: const BoxDecoration(
+                                                                                color: Color(0xff8b82ff),
+                                                                                borderRadius:BorderRadius.all(Radius.circular(5))
+                                                                              ),
+                                                                              child: const Center(
+                                                                                child: Text(
+                                                                                  'Putdown your diary here',
+                                                                                  style: TextStyle(
+                                                                                    color: Colors.white,
+                                                                                    fontSize: 16,
+                                                                                  )
+                                                                                ),
+                                                                              )
+                                                                            ),
+                                                                          ),
+                                                                          const SizedBox(height: 20),
+                                                                          const Divider(
+                                                                            thickness: 0.8,
+                                                                          ),
+                                                                          Padding(
+                                                                            padding: const EdgeInsets.fromLTRB(
+                                                                                10.0, 0.0, 10.0, 0),
+                                                                            child: Row(
+                                                                              children: [
+                                                                                const Text(
+                                                                                  'My diary: ',
+                                                                                  style: TextStyle(
+                                                                                    color: Color(0xff858585)
+                                                                                  )
+                                                                                ),
+                                                                                const Spacer(),
+                                                                                TextButton(
+                                                                                    onPressed: () async {
+                                                                                      var c =
+                                                                                          await Navigator.push(
+                                                                                              context,
+                                                                                              PageTransition(
+                                                                                                  child:
+                                                                                                      ListDiaryPutdown(
+                                                                                                    diary: 2,
+                                                                                                    pin: pin_id,
+                                                                                                  ),
+                                                                                                  type: PageTransitionType
+                                                                                                      .rightToLeft));
+
+                                                                                      setState(() {
+                                                                                        print('asd');
+                                                                                      });
+                                                                                    },
+                                                                                    child: const Text(
+                                                                                      'view more',
+                                                                                      style: TextStyle(
+                                                                                        color: Color(0xff8b82ff)
+                                                                                      ),
+                                                                                    )),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                          Container(
+                                                                            decoration: const BoxDecoration(
+                                                                              color: Colors.white,
+                                                                              borderRadius:BorderRadius.all(Radius.circular(10))
+                                                                            ),
+                                                                            child: Column(
+                                                                              children: putdownDiary[2].length <=
+                                                                                      2
+                                                                                  ? putdownDiary[2]
+                                                                                      .map<Widget>(
+                                                                                        (e) => ListTile(
+                                                                                          leading: CircleAvatar(
+                                                                                            backgroundImage:
+                                                                                                NetworkImage(
+                                                                                                    'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                                                          ),
+                                                                                          title: e['topic'] !=
+                                                                                                  null
+                                                                                              ? Text(e['topic'])
+                                                                                              : Text(
+                                                                                                  '${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                          subtitle: Text(
+                                                                                              '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                          trailing: e['status'] ==
+                                                                                                  'Public'
+                                                                                              ? Icon(Icons.public)
+                                                                                              : e['status'] ==
+                                                                                                      'Follower'
+                                                                                                  ? Icon(Icons
+                                                                                                      .people)
+                                                                                                  : Icon(
+                                                                                                      Icons.lock),
+                                                                                          onTap: () async {
+                                                                                            Navigator.push(
+                                                                                                    context,
+                                                                                                    PageTransition(
+                                                                                                        child: DiaryDetailPutdown(
+                                                                                                            id: e[
+                                                                                                                '_id']),
+                                                                                                        type: PageTransitionType
+                                                                                                            .rightToLeft))
+                                                                                                .then((_) {
+                                                                                              setState(() {});
+                                                                                            });
+                                                                                          },
+                                                                                        ),
+                                                                                      )
+                                                                                      .toList()
+                                                                                  : ownPutdown
+                                                                                      .map<Widget>(
+                                                                                        (e) => ListTile(
+                                                                                          leading: CircleAvatar(
+                                                                                            backgroundImage:
+                                                                                                NetworkImage(
+                                                                                                    'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                                                          ),
+                                                                                          title: e['topic'] !=
+                                                                                                  null
+                                                                                              ? Text(e['topic'])
+                                                                                              : Text(
+                                                                                                  '${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                          subtitle: Text(
+                                                                                              '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                          trailing: e['status'] ==
+                                                                                                  'Public'
+                                                                                              ? Icon(Icons.public)
+                                                                                              : e['status'] ==
+                                                                                                      'Follower'
+                                                                                                  ? Icon(Icons
+                                                                                                      .people)
+                                                                                                  : Icon(
+                                                                                                      Icons.lock),
+                                                                                          onTap: () async {
+                                                                                            Navigator.push(
+                                                                                                    context,
+                                                                                                    PageTransition(
+                                                                                                        child: DiaryDetailPutdown(
+                                                                                                            id: e[
+                                                                                                                '_id']),
+                                                                                                        type: PageTransitionType
+                                                                                                            .rightToLeft))
+                                                                                                .then((_) {
+                                                                                              setState(() {});
+                                                                                            });
+                                                                                          },
+                                                                                        ),
+                                                                                      )
+                                                                                      .toList(),
+                                                                            ),
+                                                                          ),
+                                                                          Padding(
+                                                                            padding: const EdgeInsets.fromLTRB(
+                                                                                10.0, 10.0, 10.0, 0),
+                                                                            child: Row(
+                                                                              children: [
+                                                                                const Text(
+                                                                                  'For following: ',
+                                                                                  style: TextStyle(
+                                                                                    color: Color(0xff858585)
+                                                                                  )
+                                                                                ),
+                                                                                Spacer(),
+                                                                                TextButton(
+                                                                                    onPressed: () {
+                                                                                      Navigator.push(
+                                                                                              context,
+                                                                                              PageTransition(
+                                                                                                  child:
+                                                                                                      ListDiaryPutdown(
+                                                                                                    diary: 1,
+                                                                                                    pin: pin_id,
+                                                                                                  ),
+                                                                                                  type: PageTransitionType
+                                                                                                      .rightToLeft))
+                                                                                          .then((_) {
+                                                                                        setState(() {});
+                                                                                      });
+                                                                                    },
+                                                                                    child: const Text(
+                                                                                      'view more',
+                                                                                      style: TextStyle(
+                                                                                          color: Color(0xff8b82ff))
+                                                                                    )),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                          Container(
+                                                                            decoration: const BoxDecoration(
+                                                                              color: Colors.white,
+                                                                              borderRadius:BorderRadius.all(Radius.circular(10))
+                                                                            ),
+                                                                            child: Column(
+                                                                              children:
+                                                                                  putdownDiary[1].length <= 2
+                                                                                      ? putdownDiary[1]
+                                                                                          .map<Widget>(
+                                                                                            (e) => ListTile(
+                                                                                              leading:
+                                                                                                  CircleAvatar(
+                                                                                                backgroundImage:
+                                                                                                    NetworkImage(
+                                                                                                        'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                                                              ),
+                                                                                              title: e['topic'] !=
+                                                                                                      null
+                                                                                                  ? Text(
+                                                                                                      e['topic'])
+                                                                                                  : Text(
+                                                                                                      '${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                              subtitle: Text(
+                                                                                                  '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                              trailing: e['status'] ==
+                                                                                                      'Public'
+                                                                                                  ? Icon(Icons
+                                                                                                      .public)
+                                                                                                  : e['status'] ==
+                                                                                                          'Follower'
+                                                                                                      ? Icon(Icons
+                                                                                                          .people)
+                                                                                                      : Icon(Icons
+                                                                                                          .lock),
+                                                                                              onTap: () async {
+                                                                                                if (e['status'] ==
+                                                                                                    'Follower') {
+                                                                                                  var check = await findFollow(
+                                                                                                      e['user_detail']
+                                                                                                              [0][
+                                                                                                          '_id']);
+                                                                                                  if (check[
+                                                                                                          'message'] ==
+                                                                                                      'true') {
+                                                                                                    Navigator.push(
+                                                                                                            context,
+                                                                                                            PageTransition(
+                                                                                                                child: DiaryDetailPutdown(id: e['_id']),
+                                                                                                                type: PageTransitionType.rightToLeft))
+                                                                                                        .then((_) {
+                                                                                                      setState(
+                                                                                                          () {});
+                                                                                                    });
+                                                                                                  } else if (check[
+                                                                                                          'message'] ==
+                                                                                                      'false') {
+                                                                                                    Navigator.push(
+                                                                                                        context,
+                                                                                                        PageTransition(
+                                                                                                            child: VisitorProfile(
+                                                                                                              user_id:
+                                                                                                                  e['user_id'],
+                                                                                                            ),
+                                                                                                            type: PageTransitionType.rightToLeft));
+                                                                                                  } else {}
+                                                                                                } else {
+                                                                                                  Navigator.push(
+                                                                                                          context,
+                                                                                                          PageTransition(
+                                                                                                              child:
+                                                                                                                  DiaryDetailPutdown(id: e['_id']),
+                                                                                                              type: PageTransitionType.rightToLeft))
+                                                                                                      .then((_) {
+                                                                                                    setState(
+                                                                                                        () {});
+                                                                                                  });
+                                                                                                }
+                                                                                              },
+                                                                                            ),
+                                                                                          )
+                                                                                          .toList()
+                                                                                      : followingPutdown
+                                                                                          .map<Widget>(
+                                                                                            (e) => ListTile(
+                                                                                              leading:
+                                                                                                  CircleAvatar(
+                                                                                                backgroundImage:
+                                                                                                    NetworkImage(
+                                                                                                        'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                                                              ),
+                                                                                              title: e['topic'] !=
+                                                                                                      null
+                                                                                                  ? Text(
+                                                                                                      e['topic'])
+                                                                                                  : Text(
+                                                                                                      '${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                              subtitle: Text(
+                                                                                                  '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                              trailing: e['status'] ==
+                                                                                                      'Public'
+                                                                                                  ? Icon(Icons
+                                                                                                      .public)
+                                                                                                  : e['status'] ==
+                                                                                                          'Follower'
+                                                                                                      ? Icon(Icons
+                                                                                                          .people)
+                                                                                                      : Icon(Icons
+                                                                                                          .lock),
+                                                                                              onTap: () async {
+                                                                                                if (e['status'] ==
+                                                                                                    'Follower') {
+                                                                                                  print('heeloo');
+                                                                                                  var check = await findFollow(
+                                                                                                      e['user_detail']
+                                                                                                              [0][
+                                                                                                          '_id']);
+                                                                                                  if (check[
+                                                                                                          'message'] ==
+                                                                                                      'true') {
+                                                                                                    Navigator.push(
+                                                                                                            context,
+                                                                                                            PageTransition(
+                                                                                                                child: DiaryDetailPutdown(id: e['_id']),
+                                                                                                                type: PageTransitionType.rightToLeft))
+                                                                                                        .then((_) {
+                                                                                                      setState(
+                                                                                                          () {});
+                                                                                                    });
+                                                                                                  } else if (check[
+                                                                                                          'message'] ==
+                                                                                                      'false') {
+                                                                                                    Navigator.push(
+                                                                                                        context,
+                                                                                                        PageTransition(
+                                                                                                            child:
+                                                                                                                VisitorProfile(user_id: e['user_id']),
+                                                                                                            type: PageTransitionType.rightToLeft));
+                                                                                                  } else {}
+                                                                                                } else {
+                                                                                                  Navigator.push(
+                                                                                                          context,
+                                                                                                          PageTransition(
+                                                                                                              child:
+                                                                                                                  DiaryDetailPutdown(id: e['_id']),
+                                                                                                              type: PageTransitionType.rightToLeft))
+                                                                                                      .then((_) {
+                                                                                                    setState(
+                                                                                                        () {});
+                                                                                                  });
+                                                                                                }
+                                                                                              },
+                                                                                            ),
+                                                                                          )
+                                                                                          .toList(),
+                                                                            ),
+                                                                          ),
+                                                                          Padding(
+                                                                            padding: const EdgeInsets.fromLTRB(
+                                                                                10.0, 10.0, 10.0, 0),
+                                                                            child: Row(
+                                                                              children: [
+                                                                                const Text(
+                                                                                  'General: ',
+                                                                                  style: TextStyle(
+                                                                                    color: Color(0xff858585)
+                                                                                  ),
+                                                                                ),
+                                                                                Spacer(),
+                                                                                TextButton(
+                                                                                    onPressed: () {
+                                                                                      Navigator.push(
+                                                                                              context,
+                                                                                              PageTransition(
+                                                                                                  child:
+                                                                                                      ListDiaryPutdown(
+                                                                                                    diary: 0,
+                                                                                                    pin: pin_id,
+                                                                                                  ),
+                                                                                                  type: PageTransitionType
+                                                                                                      .rightToLeft))
+                                                                                          .then((_) {
+                                                                                        setState(() {});
+                                                                                      });
+                                                                                    },
+                                                                                    child: const Text(
+                                                                                      'view more',
+                                                                                      style: TextStyle(
+                                                                                          color: Color(0xff8b82ff)),
+                                                                                    )),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                          Container(
+                                                                            decoration: const BoxDecoration(
+                                                                              color: Colors.white,
+                                                                              borderRadius:BorderRadius.all(Radius.circular(10))
+                                                                            ),
+                                                                            child: Column(
+                                                                              children:
+                                                                                  putdownDiary[0].length <= 2
+                                                                                      ? putdownDiary[0]
+                                                                                          .map<Widget>(
+                                                                                            (e) => ListTile(
+                                                                                              leading:
+                                                                                                  CircleAvatar(
+                                                                                                backgroundImage:
+                                                                                                    NetworkImage(
+                                                                                                        'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                                                              ),
+                                                                                              title: e['topic'] !=
+                                                                                                      null
+                                                                                                  ? Text(
+                                                                                                      e['topic'])
+                                                                                                  : Text(
+                                                                                                      '${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                              subtitle: Text(
+                                                                                                  '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                              trailing: e['status'] ==
+                                                                                                      'Public'
+                                                                                                  ? Icon(Icons
+                                                                                                      .public)
+                                                                                                  : e['status'] ==
+                                                                                                          'Follower'
+                                                                                                      ? Icon(Icons
+                                                                                                          .people)
+                                                                                                      : Icon(Icons
+                                                                                                          .lock),
+                                                                                              onTap: () async {
+                                                                                                if (e['status'] ==
+                                                                                                    'Follower') {
+                                                                                                  print('heeloo');
+                                                                                                  var check = await findFollow(
+                                                                                                      e['user_detail']
+                                                                                                              [0][
+                                                                                                          '_id']);
+                                                                                                  if (check[
+                                                                                                          'message'] ==
+                                                                                                      'true') {
+                                                                                                    Navigator.push(
+                                                                                                            context,
+                                                                                                            PageTransition(
+                                                                                                                child: DiaryDetailPutdown(id: e['_id']),
+                                                                                                                type: PageTransitionType.rightToLeft))
+                                                                                                        .then((_) {
+                                                                                                      setState(
+                                                                                                          () {});
+                                                                                                    });
+                                                                                                  } else if (check[
+                                                                                                          'message'] ==
+                                                                                                      'false') {
+                                                                                                    Navigator.push(
+                                                                                                        context,
+                                                                                                        PageTransition(
+                                                                                                            child:
+                                                                                                                VisitorProfile(user_id: e['user_id']),
+                                                                                                            type: PageTransitionType.rightToLeft));
+                                                                                                  } else {}
+                                                                                                } else {
+                                                                                                  Navigator.push(
+                                                                                                          context,
+                                                                                                          PageTransition(
+                                                                                                              child:
+                                                                                                                  DiaryDetailPutdown(id: e['_id']),
+                                                                                                              type: PageTransitionType.rightToLeft))
+                                                                                                      .then((_) {
+                                                                                                    setState(
+                                                                                                        () {});
+                                                                                                  });
+                                                                                                }
+                                                                                              },
+                                                                                            ),
+                                                                                          )
+                                                                                          .toList()
+                                                                                      : generalPutdown
+                                                                                          .map<Widget>(
+                                                                                            (e) => ListTile(
+                                                                                              leading:
+                                                                                                  CircleAvatar(
+                                                                                                backgroundImage:
+                                                                                                    NetworkImage(
+                                                                                                        'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                                                                              ),
+                                                                                              title: e['topic'] !=
+                                                                                                      null
+                                                                                                  ? Text(
+                                                                                                      e['topic'])
+                                                                                                  : Text(
+                                                                                                      '${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                              subtitle: Text(
+                                                                                                  '@${e['user_detail'][0]['username']} - ${e['mood_emoji']} ${e['mood_detail']}'),
+                                                                                              trailing: e['status'] ==
+                                                                                                      'Public'
+                                                                                                  ? Icon(Icons
+                                                                                                      .public)
+                                                                                                  : e['status'] ==
+                                                                                                          'Follower'
+                                                                                                      ? Icon(Icons
+                                                                                                          .people)
+                                                                                                      : Icon(Icons
+                                                                                                          .lock),
+                                                                                              onTap: () async {
+                                                                                                if (e['status'] ==
+                                                                                                    'Follower') {
+                                                                                                  print('heeloo');
+                                                                                                  var check = await findFollow(
+                                                                                                      e['user_detail']
+                                                                                                              [0][
+                                                                                                          '_id']);
+                                                                                                  if (check[
+                                                                                                          'message'] ==
+                                                                                                      'true') {
+                                                                                                    Navigator.push(
+                                                                                                            context,
+                                                                                                            PageTransition(
+                                                                                                                child: DiaryDetailPutdown(id: e['_id']),
+                                                                                                                type: PageTransitionType.rightToLeft))
+                                                                                                        .then((_) {
+                                                                                                      setState(
+                                                                                                          () {});
+                                                                                                    });
+                                                                                                  } else if (check[
+                                                                                                          'message'] ==
+                                                                                                      'false') {
+                                                                                                    Navigator.push(
+                                                                                                        context,
+                                                                                                        PageTransition(
+                                                                                                            child:
+                                                                                                                VisitorProfile(user_id: e['user_id']),
+                                                                                                            type: PageTransitionType.rightToLeft));
+                                                                                                  } else {}
+                                                                                                } else {
+                                                                                                  Navigator.push(
+                                                                                                          context,
+                                                                                                          PageTransition(
+                                                                                                              child:
+                                                                                                                  DiaryDetailPutdown(id: e['_id']),
+                                                                                                              type: PageTransitionType.rightToLeft))
+                                                                                                      .then((_) {
+                                                                                                    setState(
+                                                                                                        () {});
+                                                                                                  });
+                                                                                                }
+                                                                                              },
+                                                                                            ),
+                                                                                          )
+                                                                                          .toList(),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    )),
+                                                              );
+                                                            } else {
+                                                              return const Center(
+                                                                child: CircularProgressIndicator(),
+                                                              );
+                                                            }
+                                                          },
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                });
+                                          });
+                                          },
+                                          child: Container(
+                                            width: double.infinity,
+                                            height: 35,
+                                            decoration: const BoxDecoration(
+                                              color: Color(0xffebebeb),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(5)
+                                              )
+                                            ),
+                                            child: const Center(
+                                              child: Text(
+                                                'See diary',
+                                                style: TextStyle(
+                                                  color: Color(0xff8b82ff)
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                        : Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                          child: Container(
+                            width: 370,
+                            height: 120,
+                            decoration: BoxDecoration(
+                              color: Color(0xfff5f5f5),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(5)
+                              ),
+                              border: Border.all(
+                                color: Color(0xffe5e5e6),
+                                width: 1
+                              )
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  const Text(
+                                    'select pin location to putdown your diary',
+                                    style: TextStyle(
+                                      color: Colors.black54
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title: const Text('Create new pin'),
+                            content: TextField(
+                              keyboardType: TextInputType.emailAddress,
+                              cursorColor: const Color(0xff8a7efd),
+                              decoration: const InputDecoration(
+                                filled: true,
+                                fillColor: Color(0xfff1f3f4),
+                                hintText: 'input name',
+                                hintStyle: TextStyle(
+                                    color: Color(0xffc5d2e1),
+                                    fontWeight: FontWeight.w200),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide.none),
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide.none),
+                                // prefixIcon: Icon(
+                                //   Icons.email_outlined,
+                                // ),
+                              ),
+                              onChanged: (value) {
+                                setState(() {
+                                  textInput = value;
+                                });
+                              },
+                            ),
+                            actions: [
+                              TextButton(
+                                  onPressed: () async {
+                                    CoolAlert.show(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        type: CoolAlertType.loading);
+                                    SharedPreferences prefs =
+                                        await SharedPreferences.getInstance();
+                                    var token = prefs.getString('token');
+                                    var checkDelay = await checkDelayPin(token);
+                                    if (checkDelay['message'] ==
+                                            'add success' ||
+                                        checkDelay['message'] == 'success') {
+                                      var e = await addUserMarker(
+                                          token,
+                                          textInput,
+                                          newlocation.latitude as double,
+                                          newlocation.longitude
+                                              as double);
+                                      if (e['message'] == 'success') {
+                                        CoolAlert.show(
+                                            barrierDismissible: false,
+                                            context: context,
+                                            type: CoolAlertType.success,
+                                            title: 'Add pin was success.',
+                                            onConfirmBtnTap: () {
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                            });
+                                      } else if (e['message'] ==
+                                          'already have') {
+                                        CoolAlert.show(
+                                            barrierDismissible: false,
+                                            context: context,
+                                            type: CoolAlertType.warning,
+                                            title:
+                                                'Your pin location already have.',
+                                            onConfirmBtnTap: () {
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                            });
+                                      } else {
+                                        CoolAlert.show(
+                                            barrierDismissible: false,
+                                            context: context,
+                                            type: CoolAlertType.error,
+                                            title: 'Something wrong.',
+                                            onConfirmBtnTap: () {
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                            });
+                                      }
+                                    } else {
+                                      CoolAlert.show(
+                                          context: context,
+                                          type: CoolAlertType.error,
+                                          title:
+                                              'You cannot add Pin right now.',
+                                          text:
+                                              'Because you need to wait for cooldown 1 day after add pin to add another one.',
+                                          onConfirmBtnTap: () {
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                          });
+                                    }
+                                  },
+                                  child: const Text(
+                                    'Submit',
+                                    style: TextStyle(color: Color(0xff8b82ff), fontSize: 16)
+                                  ))
+                            ],
+                          )).then((_) async{
+                    findOwn();
+                    await allPin();
+                    setState(() {});
+                  });
+                                        },
+                                        child: Container(
+                                          width: 170,
+                                          height: 75,
+                                          decoration: const BoxDecoration(
+                                            color: Color(0xffebebeb),
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(5)
+                                            )
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Container(
+                                                width: 45,
+                                                height: 45,
+                                                decoration: const BoxDecoration(
+                                                  color: Colors.white,
+                                                  shape: BoxShape.circle
+                                                ),
+                                                child: const Center(
+                                                  child: 
+                                                    Icon(
+                                                      MdiIcons.mapMarkerPlus,
+                                                      color: Color(0xff8b82ff),
+                                                    ),
+                                                ),
+                                              ),
+                                              const Text(
+                                                'Create new\npin location',
+                                                style: TextStyle(
+                                                  fontSize: 12
+                                                )
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () async{
+                                          Navigator.push(
+                                                  context,
+                                                  PageTransition(
+                                                      child: OwnerPin(newlocation: newlocation),
+                                                      type: PageTransitionType.rightToLeft))
+                                              .then((_) {
+                                            allPin();
+                                            setState(() {});
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 170,
+                                          height: 75,
+                                          decoration: const BoxDecoration(
+                                            color: Color(0xffebebeb),
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(5)
+                                            )
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Container(
+                                                width: 45,
+                                                height: 45,
+                                                decoration: const BoxDecoration(
+                                                  color: Colors.white,
+                                                  shape: BoxShape.circle
+                                                ),
+                                                child: const Center(
+                                                  child: 
+                                                    Icon(
+                                                      MdiIcons.bookMarker,
+                                                      color: Color(0xff8b82ff),
+                                                    ),
+                                                ),
+                                              ),
+                                              const Text(
+                                                'Your own\npin location',
+                                                style: TextStyle(
+                                                  fontSize: 12
+                                                )
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      )      
+                                    ]
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   )
                 : const Center(
                     child: CircularProgressIndicator(),
                   ),
-            panelBuilder: (controller) =>
-                PanelWidget(controller, panelController),
-            borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
-          ),
           floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
           floatingActionButton: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 200, 0, 0),
+            padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
             child: FloatingActionButton(
                 elevation: 3,
                 heroTag: 'asd',
@@ -1603,41 +2109,6 @@ class _MapPageState extends State<MapPage> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget PanelWidget(
-      ScrollController controller, PanelController panelController) {
-    return ListView(
-      padding: EdgeInsets.zero,
-      controller: controller,
-      children: [
-        SizedBox(height: 12),
-        GestureDetector(
-          onTap: () {
-            print(panelController.isPanelClosed);
-          },
-          child: Center(
-            child: Container(
-              width: 50,
-              height: 5,
-              decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(12)),
-            ),
-          ),
-        ),
-        SizedBox(height: 36),
-        buildPinDetail(),
-        SizedBox(height: 24)
-      ],
-    );
-  }
-
-  Widget buildPinDetail() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 24),
-      child: Text('Select location to put down your diary'),
     );
   }
 
@@ -1737,6 +2208,47 @@ findFollow(target_id) async {
         <String, dynamic>{'token': token, 'target_id': target_id},
       ));
 
+  var result = jsonDecode(response.body);
+  return result;
+}
+
+findAllOwnMarker(token) async {
+  var url = 'http://10.0.2.2:3000/putdown/findAllOwnMarker';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'token': token,
+        },
+      ));
+  var result = jsonDecode(response.body);
+  return result;
+}
+
+addUserMarker(token, pin, lag, lng) async {
+  var url = 'http://10.0.2.2:3000/putdown/addPin';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{'token': token, 'pin': pin, 'lag': lag, 'lng': lng},
+      ));
+  var result = jsonDecode(response.body);
+  return result;
+}
+
+checkDelayPin(token) async {
+  var url = 'http://10.0.2.2:3000/delay/addOrDeleteDelay';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{'token': token},
+      ));
   var result = jsonDecode(response.body);
   return result;
 }
