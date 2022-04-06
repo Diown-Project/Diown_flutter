@@ -121,7 +121,7 @@ class _FollowingPageState extends State<FollowingPage> {
                                     setState(() {});
                                   },
                                   child: const Text(
-                                    'remove',
+                                    'unfollow',
                                     style: TextStyle(color: Colors.red),
                                   ))
                             ],
