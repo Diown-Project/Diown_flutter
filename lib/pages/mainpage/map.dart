@@ -1082,8 +1082,11 @@ class _MapPageState extends State<MapPage> {
                                                                       )),
                                                                 );
                                                               } else {
-                                                                return const Center(
-                                                                  child: CircularProgressIndicator(),
+                                                                return const Scaffold(
+                                                                  backgroundColor: Color(0xfff5f5f5),
+                                                                  body: Center(
+                                                                    child: CircularProgressIndicator()
+                                                                  ),
                                                                 );
                                                               }
                                                             },
@@ -1810,8 +1813,11 @@ class _MapPageState extends State<MapPage> {
                                                                     )),
                                                               );
                                                             } else {
-                                                              return const Center(
-                                                                child: CircularProgressIndicator(),
+                                                              return const Scaffold(
+                                                                backgroundColor: Color(0xfff5f5f5),
+                                                                body: Center(
+                                                                  child: CircularProgressIndicator()
+                                                                ),
                                                               );
                                                             }
                                                           },
