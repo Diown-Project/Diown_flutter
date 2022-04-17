@@ -88,241 +88,243 @@ class _CarouselLoadingState extends State<CarouselLoading> {
                   ],
                 ),
               ),
-              CarouselSlider.builder(
-                itemCount: _event.length,
-                options: CarouselOptions(
-                    viewportFraction: 1,
-                    height: 255,
-                    enableInfiniteScroll: false,
-                    onPageChanged: (index, reason) =>
-                        setState(() => activeIndex = index)),
-                itemBuilder: (context, index, realIndex) {
-                  return GestureDetector(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                              scrollable: true,
-                              title: Center(
-                                child: Text(
-                                    _event[index]['topic']),
-                              ),
-                              content: Column(
-                                children: [
-                                  Image.network(
-                                      'https://storage.googleapis.com/noseason/${_event[index]['imageLocation']}'),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    DateFormat('EEE. MMM d / yyyy')
-                                            .format(DateTime
-                                                .parse(_event[
-                                                        index]
-                                                    [
-                                                    'start_date'])) +
-                                        ' - ' +
-                                        DateFormat(
-                                                'EEE. MMM d / yyyy')
-                                            .format(DateTime
-                                                .parse(_event[
-                                                        index]
-                                                    [
-                                                    'end_date'])),
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  Row(
+              _event != null
+                  ? _event.length != 0
+                      ? CarouselSlider.builder(
+                          itemCount: _event.length,
+                          options: CarouselOptions(
+                              viewportFraction: 1,
+                              height: 255,
+                              enableInfiniteScroll: false,
+                              onPageChanged: (index, reason) =>
+                                  setState(() => activeIndex = index)),
+                          itemBuilder: (context, index, realIndex) {
+                            return GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                          scrollable: true,
+                                          title: Center(
+                                            child: Text(_event[index]['topic']),
+                                          ),
+                                          content: Column(
+                                            children: [
+                                              Image.network(
+                                                  'https://storage.googleapis.com/noseason/${_event[index]['imageLocation']}'),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Text(
+                                                DateFormat('EEE. MMM d / yyyy')
+                                                        .format(DateTime.parse(
+                                                            _event[index][
+                                                                'start_date'])) +
+                                                    ' - ' +
+                                                    DateFormat(
+                                                            'EEE. MMM d / yyyy')
+                                                        .format(DateTime.parse(
+                                                            _event[index]
+                                                                ['end_date'])),
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    MdiIcons.mapMarker,
+                                                    color: Colors.black54,
+                                                  ),
+                                                  Text(
+                                                    _event[index]['marker_id'],
+                                                    style: TextStyle(
+                                                        color: Colors.black54),
+                                                  )
+                                                ],
+                                              ),
+                                              Text(
+                                                _event[index]['detail'],
+                                                style: TextStyle(fontSize: 15),
+                                              ),
+                                              ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                          minimumSize:
+                                                              Size(280, 30)),
+                                                  child: Text('ok'))
+                                            ],
+                                          ),
+                                        ));
+                              },
+                              child: Container(
+                                  margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                  decoration: const BoxDecoration(
+                                      color: Color(0xfff1f3f4),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(15))),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Icon(
-                                        MdiIcons.mapMarker,
-                                        color: Colors.black54,
-                                      ),
-                                      Text(
-                                        _event[index]
-                                            ['marker_id'],
-                                        style: TextStyle(
-                                            color: Colors
-                                                .black54),
+                                      ClipRRect(
+                                          borderRadius: const BorderRadius.only(
+                                              topLeft: Radius.circular(15),
+                                              topRight: Radius.circular(15)),
+                                          child: Image.network(
+                                            'https://storage.googleapis.com/noseason/${_event[index]['imageLocation']}',
+                                            fit: BoxFit.cover,
+                                            height: 150,
+                                            width: double.infinity,
+                                          )),
+                                      const SizedBox(height: 6),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              DateFormat('EEE. MMM d / yyyy')
+                                                      .format(DateTime.parse(
+                                                          _event[index]
+                                                              ['start_date'])) +
+                                                  ' - ' +
+                                                  DateFormat(
+                                                          'EEE. MMM d / yyyy')
+                                                      .format(DateTime.parse(
+                                                          _event[index]
+                                                              ['end_date'])),
+                                              style: const TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.black),
+                                            ),
+                                            const SizedBox(height: 5),
+                                            Text(
+                                              _event[index]['topic'],
+                                              style: const TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            const SizedBox(height: 5),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Icon(
+                                                      MdiIcons.mapMarker,
+                                                      color: Colors.black54,
+                                                    ),
+                                                    SizedBox(width: 5),
+                                                    Text(
+                                                      _event[index]
+                                                          ['marker_id'],
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.black54),
+                                                    )
+                                                  ],
+                                                ),
+                                                // Flexible(
+                                                //   child: TextButton(
+                                                //     child: Text(
+                                                //       'Details',
+                                                //       style: TextStyle(
+                                                //           color: Colors.greenAccent,
+                                                //           fontWeight: FontWeight.bold),
+                                                //     ),
+                                                //     onPressed: () {
+                                                //       showDialog(
+                                                //           context: context,
+                                                //           builder: (context) => AlertDialog(
+                                                //                 scrollable: true,
+                                                //                 title: Center(
+                                                //                   child: Text(
+                                                //                       _event[index]['topic']),
+                                                //                 ),
+                                                //                 content: Column(
+                                                //                   children: [
+                                                //                     Image.network(
+                                                //                         'https://storage.googleapis.com/noseason/${_event[index]['imageLocation']}'),
+                                                //                     SizedBox(
+                                                //                       height: 5,
+                                                //                     ),
+                                                //                     Text(
+                                                //                       DateFormat('EEE. MMM d / yyyy')
+                                                //                               .format(DateTime
+                                                //                                   .parse(_event[
+                                                //                                           index]
+                                                //                                       [
+                                                //                                       'start_date'])) +
+                                                //                           ' - ' +
+                                                //                           DateFormat(
+                                                //                                   'EEE. MMM d / yyyy')
+                                                //                               .format(DateTime
+                                                //                                   .parse(_event[
+                                                //                                           index]
+                                                //                                       [
+                                                //                                       'end_date'])),
+                                                //                       style: TextStyle(
+                                                //                         fontSize: 14,
+                                                //                       ),
+                                                //                     ),
+                                                //                     Row(
+                                                //                       children: [
+                                                //                         Icon(
+                                                //                           MdiIcons.mapMarker,
+                                                //                           color: Colors.black54,
+                                                //                         ),
+                                                //                         Text(
+                                                //                           _event[index]
+                                                //                               ['marker_id'],
+                                                //                           style: TextStyle(
+                                                //                               color: Colors
+                                                //                                   .black54),
+                                                //                         )
+                                                //                       ],
+                                                //                     ),
+                                                //                     Text(
+                                                //                       _event[index]['detail'],
+                                                //                       style: TextStyle(
+                                                //                           fontSize: 15),
+                                                //                     ),
+                                                //                     ElevatedButton(
+                                                //                         onPressed: () {
+                                                //                           Navigator.pop(
+                                                //                               context);
+                                                //                         },
+                                                //                         style: ElevatedButton
+                                                //                             .styleFrom(
+                                                //                                 minimumSize:
+                                                //                                     Size(280,
+                                                //                                         30)),
+                                                //                         child: Text('ok'))
+                                                //                   ],
+                                                //                 ),
+                                                //               ));
+                                                //     },
+                                                //   ),
+                                                // )
+                                              ],
+                                            )
+                                          ],
+                                        ),
                                       )
                                     ],
-                                  ),
-                                  Text(
-                                    _event[index]['detail'],
-                                    style: TextStyle(
-                                        fontSize: 15),
-                                  ),
-                                  ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.pop(
-                                            context);
-                                      },
-                                      style: ElevatedButton
-                                          .styleFrom(
-                                              minimumSize:
-                                                  Size(280,
-                                                      30)),
-                                      child: Text('ok'))
-                                ],
-                              ),
-                            ));
-                    },
-                    child: Container(
-                        margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                        decoration: const BoxDecoration(
-                            color: Color(0xfff1f3f4),
-                            borderRadius: BorderRadius.all(Radius.circular(15))),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ClipRRect(
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(15),
-                                  topRight: Radius.circular(15)
-                                ),
-                                child: Image.network(
-                                  'https://storage.googleapis.com/noseason/${_event[index]['imageLocation']}',
-                                  fit: BoxFit.cover,
-                                  height: 150,
-                                  width: double.infinity,
-                                )),
-                            const SizedBox(height: 6),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                              DateFormat('EEE. MMM d / yyyy').format(
-                                      DateTime.parse(
-                                          _event[index]['start_date'])) +
-                                  ' - ' +
-                                  DateFormat('EEE. MMM d / yyyy').format(
-                                      DateTime.parse(
-                                          _event[index]['end_date'])),
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black
-                              ),
-                            ), 
-                            const SizedBox(height: 5),
-                            Text(
-                              _event[index]['topic'],
-                              style: const TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),            
-                            const SizedBox(height: 5),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      MdiIcons.mapMarker,
-                                      color: Colors.black54,
-                                    ),
-                                    SizedBox(width: 5),
-                                    Text(
-                                      _event[index]['marker_id'],
-                                      style: TextStyle(color: Colors.black54),
-                                    )
-                                  ],
-                                ),
-                                // Flexible(
-                                //   child: TextButton(
-                                //     child: Text(
-                                //       'Details',
-                                //       style: TextStyle(
-                                //           color: Colors.greenAccent,
-                                //           fontWeight: FontWeight.bold),
-                                //     ),
-                                //     onPressed: () {
-                                //       showDialog(
-                                //           context: context,
-                                //           builder: (context) => AlertDialog(
-                                //                 scrollable: true,
-                                //                 title: Center(
-                                //                   child: Text(
-                                //                       _event[index]['topic']),
-                                //                 ),
-                                //                 content: Column(
-                                //                   children: [
-                                //                     Image.network(
-                                //                         'https://storage.googleapis.com/noseason/${_event[index]['imageLocation']}'),
-                                //                     SizedBox(
-                                //                       height: 5,
-                                //                     ),
-                                //                     Text(
-                                //                       DateFormat('EEE. MMM d / yyyy')
-                                //                               .format(DateTime
-                                //                                   .parse(_event[
-                                //                                           index]
-                                //                                       [
-                                //                                       'start_date'])) +
-                                //                           ' - ' +
-                                //                           DateFormat(
-                                //                                   'EEE. MMM d / yyyy')
-                                //                               .format(DateTime
-                                //                                   .parse(_event[
-                                //                                           index]
-                                //                                       [
-                                //                                       'end_date'])),
-                                //                       style: TextStyle(
-                                //                         fontSize: 14,
-                                //                       ),
-                                //                     ),
-                                //                     Row(
-                                //                       children: [
-                                //                         Icon(
-                                //                           MdiIcons.mapMarker,
-                                //                           color: Colors.black54,
-                                //                         ),
-                                //                         Text(
-                                //                           _event[index]
-                                //                               ['marker_id'],
-                                //                           style: TextStyle(
-                                //                               color: Colors
-                                //                                   .black54),
-                                //                         )
-                                //                       ],
-                                //                     ),
-                                //                     Text(
-                                //                       _event[index]['detail'],
-                                //                       style: TextStyle(
-                                //                           fontSize: 15),
-                                //                     ),
-                                //                     ElevatedButton(
-                                //                         onPressed: () {
-                                //                           Navigator.pop(
-                                //                               context);
-                                //                         },
-                                //                         style: ElevatedButton
-                                //                             .styleFrom(
-                                //                                 minimumSize:
-                                //                                     Size(280,
-                                //                                         30)),
-                                //                         child: Text('ok'))
-                                //                   ],
-                                //                 ),
-                                //               ));
-                                //     },
-                                //   ),
-                                // )
-                              ],
-                            )
-                                ],
-                              ),
-                            )
-                          ],
-                        )),
-                  );
-                },
-              ),
+                                  )),
+                            );
+                          },
+                        )
+                      : Container()
+                  : Container(),
               const SizedBox(height: 10),
-              _event.length > 1
-              ? buildIndicator()
-              : Container(),
+              _event.length > 1 ? buildIndicator() : Container(),
             ],
           )
         : Center(
