@@ -87,85 +87,160 @@ class _EventPageState extends State<EventPage> {
                 ),
                 Column(
                   children: eventList != null
-                      ? eventList.map<Widget>((e) {
-                          return InkWidget(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  PageTransition(
-                                      child: DiaryListInEvent(
-                                        id: e['_id'],
+                      ? dropdownInit == "upcoming"
+                          ? eventList.map<Widget>((e) {
+                              return InkWidget(
+                                onTap: () {},
+                                child: Container(
+                                  margin: EdgeInsets.fromLTRB(10, 5, 10, 10),
+                                  decoration: const BoxDecoration(
+                                      color: Color(0xfff1f3f4),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(15))),
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            child: Image.network(
+                                              'https://storage.googleapis.com/noseason/${e['imageLocation']}',
+                                              fit: BoxFit.cover,
+                                              height: 120,
+                                              width: 120,
+                                            )),
                                       ),
-                                      type: PageTransitionType.rightToLeft));
-                            },
-                            child: Container(
-                              margin: EdgeInsets.fromLTRB(10, 5, 10, 10),
-                              decoration: const BoxDecoration(
-                                  color: Color(0xfff1f3f4),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(15))),
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(15),
-                                        child: Image.network(
-                                          'https://storage.googleapis.com/noseason/${e['imageLocation']}',
-                                          fit: BoxFit.cover,
-                                          height: 120,
-                                          width: 120,
-                                        )),
-                                  ),
-                                  Flexible(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          DateFormat('MMM d / yyyy').format(
-                                                  DateTime.parse(
-                                                      e['start_date'])) +
-                                              ' - ' +
-                                              DateFormat('MMM d / yyyy').format(
-                                                  DateTime.parse(
-                                                      e['end_date'])),
-                                          style: TextStyle(
-                                            fontSize: 13,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 5),
-                                        Text(
-                                          e['topic'],
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        const SizedBox(height: 5),
-                                        Row(
+                                      Flexible(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            Icon(
-                                              MdiIcons.mapMarker,
-                                              color: Colors.black54,
-                                              size: 18,
-                                            ),
                                             Text(
-                                              e['marker_id'],
+                                              DateFormat('MMM d / yyyy').format(
+                                                      DateTime.parse(
+                                                          e['start_date'])) +
+                                                  ' - ' +
+                                                  DateFormat('MMM d / yyyy')
+                                                      .format(DateTime.parse(
+                                                          e['end_date'])),
                                               style: TextStyle(
-                                                  color: Colors.black54),
-                                            )
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 5),
+                                            Text(
+                                              e['topic'],
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            const SizedBox(height: 5),
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  MdiIcons.mapMarker,
+                                                  color: Colors.black54,
+                                                  size: 18,
+                                                ),
+                                                Text(
+                                                  e['marker_id'],
+                                                  style: TextStyle(
+                                                      color: Colors.black54),
+                                                )
+                                              ],
+                                            ),
                                           ],
                                         ),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          );
-                        }).toList()
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }).toList()
+                          : eventList.map<Widget>((e) {
+                              return InkWidget(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      PageTransition(
+                                          child: DiaryListInEvent(
+                                            id: e['_id'],
+                                          ),
+                                          type:
+                                              PageTransitionType.rightToLeft));
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.fromLTRB(10, 5, 10, 10),
+                                  decoration: const BoxDecoration(
+                                      color: Color(0xfff1f3f4),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(15))),
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            child: Image.network(
+                                              'https://storage.googleapis.com/noseason/${e['imageLocation']}',
+                                              fit: BoxFit.cover,
+                                              height: 120,
+                                              width: 120,
+                                            )),
+                                      ),
+                                      Flexible(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              DateFormat('MMM d / yyyy').format(
+                                                      DateTime.parse(
+                                                          e['start_date'])) +
+                                                  ' - ' +
+                                                  DateFormat('MMM d / yyyy')
+                                                      .format(DateTime.parse(
+                                                          e['end_date'])),
+                                              style: TextStyle(
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 5),
+                                            Text(
+                                              e['topic'],
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            const SizedBox(height: 5),
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  MdiIcons.mapMarker,
+                                                  color: Colors.black54,
+                                                  size: 18,
+                                                ),
+                                                Text(
+                                                  e['marker_id'],
+                                                  style: TextStyle(
+                                                      color: Colors.black54),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }).toList()
                       : [
                           Center(
                             child: CircularProgressIndicator(),
