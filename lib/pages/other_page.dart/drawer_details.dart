@@ -163,18 +163,6 @@ class _DrawerDetailsState extends State<DrawerDetails> {
                         type: PageTransitionType.rightToLeft));
               }),
           ListTile(
-            leading: const Icon(Icons.notifications_outlined),
-            title: const Text('Notification'),
-            visualDensity: VisualDensity.compact,
-            trailing: Switch(
-                value: notification_switch,
-                onChanged: (newvalue) {
-                  setState(() {
-                    notification_switch = newvalue;
-                  });
-                }),
-          ),
-          ListTile(
               leading: const Icon(Icons.help_outline),
               title: const Text('Help Center'),
               visualDensity: VisualDensity.compact,
