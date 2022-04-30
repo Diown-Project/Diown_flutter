@@ -38,7 +38,9 @@ class _HomeState extends State<Home> {
   ];
   setRequest() async {
     request = await findRequest();
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -46,7 +48,9 @@ class _HomeState extends State<Home> {
     // TODO: implement initState
     super.initState();
     setRequest();
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -153,12 +157,11 @@ class _HomeState extends State<Home> {
                         });
                   },
                 ),
-
           bottomNavigationBar: Container(
             decoration: const BoxDecoration(
-              color: Colors.white,
-              border: Border(top: BorderSide(color: Color(0xfff5f5f5), width: 3)
-            )),
+                color: Colors.white,
+                border: Border(
+                    top: BorderSide(color: Color(0xfff5f5f5), width: 3))),
             child: AnimatedBottomNavigationBar.builder(
               backgroundColor: const Color.fromRGBO(255, 248, 248, 1),
               elevation: 0,
@@ -221,7 +224,7 @@ class _HomeState extends State<Home> {
                   });
                 }
               },
-          
+
               //other params
             ),
           )),

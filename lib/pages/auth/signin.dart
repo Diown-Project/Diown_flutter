@@ -238,7 +238,7 @@ class _SignInState extends State<SignIn> {
 }
 
 signin(email, password) async {
-  var url = 'http://10.0.2.2:3000/auth/signin';
+  var url = 'https://diown-app-server.herokuapp.com/auth/signin';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

@@ -33,7 +33,9 @@ class _visitorAchieveState extends State<visitorAchieve> {
       }
     }
 
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -41,7 +43,9 @@ class _visitorAchieveState extends State<visitorAchieve> {
     // TODO: implement initState
     super.initState();
     asd();
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -138,7 +142,7 @@ class _visitorAchieveState extends State<visitorAchieve> {
 }
 
 findAch() async {
-  var url = 'http://10.0.2.2:3000/achievement/getAll';
+  var url = 'https://diown-app-server.herokuapp.com/achievement/getAll';
   final http.Response response = await http.get(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -148,7 +152,7 @@ findAch() async {
 }
 
 findSuccessAchId(id) async {
-  var url = 'http://10.0.2.2:3000/achievement/allSuccessUser';
+  var url = 'https://diown-app-server.herokuapp.com/achievement/allSuccessUser';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

@@ -32,7 +32,7 @@ class _EditProfileState extends State<EditProfile> {
   findUserForEditProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
-    var url = 'http://10.0.2.2:3000/auth/rememberMe';
+    var url = 'https://diown-app-server.herokuapp.com/auth/rememberMe';
     final http.Response response = await http.post(Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
@@ -42,9 +42,11 @@ class _EditProfileState extends State<EditProfile> {
         ));
 
     var result = jsonDecode(response.body);
-    setState(() {
-      user = result;
-    });
+    if (mounted) {
+      setState(() {
+        user = result;
+      });
+    }
   }
 
   _saveImage() async {
@@ -463,7 +465,7 @@ class _EditProfileState extends State<EditProfile> {
 }
 
 updateUser(token, username, bio, _imageName) async {
-  var url = 'http://10.0.2.2:3000/auth/update';
+  var url = 'https://diown-app-server.herokuapp.com/auth/update';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -483,7 +485,7 @@ updateUser(token, username, bio, _imageName) async {
 checkAchievement(index) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/achievement/checkSuccess';
+  var url = 'https://diown-app-server.herokuapp.com/achievement/checkSuccess';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

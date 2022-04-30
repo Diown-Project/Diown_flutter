@@ -87,7 +87,7 @@ class _ChooseDiaryState extends State<ChooseDiary> {
 findAllYourDiary1() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/localDiary/findAllDiary';
+  var url = 'https://diown-app-server.herokuapp.com/localDiary/findAllDiary';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

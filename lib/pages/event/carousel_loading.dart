@@ -24,14 +24,18 @@ class _CarouselLoadingState extends State<CarouselLoading> {
 
   findevent() async {
     _event = await findEventOnTime();
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
   void initState() {
     super.initState();
     findevent();
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -344,7 +348,7 @@ class _CarouselLoadingState extends State<CarouselLoading> {
 }
 
 findEventOnTime() async {
-  var url = 'http://10.0.2.2:3000/putdown/findEventOnTime';
+  var url = 'https://diown-app-server.herokuapp.com/putdown/findEventOnTime';
   final http.Response response = await http.get(
     Uri.parse(url),
   );

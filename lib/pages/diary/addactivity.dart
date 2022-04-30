@@ -22,7 +22,7 @@ class _AddActivityState extends State<AddActivity> {
   String? selectedValue;
   String? valueInput;
   addAct(token, selectedValue, valueInput) async {
-    var url = 'http://10.0.2.2:3000/activity/add';
+    var url = 'https://diown-app-server.herokuapp.com/activity/add';
     final http.Response response = await http.post(Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'

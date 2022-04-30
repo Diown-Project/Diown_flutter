@@ -26,7 +26,9 @@ class _FavPageState extends State<FavPage> {
     for (var i in listDiary) {
       i['date'] = DateTime.parse(i['date']);
     }
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   bool justSort = false;
@@ -216,7 +218,7 @@ class _FavPageState extends State<FavPage> {
 findAllFav() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/localDiary/findAllFav';
+  var url = 'https://diown-app-server.herokuapp.com/localDiary/findAllFav';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -233,7 +235,7 @@ findAllFav() async {
 favSearch(value) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/localDiary/favSearch';
+  var url = 'https://diown-app-server.herokuapp.com/localDiary/favSearch';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

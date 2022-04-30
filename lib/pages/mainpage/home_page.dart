@@ -65,9 +65,9 @@ class _HomePageState extends State<HomePage> {
                               padding: const EdgeInsets.fromLTRB(10, 0, 10, 5),
                               child: Container(
                                 decoration: const BoxDecoration(
-                                  color: Color(0xfff1f3f4),
-                                  borderRadius: BorderRadius.all(Radius.circular(5))
-                                ),
+                                    color: Color(0xfff1f3f4),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(5))),
                                 child: ListTile(
                                   leading: CircleAvatar(
                                     backgroundImage: NetworkImage(
@@ -96,8 +96,7 @@ class _HomePageState extends State<HomePage> {
                                             child: Text(
                                                 '${e['marker_detail'][0]['marker_id']}',
                                                 overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                    )),
+                                                style: const TextStyle()),
                                           )
                                         ]),
                                       ),
@@ -114,7 +113,8 @@ class _HomePageState extends State<HomePage> {
                                             child: DiaryDetailPutdown(
                                               id: e['_id'],
                                             ),
-                                            type: PageTransitionType.rightToLeft));
+                                            type: PageTransitionType
+                                                .rightToLeft));
                                   },
                                 ),
                               ),
@@ -144,7 +144,7 @@ class _HomePageState extends State<HomePage> {
 findLatestPutdown() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/putdown/findLatestPutdown';
+  var url = 'https://diown-app-server.herokuapp.com/putdown/findLatestPutdown';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

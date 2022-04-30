@@ -169,7 +169,7 @@ class _EditLocalDiaryState extends State<EditLocalDiary> {
   }
 
   findDetail(id) async {
-    var url = 'http://10.0.2.2:3000/localDiary/findDetail';
+    var url = 'https://diown-app-server.herokuapp.com/localDiary/findDetail';
     final http.Response response = await http.post(Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
@@ -178,29 +178,33 @@ class _EditLocalDiaryState extends State<EditLocalDiary> {
           <String, String>{'id': id},
         ));
     var result = jsonDecode(response.body);
-    setState(() {
-      diary = result;
-      resultMood = '${diary['mood_emoji']} ${diary['mood_detail']}';
-      resultAct = diary['activity'];
-      topic = diary['topic'];
-      detail = diary['detail'];
-      if (resultMood != null) {
-        isVisibleMood = isVisibleMood;
-      } else {
-        isVisibleMood = !isVisibleMood;
-      }
-      if (resultAct != null) {
-        isVisibleActivity = isVisibleActivity;
-      } else {
-        isVisibleActivity = !isVisibleActivity;
-      }
-      imageLocation = diary['imageLocation'];
-      if (imageLocation != null) {
-        setState(() {
-          numPic = imageLocation.length;
-        });
-      }
-    });
+    if (mounted) {
+      setState(() {
+        diary = result;
+        resultMood = '${diary['mood_emoji']} ${diary['mood_detail']}';
+        resultAct = diary['activity'];
+        topic = diary['topic'];
+        detail = diary['detail'];
+        if (resultMood != null) {
+          isVisibleMood = isVisibleMood;
+        } else {
+          isVisibleMood = !isVisibleMood;
+        }
+        if (resultAct != null) {
+          isVisibleActivity = isVisibleActivity;
+        } else {
+          isVisibleActivity = !isVisibleActivity;
+        }
+        imageLocation = diary['imageLocation'];
+        if (imageLocation != null) {
+          if (mounted) {
+            setState(() {
+              numPic = imageLocation.length;
+            });
+          }
+        }
+      });
+    }
   }
 
   @override
@@ -1086,7 +1090,7 @@ class _EditLocalDiaryState extends State<EditLocalDiary> {
 
 updateDiary(id, mood_emoji, mood_detail, resultAct, _imageNameList, topic,
     detail, imageLocation) async {
-  var url = 'http://10.0.2.2:3000/localDiary/update';
+  var url = 'https://diown-app-server.herokuapp.com/localDiary/update';
   if (topic == '') {
     topic = null;
   }

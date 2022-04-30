@@ -76,7 +76,9 @@ class _AchieveState extends State<Achieve> {
       }
     }
 
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -84,7 +86,9 @@ class _AchieveState extends State<Achieve> {
     // TODO: implement initState
     super.initState();
     asd();
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -181,7 +185,7 @@ class _AchieveState extends State<Achieve> {
 }
 
 findAch() async {
-  var url = 'http://10.0.2.2:3000/achievement/getAll';
+  var url = 'https://diown-app-server.herokuapp.com/achievement/getAll';
   final http.Response response = await http.get(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -193,7 +197,7 @@ findAch() async {
 findSuccessAch() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/achievement/allSuccess';
+  var url = 'https://diown-app-server.herokuapp.com/achievement/allSuccess';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -206,7 +210,7 @@ findSuccessAch() async {
 checkAchievement(index) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/achievement/checkSuccess';
+  var url = 'https://diown-app-server.herokuapp.com/achievement/checkSuccess';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

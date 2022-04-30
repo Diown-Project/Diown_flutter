@@ -18,7 +18,9 @@ class _FollowPageState extends State<FollowPage> {
 
   moveResultToFollower() async {
     follower = await findFollower();
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -97,7 +99,7 @@ class _FollowPageState extends State<FollowPage> {
 findFollower() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/follow/follower';
+  var url = 'https://diown-app-server.herokuapp.com/follow/follower';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -112,7 +114,7 @@ findFollower() async {
 deleteFollower(id) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/follow/deleteFollower';
+  var url = 'https://diown-app-server.herokuapp.com/follow/deleteFollower';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -127,7 +129,7 @@ deleteFollower(id) async {
 findFollow(target_id) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/follow/checkFollowing';
+  var url = 'https://diown-app-server.herokuapp.com/follow/checkFollowing';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

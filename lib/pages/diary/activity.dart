@@ -27,7 +27,9 @@ class _ActivityPageState extends State<ActivityPage> {
           context, MaterialPageRoute(builder: (context) => const SignIn()));
     }
     base_activity = activity;
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -163,7 +165,7 @@ class _ActivityPageState extends State<ActivityPage> {
 }
 
 findAllActivity(token) async {
-  var url = 'http://10.0.2.2:3000/activity/allActivity';
+  var url = 'https://diown-app-server.herokuapp.com/activity/allActivity';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
