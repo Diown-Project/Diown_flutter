@@ -25,8 +25,9 @@ class _EditActState extends State<EditAct> {
     var token = prefs.getString('token');
     activity = await findOnlyYouAct(token);
     base_activity = activity;
-
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -180,7 +181,7 @@ class _EditActState extends State<EditAct> {
 }
 
 removeYourAct(token, act_emo, act_detail) async {
-  var url = 'http://10.0.2.2:3000/activity/remove';
+  var url = 'https://diown-app-server.herokuapp.com/activity/remove';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -197,7 +198,7 @@ removeYourAct(token, act_emo, act_detail) async {
 }
 
 findOnlyYouAct(token) async {
-  var url = 'http://10.0.2.2:3000/activity/onlyYourActivity';
+  var url = 'https://diown-app-server.herokuapp.com/activity/onlyYourActivity';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

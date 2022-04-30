@@ -1404,7 +1404,7 @@ class _LocalDiaryState extends State<LocalDiary> {
 
 addDiaryWithOutText(token, topic, write_detail, mood_emoji, mood_detail,
     _imageNameList, resultAct) async {
-  var url = 'https://diown-heroku.herokuapp.com/localDiary/saveDiary';
+  var url = 'https://diown-app-server.herokuapp.com/localDiary/saveDiary';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -1428,7 +1428,7 @@ addDiaryWithOutText(token, topic, write_detail, mood_emoji, mood_detail,
 checkAchievement(index) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'https://diown-heroku.herokuapp.com/achievement/checkSuccess';
+  var url = 'https://diown-app-server.herokuapp.com/achievement/checkSuccess';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

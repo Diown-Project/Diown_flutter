@@ -24,7 +24,9 @@ class _GalleryWidgetState extends State<GalleryWidget> {
     pageController = PageController(initialPage: widget.index);
     numpic = widget.index;
     diary = widget.diary;
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override

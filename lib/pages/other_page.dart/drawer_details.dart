@@ -37,15 +37,18 @@ class _DrawerDetailsState extends State<DrawerDetails> {
     String? c = prefs.getString('token');
     print(c);
     user = await rememberMe(c!);
-
-    setState(() {
-      d = 'hello';
-    });
+    if (mounted) {
+      setState(() {
+        d = 'hello';
+      });
+    }
   }
 
   setRequest() async {
     request = await findRequest();
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -221,7 +224,7 @@ class _DrawerDetailsState extends State<DrawerDetails> {
 findRequest() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/follow/checkAllRequest';
+  var url = 'https://diown-app-server.herokuapp.com/follow/checkAllRequest';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

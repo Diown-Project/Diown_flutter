@@ -17,7 +17,9 @@ class _FollowRequest_PageState extends State<FollowRequest_Page> {
 
   requestNow() async {
     request = await findRequest();
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -25,7 +27,9 @@ class _FollowRequest_PageState extends State<FollowRequest_Page> {
     // TODO: implement initState
     super.initState();
     requestNow();
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -147,7 +151,7 @@ class _FollowRequest_PageState extends State<FollowRequest_Page> {
 findRequest() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/follow/checkAllRequest';
+  var url = 'https://diown-app-server.herokuapp.com/follow/checkAllRequest';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -162,7 +166,7 @@ findRequest() async {
 addToFollow(rb) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/follow/addFollow';
+  var url = 'https://diown-app-server.herokuapp.com/follow/addFollow';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -177,7 +181,7 @@ addToFollow(rb) async {
 remove(rb) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/follow/removeRequest';
+  var url = 'https://diown-app-server.herokuapp.com/follow/removeRequest';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -192,7 +196,7 @@ remove(rb) async {
 checkAchievement(index) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/achievement/checkSuccess';
+  var url = 'https://diown-app-server.herokuapp.com/achievement/checkSuccess';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

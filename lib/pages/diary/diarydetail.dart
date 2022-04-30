@@ -30,7 +30,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
   var time;
   var isFav;
   findDetail(id) async {
-    var url = 'http://10.0.2.2:3000/localDiary/findDetail';
+    var url = 'https://diown-app-server.herokuapp.com/localDiary/findDetail';
     final http.Response response = await http.post(Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
@@ -43,14 +43,18 @@ class _DiaryDetailState extends State<DiaryDetail> {
       diary = {};
       diary['message'] = 'This diary was deleted.';
       isFav = false;
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     } else {
-      setState(() {
-        diary = result;
-        time = DateFormat('EEE. MMM d / yyyy')
-            .format(DateTime.parse(diary['date']));
-        isFav = diary['favorite'];
-      });
+      if (mounted) {
+        setState(() {
+          diary = result;
+          time = DateFormat('EEE. MMM d / yyyy')
+              .format(DateTime.parse(diary['date']));
+          isFav = diary['favorite'];
+        });
+      }
     }
   }
 
@@ -283,7 +287,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
   }
 
   favorite(id, isFav) async {
-    var url = 'http://10.0.2.2:3000/localDiary/fav';
+    var url = 'https://diown-app-server.herokuapp.com/localDiary/fav';
     final http.Response response = await http.post(Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
@@ -296,7 +300,8 @@ class _DiaryDetailState extends State<DiaryDetail> {
   }
 
   deleteLocaldiary(diary) async {
-    var url = 'http://10.0.2.2:3000/localDiary/deleteLocalDiary';
+    var url =
+        'https://diown-app-server.herokuapp.com/localDiary/deleteLocalDiary';
     final http.Response response = await http.post(Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'

@@ -30,7 +30,9 @@ class _ProfilePageState extends State<ProfilePage> {
     for (int i = 0; i < allPutdown.length; i++) {
       allPutdown[i]['date'] = allPutdown[i]['date'].toString().substring(0, 10);
     }
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -379,7 +381,7 @@ class _ProfilePageState extends State<ProfilePage> {
 }
 
 callUser(token) async {
-  var url = 'http://10.0.2.2:3000/auth/rememberMe';
+  var url = 'https://diown-app-server.herokuapp.com/auth/rememberMe';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -395,7 +397,7 @@ callUser(token) async {
 checkAchievement4() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/achievement/checkSuccess';
+  var url = 'https://diown-app-server.herokuapp.com/achievement/checkSuccess';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -410,7 +412,7 @@ checkAchievement4() async {
 findAllPutdownDiary() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/putdown/findAllputDown';
+  var url = 'https://diown-app-server.herokuapp.com/putdown/findAllputDown';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

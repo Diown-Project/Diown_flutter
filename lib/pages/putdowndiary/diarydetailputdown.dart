@@ -24,7 +24,7 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
   findDetail(id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
-    var url1 = 'http://10.0.2.2:3000/putdown/findDetail';
+    var url1 = 'https://diown-app-server.herokuapp.com/putdown/findDetail';
     final http.Response response1 = await http.post(Uri.parse(url1),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
@@ -38,9 +38,11 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
       diary = {};
       diary['message'] = 'This diary was deleted.';
       // isFav = false;
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     } else {
-      var url2 = 'http://10.0.2.2:3000/putdown/checkLike';
+      var url2 = 'https://diown-app-server.herokuapp.com/putdown/checkLike';
       final http.Response response2 = await http.post(Uri.parse(url2),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8'
@@ -49,7 +51,7 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
             <String, String>{'token': token!, 'diary_id': id},
           ));
       var result2 = jsonDecode(response2.body);
-      var url = 'http://10.0.2.2:3000/auth/rememberMe';
+      var url = 'https://diown-app-server.herokuapp.com/auth/rememberMe';
       final http.Response response = await http.post(Uri.parse(url),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8'
@@ -58,21 +60,30 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
             <String, dynamic>{'token': token},
           ));
       user = jsonDecode(response.body);
-      setState(() {});
-      if (result2['message'] == 'true') {
-        like = true;
-        setState(() {});
-      } else {
-        like = false;
+      if (mounted) {
         setState(() {});
       }
-      setState(() {
-        diary = result[0];
-        likeCount = diary['like'];
-        time = DateFormat('EEE. MMM d / yyyy')
-            .format(DateTime.parse(diary['date']));
-        // isFav = diary['favorite'];
-      });
+      if (result2['message'] == 'true') {
+        like = true;
+        if (mounted) {
+          setState(() {});
+        }
+      } else {
+        like = false;
+        if (mounted) {
+          setState(() {});
+        }
+      }
+      if (mounted) {
+        setState(() {
+          diary = result[0];
+          likeCount = diary['like'];
+          time = DateFormat('EEE. MMM d / yyyy')
+              .format(DateTime.parse(diary['date']));
+          // isFav = diary['favorite'];
+        });
+      }
+
       if (like == false && likeCount >= 1 && diary['user_id'] == user['_id']) {
         var check = await checkAchievement(11);
         if (check['message'] == 'success') {
@@ -532,7 +543,7 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
 deletePutdowndiary(diary) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/putdown/deletePutdownDiary';
+  var url = 'https://diown-app-server.herokuapp.com/putdown/deletePutdownDiary';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -547,7 +558,7 @@ deletePutdowndiary(diary) async {
 addLike(id) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/putdown/addLike';
+  var url = 'https://diown-app-server.herokuapp.com/putdown/addLike';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -562,7 +573,7 @@ addLike(id) async {
 removeLike(id) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/putdown/removeLike';
+  var url = 'https://diown-app-server.herokuapp.com/putdown/removeLike';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -577,7 +588,7 @@ removeLike(id) async {
 checkAchievement(index) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/achievement/checkSuccess';
+  var url = 'https://diown-app-server.herokuapp.com/achievement/checkSuccess';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

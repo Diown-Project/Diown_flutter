@@ -19,7 +19,9 @@ class _EventPageState extends State<EventPage> {
 
   findEventToVar(string) async {
     eventList = await findEvent(string);
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -255,7 +257,8 @@ class _EventPageState extends State<EventPage> {
 }
 
 findEvent(string) async {
-  var url = 'http://10.0.2.2:3000/putdown/findEventFromDropdown';
+  var url =
+      'https://diown-app-server.herokuapp.com/putdown/findEventFromDropdown';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

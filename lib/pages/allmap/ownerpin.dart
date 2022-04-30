@@ -99,7 +99,7 @@ class _OwnerPinState extends State<OwnerPin> {
 }
 
 deletePin(id) async {
-  var url = 'http://10.0.2.2:3000/putdown/deletePin';
+  var url = 'https://diown-app-server.herokuapp.com/putdown/deletePin';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -114,7 +114,7 @@ deletePin(id) async {
 }
 
 findAllOwnMarker(token) async {
-  var url = 'http://10.0.2.2:3000/putdown/findAllOwnMarker';
+  var url = 'https://diown-app-server.herokuapp.com/putdown/findAllOwnMarker';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -129,7 +129,7 @@ findAllOwnMarker(token) async {
 }
 
 addUserMarker(token, pin, lag, lng) async {
-  var url = 'http://10.0.2.2:3000/putdown/addPin';
+  var url = 'https://diown-app-server.herokuapp.com/putdown/addPin';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -142,7 +142,7 @@ addUserMarker(token, pin, lag, lng) async {
 }
 
 checkDelayPin(token) async {
-  var url = 'http://10.0.2.2:3000/delay/addOrDeleteDelay';
+  var url = 'https://diown-app-server.herokuapp.com/delay/addOrDeleteDelay';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

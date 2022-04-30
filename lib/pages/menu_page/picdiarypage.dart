@@ -21,7 +21,9 @@ class _PictureDiaryState extends State<PictureDiary> {
   dynamic allDiary;
   findAllYourDiary2() async {
     allDiary = await findAllYourDiary1();
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -167,7 +169,8 @@ class _PictureDiaryState extends State<PictureDiary> {
 findAllYourDiary1() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/localDiary/findAllDiaryHaveImage';
+  var url =
+      'https://diown-app-server.herokuapp.com/localDiary/findAllDiaryHaveImage';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
@@ -182,7 +185,8 @@ findAllYourDiary1() async {
 findPicDiaryBySearch(value) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/localDiary/findPicDiaryWithSearch';
+  var url =
+      'https://diown-app-server.herokuapp.com/localDiary/findPicDiaryWithSearch';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

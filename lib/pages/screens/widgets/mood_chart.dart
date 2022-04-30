@@ -19,12 +19,14 @@ class BarChartOneState extends State<BarChartOne> {
   dynamic textChart = '7';
   getMood(value) async {
     moodCount = await findEmoji(value);
-    setState(() {
-      moodKey = moodCount.keys.toList();
-      for (var i = 0; i < moodKey.length; i++) {
-        moodCount[moodKey[i]] = moodCount[moodKey[i]].toDouble();
-      }
-    });
+    if (mounted) {
+      setState(() {
+        moodKey = moodCount.keys.toList();
+        for (var i = 0; i < moodKey.length; i++) {
+          moodCount[moodKey[i]] = moodCount[moodKey[i]].toDouble();
+        }
+      });
+    }
   }
 
   @override
@@ -338,7 +340,7 @@ class BarChartOneState extends State<BarChartOne> {
 findEmoji(period) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var token = prefs.getString('token');
-  var url = 'http://10.0.2.2:3000/mood_router/findAll';
+  var url = 'https://diown-app-server.herokuapp.com/mood_router/findAll';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

@@ -26,7 +26,9 @@ class _ListDiaryPutdownState extends State<ListDiaryPutdown> {
     // TODO: implement initState
     super.initState();
     forDiarypinFunc(widget.pin);
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -190,12 +192,14 @@ class _ListDiaryPutdownState extends State<ListDiaryPutdown> {
     putdownDiary = await findDiaryInPin(token, pin);
     savePutdownDiary = [...putdownDiary];
     save2 = [...putdownDiary];
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 }
 
 findDiaryInPin(token, pin) async {
-  var url = 'http://10.0.2.2:3000/putdown/findDiaryInPin';
+  var url = 'https://diown-app-server.herokuapp.com/putdown/findDiaryInPin';
   final http.Response response = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
