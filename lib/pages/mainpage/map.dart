@@ -1517,8 +1517,6 @@ class _MapPageState extends State<MapPage> {
                                                                               true,
                                                                           fillColor:
                                                                               Color(0xfff1f3f4),
-                                                                          hintText:
-                                                                              'input name',
                                                                           hintStyle: TextStyle(
                                                                               color: Color(0xffc5d2e1),
                                                                               fontWeight: FontWeight.w200),
@@ -1546,21 +1544,70 @@ class _MapPageState extends State<MapPage> {
                                                                               CoolAlert.show(barrierDismissible: false, context: context, type: CoolAlertType.loading);
                                                                               SharedPreferences prefs = await SharedPreferences.getInstance();
                                                                               var token = prefs.getString('token');
-                                                                              var checkDelay = await checkDelayPin(token);
-                                                                              if (checkDelay['message'] == 'add success' || checkDelay['message'] == 'success') {
-                                                                                var e = await addUserMarker(token, textInput, newlocation.latitude as double, newlocation.longitude as double);
-                                                                                if (e['message'] == 'success') {
-                                                                                  CoolAlert.show(
-                                                                                      barrierDismissible: false,
-                                                                                      context: context,
-                                                                                      type: CoolAlertType.success,
-                                                                                      title: 'Add pin was success.',
-                                                                                      onConfirmBtnTap: () {
-                                                                                        Navigator.pop(context);
-                                                                                        Navigator.pop(context);
-                                                                                        Navigator.pop(context);
-                                                                                      });
-                                                                                } else if (e['message'] == 'already have') {
+                                                                              if (textInput == '' || textInput == null) {
+                                                                                CoolAlert.show(
+                                                                                    barrierDismissible: false,
+                                                                                    context: context,
+                                                                                    type: CoolAlertType.warning,
+                                                                                    title: 'Your must to give name pin.',
+                                                                                    onConfirmBtnTap: () {
+                                                                                      Navigator.pop(context);
+                                                                                      Navigator.pop(context);
+                                                                                      Navigator.pop(context);
+                                                                                    });
+                                                                              } else {
+                                                                                var checkHavePin = await alreadyOrNot(newlocation.latitude as double, newlocation.longitude as double);
+                                                                                if (checkHavePin['message'] == 'success') {
+                                                                                  var checkDelay = await checkDelayPin(token);
+                                                                                  if (checkDelay['message'] == 'add success' || checkDelay['message'] == 'success') {
+                                                                                    var e = await addUserMarker(token, textInput, newlocation.latitude as double, newlocation.longitude as double);
+                                                                                    if (e['message'] == 'success') {
+                                                                                      CoolAlert.show(
+                                                                                          barrierDismissible: false,
+                                                                                          context: context,
+                                                                                          type: CoolAlertType.success,
+                                                                                          title: 'Add pin was success.',
+                                                                                          onConfirmBtnTap: () {
+                                                                                            Navigator.pop(context);
+                                                                                            Navigator.pop(context);
+                                                                                            Navigator.pop(context);
+                                                                                          });
+                                                                                    } else if (e['message'] == 'already have') {
+                                                                                      CoolAlert.show(
+                                                                                          barrierDismissible: false,
+                                                                                          context: context,
+                                                                                          type: CoolAlertType.warning,
+                                                                                          title: 'Your pin location already have.',
+                                                                                          onConfirmBtnTap: () {
+                                                                                            Navigator.pop(context);
+                                                                                            Navigator.pop(context);
+                                                                                            Navigator.pop(context);
+                                                                                          });
+                                                                                    } else {
+                                                                                      CoolAlert.show(
+                                                                                          barrierDismissible: false,
+                                                                                          context: context,
+                                                                                          type: CoolAlertType.error,
+                                                                                          title: 'Something wrong.',
+                                                                                          onConfirmBtnTap: () {
+                                                                                            Navigator.pop(context);
+                                                                                            Navigator.pop(context);
+                                                                                            Navigator.pop(context);
+                                                                                          });
+                                                                                    }
+                                                                                  } else {
+                                                                                    CoolAlert.show(
+                                                                                        context: context,
+                                                                                        type: CoolAlertType.error,
+                                                                                        title: 'You cannot add Pin right now.',
+                                                                                        text: 'Because you need to wait for cooldown 1 day after add pin to add another one.',
+                                                                                        onConfirmBtnTap: () {
+                                                                                          Navigator.pop(context);
+                                                                                          Navigator.pop(context);
+                                                                                          Navigator.pop(context);
+                                                                                        });
+                                                                                  }
+                                                                                } else {
                                                                                   CoolAlert.show(
                                                                                       barrierDismissible: false,
                                                                                       context: context,
@@ -1571,29 +1618,12 @@ class _MapPageState extends State<MapPage> {
                                                                                         Navigator.pop(context);
                                                                                         Navigator.pop(context);
                                                                                       });
-                                                                                } else {
-                                                                                  CoolAlert.show(
-                                                                                      barrierDismissible: false,
-                                                                                      context: context,
-                                                                                      type: CoolAlertType.error,
-                                                                                      title: 'Something wrong.',
-                                                                                      onConfirmBtnTap: () {
-                                                                                        Navigator.pop(context);
-                                                                                        Navigator.pop(context);
-                                                                                        Navigator.pop(context);
-                                                                                      });
                                                                                 }
-                                                                              } else {
-                                                                                CoolAlert.show(
-                                                                                    context: context,
-                                                                                    type: CoolAlertType.error,
-                                                                                    title: 'You cannot add Pin right now.',
-                                                                                    text: 'Because you need to wait for cooldown 1 day after add pin to add another one.',
-                                                                                    onConfirmBtnTap: () {
-                                                                                      Navigator.pop(context);
-                                                                                      Navigator.pop(context);
-                                                                                      Navigator.pop(context);
-                                                                                    });
+                                                                              }
+                                                                              if (mounted) {
+                                                                                setState(() {
+                                                                                  textInput = '';
+                                                                                });
                                                                               }
                                                                             },
                                                                             child:
@@ -1876,6 +1906,19 @@ checkDelayPin(token) async {
       },
       body: jsonEncode(
         <String, dynamic>{'token': token},
+      ));
+  var result = jsonDecode(response.body);
+  return result;
+}
+
+alreadyOrNot(lat, lng) async {
+  var url = 'https://diown-app-server.herokuapp.com/delay/checkPin';
+  final http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{"lat": lat, "lng": lng},
       ));
   var result = jsonDecode(response.body);
   return result;
