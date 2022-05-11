@@ -16,7 +16,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var latest;
-
   findLatest() async {
     latest = await findLatestPutdown();
   }
@@ -61,88 +60,88 @@ class _HomePageState extends State<HomePage> {
                             )),
                         const SizedBox(height: 15),
                         latest.length != 0
-                        ?
-                        Column(
-                          children: 
-                          latest.map<Widget>((e) {
-                            return Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 5),
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5))),
-                                child: ListTile(
-                                  leading: CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                                  ),
-                                  title: e['topic'] != null
-                                      ? Text(e['topic'])
-                                      : Text(
-                                          '${e['mood_emoji']} ${e['mood_detail']}'),
-                                  subtitle: Row(
-                                    children: [
-                                      Flexible(
-                                        child: Text(
-                                          '@${e['user_detail'][0]['username']} - ',
+                            ? Column(
+                                children: latest.map<Widget>((e) {
+                                  return Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(10, 0, 10, 5),
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5))),
+                                      child: ListTile(
+                                        leading: CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                              'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                                        ),
+                                        title: e['topic'] != null
+                                            ? Text(e['topic'])
+                                            : Text(
+                                                '${e['mood_emoji']} ${e['mood_detail']}'),
+                                        subtitle: Row(
+                                          children: [
+                                            Flexible(
+                                              child: Text(
+                                                '@${e['user_detail'][0]['username']} - ',
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            Flexible(
+                                              child: Row(children: [
+                                                const Icon(
+                                                  MdiIcons.mapMarker,
+                                                  color: Colors.black54,
+                                                  size: 14,
+                                                ),
+                                                Flexible(
+                                                  child: Text(
+                                                      '${e['marker_detail'][0]['marker_id']}',
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: const TextStyle()),
+                                                )
+                                              ]),
+                                            ),
+                                          ],
+                                        ),
+                                        trailing: Text(
+                                          e['date'].toString().substring(0, 10),
                                           overflow: TextOverflow.ellipsis,
                                         ),
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              PageTransition(
+                                                  child: DiaryDetailPutdown(
+                                                    id: e['_id'],
+                                                  ),
+                                                  type: PageTransitionType
+                                                      .rightToLeft));
+                                        },
                                       ),
-                                      Flexible(
-                                        child: Row(children: [
-                                          const Icon(
-                                            MdiIcons.mapMarker,
-                                            color: Colors.black54,
-                                            size: 14,
-                                          ),
-                                          Flexible(
-                                            child: Text(
-                                                '${e['marker_detail'][0]['marker_id']}',
-                                                overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle()),
-                                          )
-                                        ]),
-                                      ),
-                                    ],
+                                    ),
+                                  );
+                                }).toList(),
+                              )
+                            : Column(
+                                // mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const SizedBox(height: 20),
+                                  Icon(
+                                    MdiIcons.bookMarker,
+                                    size: 100,
+                                    color: Colors.grey[300],
                                   ),
-                                  trailing: Text(
-                                    e['date'].toString().substring(0, 10),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        PageTransition(
-                                            child: DiaryDetailPutdown(
-                                              id: e['_id'],
-                                            ),
-                                            type: PageTransitionType
-                                                .rightToLeft));
-                                  },
-                                ),
+                                  const SizedBox(height: 20),
+                                  const Text(
+                                    'Don\'t have putdown diary',
+                                    style: TextStyle(
+                                        fontSize: 20, color: Colors.grey),
+                                  )
+                                ],
                               ),
-                            );
-                          }).toList(),
-                        )
-                        : Column(
-                          // mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const SizedBox(height: 20),
-                            Icon(
-                              MdiIcons.bookMarker,
-                              size: 100,
-                              color: Colors.grey[300],
-                            ),
-                            const SizedBox(height: 20),
-                            const Text(
-                              'Don\'t have putdown diary',
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.grey),
-                            )
-                          ],
-                        ),
                         SizedBox(
                           height: 30,
                         )
