@@ -82,8 +82,13 @@ class _HomeState extends State<Home> {
                         context: context,
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
+<<<<<<< Updated upstream
                               topLeft: Radius.circular(15),
                               topRight: Radius.circular(15)),
+=======
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10)),
+>>>>>>> Stashed changes
                         ),
                         useRootNavigator: false,
                         builder: (context) {
