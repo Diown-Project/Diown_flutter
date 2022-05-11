@@ -66,14 +66,21 @@ class _MapPageState extends State<MapPage> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   final panelController = PanelController();
+  late BitmapDescriptor mapMarker;
+  late BitmapDescriptor eventMarker;
+
+  setMarker() async {
+    mapMarker = await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'images/diary_marker.png');
+    eventMarker = await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'images/event_marker_icon.png');
+  }
 
   allPin() async {
+    
     allEvent = await findAllEventPin();
     allEventShow = allEvent!.map<Marker>((e) {
       return Marker(
           markerId: MarkerId('${e['marker_id']}'),
-          icon:
-              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
+          icon: eventMarker,
           position: LatLng(e['lag'], e['lng']),
           infoWindow: InfoWindow(title: '${e['marker_id']}'),
           onTap: () {
@@ -94,7 +101,7 @@ class _MapPageState extends State<MapPage> {
     allPinShow = allpin!.map<Marker>((e) {
       return Marker(
           markerId: MarkerId('${e['marker_id']}'),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
+          icon: mapMarker,
           position: LatLng(e['lag'], e['lng']),
           infoWindow: InfoWindow(title: '${e['marker_id']}'),
           onTap: () {
@@ -161,6 +168,7 @@ class _MapPageState extends State<MapPage> {
     getCurrentLocation();
     allPin();
     findOwn();
+    setMarker();
     if (mounted) {
       setState(() {
         focus = true;
@@ -388,7 +396,7 @@ class _MapPageState extends State<MapPage> {
                                 ),
                                 filled: true,
                                 fillColor: Colors.white,
-                                hintText: 'search Location',
+                                hintText: 'Search Location Name',
                                 hintStyle: const TextStyle(
                                     color: Colors.black38,
                                     fontWeight: FontWeight.w200),
@@ -494,7 +502,7 @@ class _MapPageState extends State<MapPage> {
                                                             appBar: AppBar(
                                                               backgroundColor:
                                                                   Color(
-                                                                      0xfff5f5f5),
+                                                                      0xffeff2f5),
                                                               elevation: 0,
                                                               foregroundColor:
                                                                   Colors.black,
@@ -555,7 +563,7 @@ class _MapPageState extends State<MapPage> {
                                                                   return SingleChildScrollView(
                                                                     child: Container(
                                                                         height: 807,
-                                                                        color: Color(0xfff5f5f5),
+                                                                        color: Color(0xffeff2f5),
                                                                         child: Padding(
                                                                           padding:
                                                                               const EdgeInsets.all(10.0),
@@ -565,7 +573,7 @@ class _MapPageState extends State<MapPage> {
                                                                                 CrossAxisAlignment.start,
                                                                             children: [
                                                                               Text('Distance ∙ ${dis.toStringAsFixed(3)} km.'),
-                                                                              Text('Putdown ∙ ${dis.toStringAsFixed(3)}'),
+                                                                              
                                                                               const SizedBox(height: 10),
                                                                               GestureDetector(
                                                                                 onTap: () {
@@ -583,7 +591,7 @@ class _MapPageState extends State<MapPage> {
                                                                                     AwesomeDialog(
                                                                                             context: context,
                                                                                             dialogType: DialogType.WARNING,
-                                                                                            desc: 'Distance is to long.\nYou must to go closely on pin.\n Go closely on pin less than 50 meters.',
+                                                                                            desc: 'This location is to far away!\nYou must go to the location\n(less than 50 metres) before\nyou can post your diary',
                                                                                             btnOk: ElevatedButton(
                                                                                                 onPressed: () {
                                                                                                   Navigator.pop(context);
@@ -1028,7 +1036,7 @@ class _MapPageState extends State<MapPage> {
                                                                 appBar: AppBar(
                                                                   backgroundColor:
                                                                       Color(
-                                                                          0xfff5f5f5),
+                                                                          0xffeff2f5),
                                                                   elevation: 0,
                                                                   foregroundColor:
                                                                       Colors
@@ -1088,7 +1096,7 @@ class _MapPageState extends State<MapPage> {
                                                                         child: Container(
                                                                             width: double.infinity,
                                                                             height: 807,
-                                                                            color: Color(0xfff5f5f5),
+                                                                            color: Color(0xffeff2f5),
                                                                             child: Padding(
                                                                               padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                                                               child: Column(

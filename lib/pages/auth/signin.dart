@@ -27,6 +27,7 @@ class _SignInState extends State<SignIn> {
     return GestureDetector(
       onTap: FocusScope.of(context).unfocus,
       child: Scaffold(
+        backgroundColor: Color(0xffeff2f5),   
         body: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(20),
@@ -39,7 +40,7 @@ class _SignInState extends State<SignIn> {
                   ),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 5,
                 ),
                 Container(
                   alignment: Alignment.center,
@@ -72,13 +73,14 @@ class _SignInState extends State<SignIn> {
                           cursorColor: const Color(0xff8a7efd),
                           decoration: const InputDecoration(
                             filled: true,
-                            fillColor: Color(0xfff1f3f4),
+                            fillColor: Colors.white,
                             hintText: 'yourname@example.com',
                             hintStyle: TextStyle(
                                 color: Color(0xffc5d2e1),
                                 fontWeight: FontWeight.w200),
                             focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide.none),
+                              borderSide: BorderSide(color: Color(0xff8a7efd), width: 2),
+                            ),
                             enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide.none),
                             // prefixIcon: Icon(
@@ -87,7 +89,7 @@ class _SignInState extends State<SignIn> {
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'You must to fill this field.';
+                              return 'This field is required';
                             }
                             return null;
                           },
@@ -110,13 +112,14 @@ class _SignInState extends State<SignIn> {
                           cursorColor: Color(0xff8a7efd),
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: Color(0xfff1f3f4),
+                            fillColor: Colors.white,
                             hintText: 'yourpassword',
                             hintStyle: const TextStyle(
                                 color: Color(0xffc5d2e1),
                                 fontWeight: FontWeight.w200),
                             focusedBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide.none),
+                              borderSide: BorderSide(color: Color(0xff8a7efd), width: 2),
+                            ),
                             enabledBorder: const UnderlineInputBorder(
                                 borderSide: BorderSide.none),
                             // prefixIcon: const Icon(Icons.lock),
@@ -139,7 +142,7 @@ class _SignInState extends State<SignIn> {
                           },
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'You must to fill this field.';
+                              return 'This field is required';
                             }
                             return null;
                           },
@@ -178,7 +181,7 @@ class _SignInState extends State<SignIn> {
                                     barrierDismissible: false,
                                     context: context,
                                     type: CoolAlertType.error,
-                                    title: 'Error warning!',
+                                    title: 'Error',
                                     text: msg,
                                     onConfirmBtnTap: () {
                                       Navigator.of(context).pop();
@@ -217,14 +220,20 @@ class _SignInState extends State<SignIn> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
-                          'Dont have an account?',
-                          style: TextStyle(color: Colors.black),
+                        Text(
+                          'Don\'t have an account?',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15
+                          ),
                         ),
-                        const SizedBox(width: 5),
-                        const Text(
-                          'Register',
-                          style: TextStyle(color: Color(0xff8a7efd)),
+                        SizedBox(width: 5),
+                        Text(
+                          'Register now',
+                          style: TextStyle(
+                            color: Color(0xff8a7efd),
+                            fontSize: 15
+                          ),
                         )
                       ],
                     ))

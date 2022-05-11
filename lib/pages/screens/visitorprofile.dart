@@ -69,7 +69,7 @@ class _VisitorProfileState extends State<VisitorProfile> {
             foregroundColor: Colors.black,
             title: user != null
                 ? Text(user['username'])
-                : const Text('Loading . . .'),
+                : const Text(''),
             centerTitle: true,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_ios_new_rounded,

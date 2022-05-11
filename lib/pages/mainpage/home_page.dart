@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Image.asset(
                                 'images/logo_support.png',
-                                width: 120,
+                                width: 90,
                               ),
                             ],
                           ),
@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
                           children: 
                           latest.map<Widget>((e) {
                             return Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 5),
+                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                               child: Container(
                                 decoration: const BoxDecoration(
                                     color: Colors.white,

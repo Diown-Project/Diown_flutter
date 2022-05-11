@@ -149,7 +149,7 @@ class _EditProfileState extends State<EditProfile> {
                                                   child: Image.asset(
                                                       'images/profile.png')),
                                             ),
-                                            title: 'congratulations',
+                                            title: 'Congratulations',
                                             body: Padding(
                                                 padding:
                                                     const EdgeInsets.fromLTRB(
@@ -157,7 +157,7 @@ class _EditProfileState extends State<EditProfile> {
                                                 child: Column(
                                                   children: const [
                                                     Text(
-                                                      'congratulations',
+                                                      'Congratulations',
                                                       style: TextStyle(
                                                         fontSize: 20,
                                                         height: 1.5,
@@ -167,7 +167,7 @@ class _EditProfileState extends State<EditProfile> {
                                                     ),
                                                     SizedBox(height: 10),
                                                     Text(
-                                                      'Congratulations to unlock this achievement (Identify yourself).',
+                                                      'You have unlock the new achievement (Identify Yourself)',
                                                       textAlign:
                                                           TextAlign.center,
                                                     ),
@@ -181,7 +181,14 @@ class _EditProfileState extends State<EditProfile> {
                                                   Navigator.pop(context);
                                                   Navigator.pop(context);
                                                 },
-                                                child: const Text('ok')))
+                                                child: const Text('OK'),
+                                                style: OutlinedButton.styleFrom(
+                                                  shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(5.0)),
+                                                  backgroundColor: Color(0xff8a7efd),
+                                                  side: BorderSide.none,
+                                                ),
+                                                ))
                                         .show();
                                   });
                             } else {
@@ -384,7 +391,7 @@ class _EditProfileState extends State<EditProfile> {
                                       TextStyle(color: Color(0xff8fa1b6)),
                                   filled: true,
                                   fillColor: Color(0xfff1f3f4),
-                                  hintText: 'usernaem',
+                                  hintText: 'username',
                                   hintStyle: TextStyle(
                                       color: Color(0xffc5d2e1),
                                       fontWeight: FontWeight.w200),
@@ -397,7 +404,7 @@ class _EditProfileState extends State<EditProfile> {
                                 ),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'You must to fill this field.';
+                                    return 'This field is required';
                                   }
                                   return null;
                                 },

@@ -218,14 +218,14 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                                               child: Image.asset(
                                                   'images/Place_Memory.png')),
                                         ),
-                                        title: 'congratulations',
+                                        title: 'Congratulations',
                                         body: Padding(
                                             padding: const EdgeInsets.fromLTRB(
                                                 15, 0, 10, 10),
                                             child: Column(
                                               children: const [
                                                 Text(
-                                                  'congratulations',
+                                                  'Congratulations',
                                                   style: TextStyle(
                                                     fontSize: 20,
                                                     height: 1.5,
@@ -234,7 +234,7 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                                                 ),
                                                 SizedBox(height: 10),
                                                 Text(
-                                                  'Congratulations to unlock this achievement (Place Memory).',
+                                                  'You have unlock the new achievement (Place Memory)',
                                                   textAlign: TextAlign.center,
                                                 ),
                                               ],
@@ -247,7 +247,14 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                                               Navigator.pop(context);
                                               Navigator.pop(context);
                                             },
-                                            child: const Text('ok')))
+                                            child: const Text('OK'),
+                                            style: OutlinedButton.styleFrom(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(5.0)),
+                                              backgroundColor: Color(0xff8a7efd),
+                                              side: BorderSide.none,
+                                            ),
+                                        ))
                                     .show();
                               } else {
                                 Navigator.pop(context);
@@ -283,14 +290,14 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                                               child: Image.asset(
                                                   'images/Place_Memory.png')),
                                         ),
-                                        title: 'congratulations',
+                                        title: 'Congratulations',
                                         body: Padding(
                                             padding: const EdgeInsets.fromLTRB(
                                                 15, 0, 10, 10),
                                             child: Column(
                                               children: const [
                                                 Text(
-                                                  'congratulations',
+                                                  'Congratulations',
                                                   style: TextStyle(
                                                     fontSize: 20,
                                                     height: 1.5,
@@ -299,7 +306,7 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                                                 ),
                                                 SizedBox(height: 10),
                                                 Text(
-                                                  'Congratulations to unlock this achievement (Place Memory).',
+                                                  'You have unlock the new achievement (Place Memory)',
                                                   textAlign: TextAlign.center,
                                                 ),
                                               ],
@@ -312,7 +319,14 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                                               Navigator.pop(context);
                                               Navigator.pop(context);
                                             },
-                                            child: const Text('ok')))
+                                            child: const Text('OK'),
+                                            style: OutlinedButton.styleFrom(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(5.0)),
+                                              backgroundColor: Color(0xff8a7efd),
+                                              side: BorderSide.none,
+                                            ),
+                                        ))
                                     .show();
                               } else {
                                 Navigator.pop(context);
@@ -325,8 +339,8 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                                   context: context,
                                   type: CoolAlertType.error,
                                   barrierDismissible: false,
-                                  title: 'error Alert!',
-                                  text: 'You must to fill at less mood.',
+                                  title: 'Error Alert!',
+                                  text: 'This field is required',
                                   onConfirmBtnTap: () {
                                     Navigator.pop(context);
                                     Navigator.pop(context);

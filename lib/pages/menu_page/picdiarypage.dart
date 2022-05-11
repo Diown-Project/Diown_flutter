@@ -38,6 +38,7 @@ class _PictureDiaryState extends State<PictureDiary> {
     return GestureDetector(
       onTap: FocusScope.of(context).unfocus,
       child: Scaffold(
+        backgroundColor: Color(0xffeff2f5),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,

@@ -25,13 +25,19 @@ class _SignUpState extends State<SignUp> {
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
+          backgroundColor: Color(0xffeff2f5),
             appBar: AppBar(
               backgroundColor: Colors.transparent,
               elevation: 0,
               foregroundColor: Colors.black,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back_ios_new_rounded,
+                    color: Colors.black),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
             ),
             body: SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
               child: Column(
                 children: [
                   Container(
@@ -63,6 +69,45 @@ class _SignUpState extends State<SignUp> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
+                            'Email',
+                            style: TextStyle(
+                                color: Color(0xff8fa1b6),
+                                fontSize: 18,
+                                fontWeight: FontWeight.w400),
+                          ),
+                          const SizedBox(height: 5),
+                          TextFormField(
+                            keyboardType: TextInputType.emailAddress,
+                            cursorColor: Color(0xff8a7efd),
+                            decoration: const InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              hintText: 'yourname@example.com',
+                              hintStyle: TextStyle(
+                                  color: Color(0xffc5d2e1),
+                                  fontWeight: FontWeight.w200),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Color(0xff8a7efd), width: 2),
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide.none),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'This field is required';
+                              } else if (!value.contains('@')) {
+                                return 'Your input must be email';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              email = value;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          const Text(
                             'Username',
                             style: TextStyle(
                                 color: Color(0xff8fa1b6),
@@ -76,19 +121,20 @@ class _SignUpState extends State<SignUp> {
                             cursorColor: Color(0xff8a7efd),
                             decoration: const InputDecoration(
                               filled: true,
-                              fillColor: Color(0xfff1f3f4),
+                              fillColor: Colors.white,
                               hintText: 'yourusername',
                               hintStyle: TextStyle(
                                   color: Color(0xffc5d2e1),
                                   fontWeight: FontWeight.w200),
                               focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide.none),
+                                  borderSide: BorderSide(color: Color(0xff8a7efd), width: 2),
+                              ),
                               enabledBorder: UnderlineInputBorder(
                                   borderSide: BorderSide.none),
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'You must to fill this field.';
+                                return 'This field is required';
                               }
                               return null;
                             },
@@ -96,44 +142,7 @@ class _SignUpState extends State<SignUp> {
                               username = value;
                             },
                           ),
-                          const Text(
-                            'Email',
-                            style: TextStyle(
-                                color: Color(0xff8fa1b6),
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400),
-                          ),
-                          const SizedBox(height: 5),
-                          TextFormField(
-                            keyboardType: TextInputType.emailAddress,
-                            cursorColor: Color(0xff8a7efd),
-                            decoration: const InputDecoration(
-                              filled: true,
-                              fillColor: Color(0xfff1f3f4),
-                              hintText: 'yourname@example.com',
-                              hintStyle: TextStyle(
-                                  color: Color(0xffc5d2e1),
-                                  fontWeight: FontWeight.w200),
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide.none),
-                              enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide.none),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'You must to fill this field.';
-                              } else if (!value.contains('@')) {
-                                return 'Your input must be email.';
-                              }
-                              return null;
-                            },
-                            onSaved: (value) {
-                              email = value;
-                            },
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
+                          
                           const Text(
                             'Password',
                             style: TextStyle(
@@ -147,13 +156,14 @@ class _SignUpState extends State<SignUp> {
                             cursorColor: Color(0xff8a7efd),
                             decoration: InputDecoration(
                               filled: true,
-                              fillColor: Color(0xfff1f3f4),
+                              fillColor: Colors.white,
                               hintText: 'yourpassword',
                               hintStyle: const TextStyle(
                                   color: Color(0xffc5d2e1),
                                   fontWeight: FontWeight.w200),
                               focusedBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide.none),
+                                  borderSide: BorderSide(color: Color(0xff8a7efd), width: 2),
+                              ),
                               enabledBorder: const UnderlineInputBorder(
                                   borderSide: BorderSide.none),
                               // prefixIcon: const Icon(Icons.lock),
@@ -179,9 +189,9 @@ class _SignUpState extends State<SignUp> {
                                 checkPassword1 = value;
                               });
                               if (value == null || value.isEmpty) {
-                                return 'You must to fill this field.';
+                                return 'This field is required';
                               } else if (value.length <= 8) {
-                                return 'Your password must be greater than 8';
+                                return 'Your password must be at least than 8 characters';
                               }
 
                               return null;
@@ -201,13 +211,14 @@ class _SignUpState extends State<SignUp> {
                             cursorColor: Color(0xff8a7efd),
                             decoration: InputDecoration(
                               filled: true,
-                              fillColor: Color(0xfff1f3f4),
+                              fillColor: Colors.white,
                               hintText: 'confirm yourpassword',
                               hintStyle: const TextStyle(
                                   color: Color(0xffc5d2e1),
                                   fontWeight: FontWeight.w200),
                               focusedBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide.none),
+                                  borderSide: BorderSide(color: Color(0xff8a7efd), width: 2),
+                              ),
                               enabledBorder: const UnderlineInputBorder(
                                   borderSide: BorderSide.none),
                               // prefixIcon: const Icon(Icons.lock),
@@ -233,10 +244,10 @@ class _SignUpState extends State<SignUp> {
                                 checkPassword2 = value;
                               });
                               if (value == null || value.isEmpty) {
-                                return 'You must to fill this field.';
+                                return 'This field is required';
                               }
                               if (checkPassword1 != checkPassword2) {
-                                return 'your password not match each other.';
+                                return 'your password not match each other';
                               }
                               return null;
                             },
@@ -269,9 +280,9 @@ class _SignUpState extends State<SignUp> {
                                     context: context,
                                     type: CoolAlertType.success,
                                     title: msg,
-                                    text: "Your registeration was successful!",
+                                    text: "Your registeration it successful",
                                     onConfirmBtnTap: () {
-                                      prefs.remove('msg');
+                                      prefs.remove('Success');
                                       Navigator.of(context).pop();
                                       Navigator.of(context).pop();
                                       Navigator.of(context).pop();
@@ -284,7 +295,7 @@ class _SignUpState extends State<SignUp> {
                                     type: CoolAlertType.error,
                                     text: msg,
                                     onConfirmBtnTap: () {
-                                      prefs.remove('msg');
+                                      prefs.remove('Success');
                                       Navigator.of(context).pop();
                                       Navigator.of(context).pop();
                                     },

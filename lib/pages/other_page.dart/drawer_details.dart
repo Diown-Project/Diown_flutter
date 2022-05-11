@@ -63,6 +63,7 @@ class _DrawerDetailsState extends State<DrawerDetails> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Container(
+          color: Colors.white,
             child: Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListView(
@@ -76,7 +77,7 @@ class _DrawerDetailsState extends State<DrawerDetails> {
                         'https://storage.googleapis.com/noseason/${user['profile_image']}'),
                   ),
                   title: Text('${user['username']}'),
-                  subtitle: const Text('edit profile.'),
+                  subtitle: const Text('edit profile'),
                   trailing: const Icon(Icons.navigate_next_rounded),
                   onTap: () {
                     Navigator.push(
@@ -201,6 +202,8 @@ class _DrawerDetailsState extends State<DrawerDetails> {
                   type: CoolAlertType.confirm,
                   title: 'Do you sure to logout.',
                   confirmBtnColor: Colors.red,
+                  confirmBtnText: 'Yes',
+                  cancelBtnText: 'No',
                   onConfirmBtnTap: () async {
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();

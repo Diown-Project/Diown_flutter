@@ -20,6 +20,7 @@ class _ContactScreenState extends State<ContactScreen> {
     return GestureDetector(
       onTap: FocusScope.of(context).unfocus,
       child: Scaffold(
+        backgroundColor: Color(0xffeff2f5),
         body: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(20),
@@ -46,13 +47,13 @@ class _ContactScreenState extends State<ContactScreen> {
                       children: [
                         TextFormField(
                           controller: textEditingController,
-                          maxLength: 48,
+                          maxLength: 50,
                           keyboardType: TextInputType.emailAddress,
                           decoration: const InputDecoration(
                             contentPadding:
                                 EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                             filled: true,
-                            fillColor: Color(0xfff1f3f4),
+                            fillColor: Colors.white,
                             hintText: 'Topic',
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide.none,
@@ -84,6 +85,8 @@ class _ContactScreenState extends State<ContactScreen> {
                             contentPadding:
                                 EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                             hintText: 'Write details to us here.',
+                            filled: true,
+                            fillColor: Colors.white,
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide.none,
                             ),
