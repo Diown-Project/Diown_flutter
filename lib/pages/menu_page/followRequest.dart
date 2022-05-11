@@ -39,12 +39,13 @@ class _FollowRequest_PageState extends State<FollowRequest_Page> {
       extendBodyBehindAppBar: request != null
         ? request.length == 0 ? true : false 
         : false,
+        backgroundColor: Color(0xffeff2f5),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         foregroundColor: Colors.black,
         centerTitle: true,
-        title: const Text('Follow request'),
+        title: const Text('Follow Request'),
         leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios_new_rounded,
                 color: Colors.black),
@@ -57,97 +58,126 @@ class _FollowRequest_PageState extends State<FollowRequest_Page> {
               child: Column(
                 children: request
                     .map<Widget>(
-                      (e) => ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          backgroundImage: NetworkImage(
-                              'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                        ),
-                        title: Text(
-                          e['user_detail'][0]['username'],
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        subtitle: const Text('Want to follow you.'),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            TextButton(
-                                onPressed: () async {
-                                  var check = await checkAchievement(5);
-                                  if (check['message'] == 'success') {
-                                    AwesomeDialog(
-                                            context: context,
-                                            dismissOnTouchOutside: false,
-                                            dialogType: DialogType.SUCCES,
-                                            customHeader: Container(
-                                              height: 100,
-                                              child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          50),
-                                                  child: Image.asset(
-                                                      'images/Starlight.png')),
-                                            ),
-                                            title: 'congratulations',
-                                            body: Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        15, 0, 10, 10),
-                                                child: Column(
-                                                  children: const [
-                                                    Text(
-                                                      'congratulations',
-                                                      style: TextStyle(
-                                                        fontSize: 20,
-                                                        height: 1.5,
-                                                        fontWeight:
-                                                            FontWeight.bold,
+                      (e) => Container(
+                        margin: EdgeInsets.fromLTRB(5, 15, 5, 0),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(5))),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            backgroundImage: NetworkImage(
+                                'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                          ),
+                          title: Text(
+                            e['user_detail'][0]['username'],
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          // subtitle: const Text('Want to follow you.'),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextButton(
+                                  onPressed: () async {
+                                    var check = await checkAchievement(5);
+                                    if (check['message'] == 'success') {
+                                      AwesomeDialog(
+                                              context: context,
+                                              dismissOnTouchOutside: false,
+                                              dialogType: DialogType.SUCCES,
+                                              customHeader: Container(
+                                                height: 100,
+                                                child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            50),
+                                                    child: Image.asset(
+                                                        'images/Starlight.png')),
+                                              ),
+                                              title: 'congratulations',
+                                              body: Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          15, 0, 10, 10),
+                                                  child: Column(
+                                                    children: const [
+                                                      Text(
+                                                        'congratulations',
+                                                        style: TextStyle(
+                                                          fontSize: 20,
+                                                          height: 1.5,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
                                                       ),
-                                                    ),
-                                                    SizedBox(height: 10),
-                                                    Text(
-                                                      'Congratulations to unlock this achievement (Starlight).',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
-                                                  ],
-                                                )),
-                                            btnOk: ElevatedButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: const Text('Ok')))
-                                        .show();
-                                    var c = await addToFollow(
+                                                      SizedBox(height: 10),
+                                                      Text(
+                                                        'Congratulations to unlock this achievement (Starlight).',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                    ],
+                                                  )),
+                                              btnOk: ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text('Ok')))
+                                          .show();
+                                      var c = await addToFollow(
+                                          e['user_detail'][0]['_id']);
+                                      request.removeWhere((element) =>
+                                          element['user_detail'][0]['_id'] ==
+                                          e['user_detail'][0]['_id']);
+                                      setState(() {});
+                                    } else {
+                                      var c = await addToFollow(
+                                          e['user_detail'][0]['_id']);
+                                      request.removeWhere((element) =>
+                                          element['user_detail'][0]['_id'] ==
+                                          e['user_detail'][0]['_id']);
+                                      setState(() {});
+                                    }
+                                  },
+                                  child: const Text(
+                                    'Confirm',
+                                    style: TextStyle(
+                                      color: Colors.white
+                                    ),
+                                  ),
+                                  style: TextButton.styleFrom(
+                                    minimumSize: Size(60, 35),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5.0)),
+                                    backgroundColor: Color(0xff8a7efd),
+                                    side: BorderSide.none,
+                                  )
+                                ),
+                                SizedBox(width: 5),
+                              OutlinedButton(
+                                  onPressed: () async {
+                                    var c = await remove(
                                         e['user_detail'][0]['_id']);
                                     request.removeWhere((element) =>
                                         element['user_detail'][0]['_id'] ==
                                         e['user_detail'][0]['_id']);
                                     setState(() {});
-                                  } else {
-                                    var c = await addToFollow(
-                                        e['user_detail'][0]['_id']);
-                                    request.removeWhere((element) =>
-                                        element['user_detail'][0]['_id'] ==
-                                        e['user_detail'][0]['_id']);
-                                    setState(() {});
-                                  }
-                                },
-                                child: const Text('confirm')),
-                            TextButton(
-                                onPressed: () async {
-                                  var c = await remove(
-                                      e['user_detail'][0]['_id']);
-                                  request.removeWhere((element) =>
-                                      element['user_detail'][0]['_id'] ==
-                                      e['user_detail'][0]['_id']);
-                                  setState(() {});
-                                },
-                                child: const Text(
-                                  'remove',
-                                  style: TextStyle(color: Colors.red),
-                                ))
-                          ],
+                                  },
+                                  child: const Text(
+                                    'Delete',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                style: OutlinedButton.styleFrom(
+                                    minimumSize: Size(60, 35),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5.0),
+                                    ),
+                                    side: BorderSide(width: 1.0, color: Colors.black)
+                                  )    
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     )

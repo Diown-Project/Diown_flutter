@@ -50,7 +50,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
       if (mounted) {
         setState(() {
           diary = result;
-          time = DateFormat('EEE. MMM d / yyyy')
+          time = DateFormat('d MMM yyyy (EEE)')
               .format(DateTime.parse(diary['date']));
           isFav = diary['favorite'];
         });
@@ -69,13 +69,14 @@ class _DiaryDetailState extends State<DiaryDetail> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           centerTitle: true,
           title: diary != null
               ? diary.containsKey('message')
                   ? Text('This diary was deleted.')
                   : Text('${time}')
-              : Text('wait. . .'),
+              : Text('Please wait. . .'),
           elevation: 0,
           backgroundColor: Colors.transparent,
           foregroundColor: Colors.black,
@@ -181,6 +182,11 @@ class _DiaryDetailState extends State<DiaryDetail> {
                             ])
                 : Container()
           ],
+          leading: IconButton(
+                icon: const Icon(Icons.arrow_back_ios_new_rounded,
+                    color: Colors.black),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -224,7 +230,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
                     )
                   : Container(),
               Padding(
-                padding: const EdgeInsets.fromLTRB(20, 5, 0, 5),
+                padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                 child: Row(
                   children: [
                     Flexible(
@@ -256,7 +262,7 @@ class _DiaryDetailState extends State<DiaryDetail> {
               ),
               diary != null && diary['topic'] != null
                   ? Padding(
-                      padding: const EdgeInsets.fromLTRB(23, 0, 8, 5),
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
                       child: Container(
                         alignment: Alignment.topLeft,
                         child: Text(
@@ -267,9 +273,10 @@ class _DiaryDetailState extends State<DiaryDetail> {
                       ),
                     )
                   : Container(),
+              SizedBox(height: 5),
               diary != null && diary['detail'] != null
                   ? Padding(
-                      padding: const EdgeInsets.fromLTRB(23, 0, 8, 5),
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
                       child: Container(
                         alignment: Alignment.centerLeft,
                         child: Text(

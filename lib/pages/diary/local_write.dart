@@ -165,6 +165,9 @@ class _LocalDiaryState extends State<LocalDiary> {
                         type: CoolAlertType.confirm,
                         title: 'Please confirm',
                         text: 'If you want to save this diary.',
+                        confirmBtnColor: Color(0xff8a7efd),
+                        confirmBtnText: 'Yes',
+                        cancelBtnText: "No",
                         onConfirmBtnTap: () async {
                           CoolAlert.show(
                               barrierDismissible: false,
@@ -209,14 +212,14 @@ class _LocalDiaryState extends State<LocalDiary> {
                                             child: Image.asset(
                                                 'images/NewbieWriter.png')),
                                       ),
-                                      title: 'congratulations',
+                                      title: 'Congratulations',
                                       body: Padding(
                                           padding: const EdgeInsets.fromLTRB(
                                               15, 0, 10, 10),
                                           child: Column(
                                             children: const [
                                               Text(
-                                                'congratulations',
+                                                'Congratulations',
                                                 style: TextStyle(
                                                   fontSize: 20,
                                                   height: 1.5,
@@ -225,7 +228,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                               ),
                                               SizedBox(height: 10),
                                               Text(
-                                                'Congratulations to unlock this achievement (Newbie Writer).',
+                                                'You have unlock the new achievement (Newbie Writer)',
                                                 textAlign: TextAlign.center,
                                               ),
                                             ],
@@ -248,7 +251,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                                           child: Image.asset(
                                                               'images/Picture_Memory.png')),
                                                     ),
-                                                    title: 'congratulations',
+                                                    title: 'Congratulations',
                                                     body: Padding(
                                                         padding:
                                                             const EdgeInsets
@@ -257,7 +260,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                                         child: Column(
                                                           children: const [
                                                             Text(
-                                                              'congratulations',
+                                                              'Congratulations',
                                                               style: TextStyle(
                                                                 fontSize: 20,
                                                                 height: 1.5,
@@ -269,7 +272,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                                             SizedBox(
                                                                 height: 10),
                                                             Text(
-                                                              'Congratulations to unlock this achievement (Picture Memory).',
+                                                              'You have unlock the new achievement (Picture Memory)',
                                                               textAlign:
                                                                   TextAlign
                                                                       .center,
@@ -289,10 +292,24 @@ class _LocalDiaryState extends State<LocalDiary> {
                                                           Navigator.pop(
                                                               context);
                                                         },
-                                                        child: Text('ok')))
+                                                        child: Text('OK'),
+                                                        style: OutlinedButton.styleFrom(
+                                                          shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(5.0)),
+                                                          backgroundColor: Color(0xff8a7efd),
+                                                          side: BorderSide.none,
+                                                        ),
+                                                      ))
                                                 .show();
                                           },
-                                          child: const Text('ok')))
+                                          child: const Text('OK'),
+                                          style: OutlinedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(5.0)),
+                                            backgroundColor: Color(0xff8a7efd),
+                                            side: BorderSide.none,
+                                          ),
+                                      ))
                                   .show();
                             } else if (checkImg['message'] == 'success' &&
                                 check7['message'] == 'success') {
@@ -308,14 +325,14 @@ class _LocalDiaryState extends State<LocalDiary> {
                                             child: Image.asset(
                                                 'images/Picture_Memory.png')),
                                       ),
-                                      title: 'congratulations',
+                                      title: 'Congratulations',
                                       body: Padding(
                                           padding: const EdgeInsets.fromLTRB(
                                               15, 0, 10, 10),
                                           child: Column(
                                             children: const [
                                               Text(
-                                                'congratulations',
+                                                'Congratulations',
                                                 style: TextStyle(
                                                   fontSize: 20,
                                                   height: 1.5,
@@ -324,7 +341,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                               ),
                                               SizedBox(height: 10),
                                               Text(
-                                                'Congratulations to unlock this achievement (Picture Memory).',
+                                                'You have unlock the new achievement (Picture Memory)',
                                                 textAlign: TextAlign.center,
                                               ),
                                             ],
@@ -347,7 +364,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                                           child: Image.asset(
                                                               'images/Diary_diary.png')),
                                                     ),
-                                                    title: 'congratulations',
+                                                    title: 'Congratulations',
                                                     body: Padding(
                                                         padding:
                                                             const EdgeInsets
@@ -356,7 +373,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                                         child: Column(
                                                           children: const [
                                                             Text(
-                                                              'congratulations',
+                                                              'Congratulations',
                                                               style: TextStyle(
                                                                 fontSize: 20,
                                                                 height: 1.5,
@@ -368,7 +385,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                                             SizedBox(
                                                                 height: 10),
                                                             Text(
-                                                              'Congratulations to unlock this achievement (Diary diary).',
+                                                              'You have unlock the new achievement (Diary Diary)',
                                                               textAlign:
                                                                   TextAlign
                                                                       .center,
@@ -388,11 +405,24 @@ class _LocalDiaryState extends State<LocalDiary> {
                                                           Navigator.pop(
                                                               context);
                                                         },
-                                                        child:
-                                                            const Text('Ok')))
+                                                        child:const Text('OK'),                        
+                                                        style: OutlinedButton.styleFrom(
+                                                          shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(5.0)),
+                                                          backgroundColor: Color(0xff8a7efd),
+                                                          side: BorderSide.none,
+                                                        ),
+                                                    ))
                                                 .show();
                                           },
-                                          child: Text('ok')))
+                                          child: Text('OK'),
+                                            style: OutlinedButton.styleFrom(
+                                              shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(5.0)),
+                                              backgroundColor: Color(0xff8a7efd),
+                                              side: BorderSide.none,
+                                            ),
+                                          ))
                                   .show();
                             } else if (checkImg['message'] == 'success' &&
                                 check30['message'] == 'success') {
@@ -408,14 +438,14 @@ class _LocalDiaryState extends State<LocalDiary> {
                                             child: Image.asset(
                                                 'images/Picture_Memory.png')),
                                       ),
-                                      title: 'congratulations',
+                                      title: 'Congratulations',
                                       body: Padding(
                                           padding: const EdgeInsets.fromLTRB(
                                               15, 0, 10, 10),
                                           child: Column(
                                             children: const [
                                               Text(
-                                                'congratulations',
+                                                'Congratulations',
                                                 style: TextStyle(
                                                   fontSize: 20,
                                                   height: 1.5,
@@ -424,7 +454,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                               ),
                                               SizedBox(height: 10),
                                               Text(
-                                                'Congratulations to unlock this achievement (Picture Memory).',
+                                                'You have unlock the new achievement (Picture Memory)',
                                                 textAlign: TextAlign.center,
                                               ),
                                             ],
@@ -447,7 +477,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                                           child: Image.asset(
                                                               'images/Expert_writer.png')),
                                                     ),
-                                                    title: 'congratulations',
+                                                    title: 'Congratulations',
                                                     body: Padding(
                                                         padding:
                                                             const EdgeInsets
@@ -456,7 +486,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                                         child: Column(
                                                           children: const [
                                                             Text(
-                                                              'congratulations',
+                                                              'Congratulations',
                                                               style: TextStyle(
                                                                 fontSize: 20,
                                                                 height: 1.5,
@@ -468,7 +498,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                                             SizedBox(
                                                                 height: 10),
                                                             Text(
-                                                              'Congratulations to unlock this achievement (Expert writer).',
+                                                              'You have unlock the new achievement (Expert writer)',
                                                               textAlign:
                                                                   TextAlign
                                                                       .center,
@@ -489,10 +519,24 @@ class _LocalDiaryState extends State<LocalDiary> {
                                                               context);
                                                         },
                                                         child:
-                                                            const Text('Ok')))
+                                                            const Text('OK'),
+                                                        style: OutlinedButton.styleFrom(
+                                                          shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(5.0)),
+                                                          backgroundColor: Color(0xff8a7efd),
+                                                          side: BorderSide.none,
+                                                        ),
+                                                        ))
                                                 .show();
                                           },
-                                          child: const Text('Ok')))
+                                          child: const Text('OK'),
+                                          style: OutlinedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(5.0)),
+                                            backgroundColor: Color(0xff8a7efd),
+                                            side: BorderSide.none,
+                                          ),
+                                          ))
                                   .show();
                             } else if (check7['message'] == 'success') {
                               AwesomeDialog(
@@ -507,14 +551,14 @@ class _LocalDiaryState extends State<LocalDiary> {
                                             child: Image.asset(
                                                 'images/Diary_diary.png')),
                                       ),
-                                      title: 'congratulations',
+                                      title: 'Congratulations',
                                       body: Padding(
                                           padding: const EdgeInsets.fromLTRB(
                                               15, 0, 10, 10),
                                           child: Column(
                                             children: const [
                                               Text(
-                                                'congratulations',
+                                                'Congratulations',
                                                 style: TextStyle(
                                                   fontSize: 20,
                                                   height: 1.5,
@@ -523,7 +567,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                               ),
                                               SizedBox(height: 10),
                                               Text(
-                                                'Congratulations to unlock this achievement (Diary diary).',
+                                                'You have unlock the new achievement (Diary Diary)',
                                                 textAlign: TextAlign.center,
                                               ),
                                             ],
@@ -536,7 +580,14 @@ class _LocalDiaryState extends State<LocalDiary> {
                                             Navigator.pop(context, "yeah");
                                             Navigator.pop(context);
                                           },
-                                          child: const Text('Ok')))
+                                          child: const Text('OK'),
+                                          style: OutlinedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(5.0)),
+                                            backgroundColor: Color(0xff8a7efd),
+                                            side: BorderSide.none,
+                                          ),
+                                          ))
                                   .show();
                             } else if (checkImg['message'] == 'success') {
                               AwesomeDialog(
@@ -551,14 +602,14 @@ class _LocalDiaryState extends State<LocalDiary> {
                                             child: Image.asset(
                                                 'images/Picture_Memory.png')),
                                       ),
-                                      title: 'congratulations',
+                                      title: 'Congratulations',
                                       body: Padding(
                                           padding: const EdgeInsets.fromLTRB(
                                               15, 0, 10, 10),
                                           child: Column(
                                             children: const [
                                               Text(
-                                                'congratulations',
+                                                'Congratulations',
                                                 style: TextStyle(
                                                   fontSize: 20,
                                                   height: 1.5,
@@ -567,7 +618,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                               ),
                                               SizedBox(height: 10),
                                               Text(
-                                                'Congratulations to unlock this achievement (Picture Memory).',
+                                                'You have unlock the new achievement (Picture Memory)',
                                                 textAlign: TextAlign.center,
                                               ),
                                             ],
@@ -580,7 +631,14 @@ class _LocalDiaryState extends State<LocalDiary> {
                                             Navigator.pop(context, "yeah");
                                             Navigator.pop(context);
                                           },
-                                          child: const Text('Ok')))
+                                          child: const Text('OK'),
+                                          style: OutlinedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(5.0)),
+                                            backgroundColor: Color(0xff8a7efd),
+                                            side: BorderSide.none,
+                                          ),
+                                        ))
                                   .show();
                             } else if (check30['message'] == 'success') {
                               AwesomeDialog(
@@ -595,14 +653,14 @@ class _LocalDiaryState extends State<LocalDiary> {
                                             child: Image.asset(
                                                 'images/Expert_writer.png')),
                                       ),
-                                      title: 'congratulations',
+                                      title: 'Congratulations',
                                       body: Padding(
                                           padding: const EdgeInsets.fromLTRB(
                                               15, 0, 10, 10),
                                           child: Column(
                                             children: const [
                                               Text(
-                                                'congratulations',
+                                                'Congratulations',
                                                 style: TextStyle(
                                                   fontSize: 20,
                                                   height: 1.5,
@@ -611,7 +669,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                               ),
                                               SizedBox(height: 10),
                                               Text(
-                                                'Congratulations to unlock this achievement (Expert writer).',
+                                                'You have unlock the new achievement (Expert Writer)',
                                                 textAlign: TextAlign.center,
                                               ),
                                             ],
@@ -624,7 +682,14 @@ class _LocalDiaryState extends State<LocalDiary> {
                                             Navigator.pop(context, "yeah");
                                             Navigator.pop(context);
                                           },
-                                          child: const Text('Ok')))
+                                          child: const Text('OK'),
+                                          style: OutlinedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(5.0)),
+                                            backgroundColor: Color(0xff8a7efd),
+                                            side: BorderSide.none,
+                                          ),
+                                          ))
                                   .show();
                             } else {
                               Navigator.pop(context);
@@ -661,14 +726,14 @@ class _LocalDiaryState extends State<LocalDiary> {
                                             child: Image.asset(
                                                 'images/NewbieWriter.png')),
                                       ),
-                                      title: 'congratulations',
+                                      title: 'Congratulations',
                                       body: Padding(
                                           padding: const EdgeInsets.fromLTRB(
                                               15, 0, 10, 10),
                                           child: Column(
                                             children: const [
                                               Text(
-                                                'congratulations',
+                                                'Congratulations',
                                                 style: TextStyle(
                                                   fontSize: 20,
                                                   height: 1.5,
@@ -677,7 +742,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                               ),
                                               SizedBox(height: 10),
                                               Text(
-                                                'Congratulations to unlock this achievement (Newbie Writer).',
+                                                'You have unlock the new achievement (Newbie Writer)',
                                                 textAlign: TextAlign.center,
                                               ),
                                             ],
@@ -690,7 +755,14 @@ class _LocalDiaryState extends State<LocalDiary> {
                                             Navigator.pop(context, "yeah");
                                             Navigator.pop(context);
                                           },
-                                          child: Text('ok')))
+                                          child: Text('OK'),
+                                          style: OutlinedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(5.0)),
+                                            backgroundColor: Color(0xff8a7efd),
+                                            side: BorderSide.none,
+                                          ),
+                                          ))
                                   .show();
                             } else if (check7['message'] == 'success') {
                               print('hello');
@@ -706,14 +778,14 @@ class _LocalDiaryState extends State<LocalDiary> {
                                             child: Image.asset(
                                                 'images/Diary_diary.png')),
                                       ),
-                                      title: 'congratulations',
+                                      title: 'Congratulations',
                                       body: Padding(
                                           padding: const EdgeInsets.fromLTRB(
                                               15, 0, 10, 10),
                                           child: Column(
                                             children: const [
                                               Text(
-                                                'congratulations',
+                                                'Congratulations',
                                                 style: TextStyle(
                                                   fontSize: 20,
                                                   height: 1.5,
@@ -722,7 +794,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                               ),
                                               SizedBox(height: 10),
                                               Text(
-                                                'Congratulations to unlock this achievement (Diary diary).',
+                                                'You have unlock the new achievement (Diary Diary)',
                                                 textAlign: TextAlign.center,
                                               ),
                                             ],
@@ -735,7 +807,14 @@ class _LocalDiaryState extends State<LocalDiary> {
                                             Navigator.pop(context, "yeah");
                                             Navigator.pop(context);
                                           },
-                                          child: const Text('Ok')))
+                                          child: const Text('OK'),
+                                          style: OutlinedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(5.0)),
+                                            backgroundColor: Color(0xff8a7efd),
+                                            side: BorderSide.none,
+                                          ),
+                                          ))
                                   .show();
                             } else if (check30['message'] == 'success') {
                               AwesomeDialog(
@@ -750,14 +829,14 @@ class _LocalDiaryState extends State<LocalDiary> {
                                             child: Image.asset(
                                                 'images/Expert_writer.png')),
                                       ),
-                                      title: 'congratulations',
+                                      title: 'Congratulations',
                                       body: Padding(
                                           padding: const EdgeInsets.fromLTRB(
                                               15, 0, 10, 10),
                                           child: Column(
                                             children: const [
                                               Text(
-                                                'congratulations',
+                                                'Congratulations',
                                                 style: TextStyle(
                                                   fontSize: 20,
                                                   height: 1.5,
@@ -766,7 +845,7 @@ class _LocalDiaryState extends State<LocalDiary> {
                                               ),
                                               SizedBox(height: 10),
                                               Text(
-                                                'Congratulations to unlock this achievement (Expert writer).',
+                                                'You have unlock the new achievement (Expert Writer)',
                                                 textAlign: TextAlign.center,
                                               ),
                                             ],
@@ -779,7 +858,14 @@ class _LocalDiaryState extends State<LocalDiary> {
                                             Navigator.pop(context, "yeah");
                                             Navigator.pop(context);
                                           },
-                                          child: const Text('Ok')))
+                                          child: const Text('OK'),
+                                          style: OutlinedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(5.0)),
+                                            backgroundColor: Color(0xff8a7efd),
+                                            side: BorderSide.none,
+                                          ),
+                                          ))
                                   .show();
                             } else {
                               Navigator.pop(context);
@@ -792,8 +878,8 @@ class _LocalDiaryState extends State<LocalDiary> {
                                 barrierDismissible: false,
                                 context: context,
                                 type: CoolAlertType.error,
-                                title: 'error Alert!',
-                                text: 'You must to fill at less mood.',
+                                title: 'Error!',
+                                text: 'Please select mood',
                                 onConfirmBtnTap: () {
                                   Navigator.pop(context);
                                   Navigator.pop(context);

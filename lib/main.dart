@@ -15,7 +15,7 @@ void main() {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(MaterialApp(
     theme: new ThemeData(
-        scaffoldBackgroundColor: const Color(0xFFEFEFEF), fontFamily: 'readex'),
+    scaffoldBackgroundColor: Colors.white, fontFamily: 'readex'),
     initialRoute: LoaddingPage.id,
     debugShowCheckedModeBanner: false,
     routes: {

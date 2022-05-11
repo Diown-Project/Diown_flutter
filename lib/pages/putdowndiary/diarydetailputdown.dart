@@ -6,6 +6,7 @@ import 'package:diown/pages/diary/gallery.dart';
 import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -78,7 +79,7 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
         setState(() {
           diary = result[0];
           likeCount = diary['like'];
-          time = DateFormat('EEE. MMM d / yyyy')
+          time = DateFormat('d MMM yyyy (EEE)')
               .format(DateTime.parse(diary['date']));
           // isFav = diary['favorite'];
         });
@@ -97,13 +98,13 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                         borderRadius: BorderRadius.circular(50),
                         child: Image.asset('images/someone_interesting.png')),
                   ),
-                  title: 'congratulations',
+                  title: 'Congratulations',
                   body: Padding(
                       padding: const EdgeInsets.fromLTRB(15, 0, 10, 10),
                       child: Column(
                         children: const [
                           Text(
-                            'congratulations',
+                            'Congratulations',
                             style: TextStyle(
                               fontSize: 20,
                               height: 1.5,
@@ -112,7 +113,7 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                           ),
                           SizedBox(height: 10),
                           Text(
-                            'Congratulations to unlock this achievement (someone_interest).',
+                            'You have unlock the new achievement (Someone Interest)',
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -121,7 +122,7 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: const Text('Ok')))
+                      child: const Text('OK')))
               .show();
         }
       } else if (like == true &&
@@ -139,13 +140,13 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                         borderRadius: BorderRadius.circular(50),
                         child: Image.asset('images/someone_interesting.png')),
                   ),
-                  title: 'congratulations',
+                  title: 'Congratulations',
                   body: Padding(
                       padding: const EdgeInsets.fromLTRB(15, 0, 10, 10),
                       child: Column(
                         children: const [
                           Text(
-                            'congratulations',
+                            'Congratulations',
                             style: TextStyle(
                               fontSize: 20,
                               height: 1.5,
@@ -154,7 +155,7 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                           ),
                           SizedBox(height: 10),
                           Text(
-                            'Congratulations to unlock this achievement (someone_interest).',
+                            'You have unlock the new achievement (Someone Interest)',
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -163,7 +164,14 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: const Text('Ok')))
+                      child: const Text('OK'),
+                      style: OutlinedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0)),
+                        backgroundColor: Color(0xff8a7efd),
+                        side: BorderSide.none,
+                      ),
+                  ))
               .show();
         }
       } else {}
@@ -184,9 +192,9 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
         centerTitle: true,
         title: diary != null
             ? diary.containsKey('message')
-                ? Text('This diary was deleted.')
+                ? Text('This Diary was Deleted.')
                 : Text('${time}')
-            : Text('wait. . .'),
+            : Text('Please wait. . .'),
         elevation: 0,
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.black,
@@ -228,7 +236,7 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                                                     child: Image.asset(
                                                         'images/first_like.png')),
                                               ),
-                                              title: 'congratulations',
+                                              title: 'Congratulations',
                                               body: Padding(
                                                   padding:
                                                       const EdgeInsets.fromLTRB(
@@ -236,7 +244,7 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                                                   child: Column(
                                                     children: const [
                                                       Text(
-                                                        'congratulations',
+                                                        'Congratulations',
                                                         style: TextStyle(
                                                           fontSize: 20,
                                                           height: 1.5,
@@ -246,7 +254,7 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                                                       ),
                                                       SizedBox(height: 10),
                                                       Text(
-                                                        'Congratulations to unlock this achievement (first_like).',
+                                                        'You have unlock the new achievement (First Like)',
                                                         textAlign:
                                                             TextAlign.center,
                                                       ),
@@ -256,7 +264,14 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                                                   onPressed: () {
                                                     Navigator.pop(context);
                                                   },
-                                                  child: const Text('Ok')))
+                                                  child: const Text('OK'),
+                                                  style: OutlinedButton.styleFrom(
+                                                    shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(5.0)),
+                                                    backgroundColor: Color(0xff8a7efd),
+                                                    side: BorderSide.none,
+                                                  ),
+                                              ))
                                           .show();
                                     }
                                     if (value) {
@@ -308,7 +323,7 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                                                       child: Image.asset(
                                                           'images/first_like.png')),
                                                 ),
-                                                title: 'congratulations',
+                                                title: 'Congratulations',
                                                 body: Padding(
                                                     padding: const EdgeInsets
                                                             .fromLTRB(
@@ -316,7 +331,7 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                                                     child: Column(
                                                       children: const [
                                                         Text(
-                                                          'congratulations',
+                                                          'Congratulations',
                                                           style: TextStyle(
                                                             fontSize: 20,
                                                             height: 1.5,
@@ -326,7 +341,7 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                                                         ),
                                                         SizedBox(height: 10),
                                                         Text(
-                                                          'Congratulations to unlock this achievement (first_like).',
+                                                          'You have unlock the new achievement (First Like)',
                                                           textAlign:
                                                               TextAlign.center,
                                                         ),
@@ -336,7 +351,20 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                                                     onPressed: () {
                                                       Navigator.pop(context);
                                                     },
-                                                    child: const Text('Ok')))
+                                                    child: const Text(
+                                                      'OK',
+                                                      style: TextStyle(
+                                                        color: Colors.white
+                                                      ),
+                                                    ),
+                                                    style: OutlinedButton.styleFrom(
+                                                      shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(5.0)),
+                                                      backgroundColor: Color(0xff8a7efd),
+                                                      side: BorderSide.none,
+                                                    ),
+                                                )
+                                                )
                                             .show();
                                       }
                                       if (value) {
@@ -416,6 +444,11 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                       : Container()
               : Container()
         ],
+        leading: IconButton(
+                icon: const Icon(Icons.arrow_back_ios_new_rounded,
+                    color: Colors.black),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -458,7 +491,7 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                   )
                 : Container(),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 5, 0, 2),
+              padding: const EdgeInsets.fromLTRB(20, 5, 20, 2),
               child: Row(
                 children: [
                   Flexible(
@@ -492,27 +525,28 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                 ? diary.containsKey('message')
                     ? Container()
                     : Padding(
-                        padding: const EdgeInsets.fromLTRB(23, 0, 8, 1),
+                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                         child: Row(
                           children: [
-                            Icon(
-                              Icons.pin_drop_rounded,
-                              color: Colors.blue,
-                              size: 14,
+                            const Icon(
+                              MdiIcons.mapMarker,
+                              color: Colors.black,
+                              size: 20,
                             ),
+                            SizedBox(width: 5),
                             Text(diary['marker_detail'][0]['marker_id'],
                                 style: const TextStyle(
-                                    fontSize: 14, color: Colors.blue)),
+                                    fontSize: 14, color: Colors.black)),
                           ],
                         ),
                       )
                 : Container(),
             SizedBox(
-              height: 10,
+              height: 20,
             ),
             diary != null && diary['topic'] != null
                 ? Padding(
-                    padding: const EdgeInsets.fromLTRB(23, 0, 8, 5),
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
                     child: Container(
                       alignment: Alignment.topLeft,
                       child: Text('${diary['topic']}',
@@ -523,7 +557,7 @@ class _DiaryDetailPutdownState extends State<DiaryDetailPutdown> {
                 : Container(),
             diary != null && diary['detail'] != null
                 ? Padding(
-                    padding: const EdgeInsets.fromLTRB(23, 0, 8, 5),
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
                     child: Container(
                       alignment: Alignment.centerLeft,
                       child: Text(

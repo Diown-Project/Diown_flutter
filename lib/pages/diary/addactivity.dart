@@ -432,7 +432,7 @@ class _AddActivityState extends State<AddActivity> {
                                   },
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'You must to fill this field.';
+                                      return 'This field is required';
                                     }
                                     return null;
                                   },

@@ -26,6 +26,7 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.black,
@@ -276,14 +277,14 @@ class _SettingPageState extends State<SettingPage> {
                                               child: Image.asset(
                                                   'images/Make_A_Secret.png')),
                                         ),
-                                        title: 'congratulations',
+                                        title: 'Congratulations',
                                         body: Padding(
                                             padding: const EdgeInsets.fromLTRB(
                                                 15, 0, 10, 10),
                                             child: Column(
                                               children: const [
                                                 Text(
-                                                  'congratulations',
+                                                  'Congratulations',
                                                   style: TextStyle(
                                                     fontSize: 20,
                                                     height: 1.5,
@@ -292,7 +293,7 @@ class _SettingPageState extends State<SettingPage> {
                                                 ),
                                                 SizedBox(height: 10),
                                                 Text(
-                                                  'Congratulations to unlock this achievement (Make a secret).',
+                                                  'You have unlock the new achievement (Make a Secret)',
                                                   textAlign: TextAlign.center,
                                                 ),
                                               ],
@@ -303,7 +304,14 @@ class _SettingPageState extends State<SettingPage> {
                                               Navigator.popAndPushNamed(
                                                   context, Home.id);
                                             },
-                                            child: Text('ok')))
+                                            child: Text('OK'),
+                                            style: OutlinedButton.styleFrom(
+                                              shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(5.0)),
+                                              backgroundColor: Color(0xff8a7efd),
+                                              side: BorderSide.none,
+                                            ),
+                                            ))
                                     .show();
                               } else {
                                 Navigator.popAndPushNamed(context, Home.id);

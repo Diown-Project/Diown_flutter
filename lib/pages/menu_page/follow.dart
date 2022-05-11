@@ -37,6 +37,7 @@ class _FollowPageState extends State<FollowPage> {
       extendBodyBehindAppBar: follower != null
         ? follower.length == 0 ? true : false 
         : false,
+      backgroundColor: Color(0xffeff2f5),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -55,47 +56,62 @@ class _FollowPageState extends State<FollowPage> {
               child: Column(
                 children: follower
                     .map<Widget>(
-                      (e) => ListTile(
-                        onTap: () {
-                          Navigator.push(
-                                  context,
-                                  PageTransition(
-                                      child: VisitorProfile(
-                                        user_id: e['user_detail'][0]['_id'],
-                                      ),
-                                      type: PageTransitionType.rightToLeft))
-                              .then((_) async {
-                            await moveResultToFollower();
-                            setState(() {});
-                          });
-                        },
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          backgroundImage: NetworkImage(
-                              'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                        ),
-                        title: Text(
-                          e['user_detail'][0]['username'],
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        subtitle: const Text('One of your follower.'),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            TextButton(
-                                onPressed: () async {
-                                  var c = await deleteFollower(
-                                      e['user_detail'][0]['_id']);
-                                  follower.removeWhere((element) =>
-                                      element['user_detail'][0]['_id'] ==
-                                      e['user_detail'][0]['_id']);
-                                  setState(() {});
-                                },
-                                child: const Text(
-                                  'remove',
-                                  style: TextStyle(color: Colors.red),
-                                ))
-                          ],
+                      (e) => Container(
+                        margin: EdgeInsets.fromLTRB(5, 15, 5, 0),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(5))),
+                        child: ListTile(
+                          onTap: () {
+                            Navigator.push(
+                                    context,
+                                    PageTransition(
+                                        child: VisitorProfile(
+                                          user_id: e['user_detail'][0]['_id'],
+                                        ),
+                                        type: PageTransitionType.rightToLeft))
+                                .then((_) async {
+                              await moveResultToFollower();
+                              setState(() {});
+                            });
+                          },
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            backgroundImage: NetworkImage(
+                                'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
+                          ),
+                          title: Text(
+                            e['user_detail'][0]['username'],
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          // subtitle: const Text('One of your follower.'),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              OutlinedButton(
+                                  onPressed: () async {
+                                    var c = await deleteFollower(
+                                        e['user_detail'][0]['_id']);
+                                    follower.removeWhere((element) =>
+                                        element['user_detail'][0]['_id'] ==
+                                        e['user_detail'][0]['_id']);
+                                    setState(() {});
+                                  },
+                                  child: const Text(
+                                    'Remove',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                  style: OutlinedButton.styleFrom(
+                                    minimumSize: Size(60, 35),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5.0),
+                                    ),
+                                    side: BorderSide(width: 1.0, color: Colors.black)
+                                  ) 
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     )

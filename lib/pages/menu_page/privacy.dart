@@ -14,6 +14,11 @@ class PrivacypolicyWidget extends StatelessWidget {
         foregroundColor: Colors.black,
         centerTitle: true,
         title: const Text('Privacy policy'),
+        leading: IconButton(
+          icon:
+              const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body: SingleChildScrollView(
           child: Padding(

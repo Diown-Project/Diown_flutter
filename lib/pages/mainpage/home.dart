@@ -164,7 +164,7 @@ class _HomeState extends State<Home> {
                 border: Border(
                     top: BorderSide(color: Color(0xfff5f5f5), width: 3))),
             child: AnimatedBottomNavigationBar.builder(
-              backgroundColor: const Color.fromRGBO(255, 248, 248, 1),
+              backgroundColor: Colors.white,
               elevation: 0,
               height: 60,
               itemCount: iconList.length,

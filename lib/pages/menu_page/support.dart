@@ -13,20 +13,15 @@ class _SupportPageState extends State<SupportPage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      
       child: Scaffold(
+        backgroundColor: Color(0xffeff2f5),
         appBar: AppBar(
           elevation: 0,
-          title: const Text('Help center',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Color.fromRGBO(0, 0, 0, 1),
-                  fontFamily: 'Readex Pro',
-                  fontSize: 24,
-                  letterSpacing:
-                      0 /*percentages not used in flutter. defaulting to zero*/,
-                  fontWeight: FontWeight.normal,
-                  height: 0.6666666666666666)),
+          title: const Text('Help Center',
+            style: TextStyle(
+              color: Colors.black
+            ),  
+          ),
           centerTitle: true,
           backgroundColor: Colors.white,
           leading: IconButton(

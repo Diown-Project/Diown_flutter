@@ -58,8 +58,9 @@ class _FavPageState extends State<FavPage> {
     return GestureDetector(
       onTap: FocusScope.of(context).unfocus,
       child: Scaffold(
+        backgroundColor: Color(0xffeff2f5),
           appBar: AppBar(
-            title: const Text('favorite diary'),
+            title: const Text('Favorite Diary'),
             centerTitle: true,
             elevation: 0,
             backgroundColor: Colors.transparent,
@@ -76,142 +77,140 @@ class _FavPageState extends State<FavPage> {
             controller: _refreshController,
             child: Padding(
               padding: const EdgeInsets.all(10.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    CupertinoSearchTextField(
-                      placeholder: 'Search by date, topic',
-                      onChanged: (value) async {
-                        listDiary = await favSearch(value);
-                        setState(() {});
-                      },
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          Container(
-                              
-                              child: const Text(
-                                'Sort by Date.',
-                                style: TextStyle(fontSize: 18),
-                              )),
-                          const Spacer(),
-                          IconButton(
-                            padding: EdgeInsets.zero,
-                            constraints: BoxConstraints(),
-                              onPressed: listDiary != null
-                                  ? () {
-                                      if (listDiary == null &&
-                                          listDiary.length == 0 &&
-                                          listDiary.length == 1) {
-                                      } else if (justSort == false) {
-                                        setState(() {
-                                          listDiary.sort((a, b) {
-                                            return a['date']!
-                                                .compareTo(b['date']!) as int;
-                                          });
-                                          justSort = true;
+              child: Column(
+                children: [
+                  CupertinoSearchTextField(
+                    placeholder: 'Search by date, topic',
+                    onChanged: (value) async {
+                      listDiary = await favSearch(value);
+                      setState(() {});
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Container(
+                            
+                            child: const Text(
+                              'Sort by Date.',
+                              style: TextStyle(fontSize: 18),
+                            )),
+                        const Spacer(),
+                        IconButton(
+                          padding: EdgeInsets.zero,
+                          constraints: BoxConstraints(),
+                            onPressed: listDiary != null
+                                ? () {
+                                    if (listDiary == null &&
+                                        listDiary.length == 0 &&
+                                        listDiary.length == 1) {
+                                    } else if (justSort == false) {
+                                      setState(() {
+                                        listDiary.sort((a, b) {
+                                          return a['date']!
+                                              .compareTo(b['date']!) as int;
                                         });
-                                      } else {
-                                        setState(() {
-                                          listDiary.sort((b, a) {
-                                            return a['date']!
-                                                .compareTo(b['date']!) as int;
-                                          });
-                                          justSort = false;
+                                        justSort = true;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        listDiary.sort((b, a) {
+                                          return a['date']!
+                                              .compareTo(b['date']!) as int;
                                         });
-                                      }
+                                        justSort = false;
+                                      });
                                     }
-                                  : () {},
-                              icon: const Icon(Icons.sort)),
-                        ],
-                      ),
+                                  }
+                                : () {},
+                            icon: const Icon(Icons.sort)),
+                      ],
                     ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Column(
-                      children: listDiary != null
-                          ? listDiary.length != 0
-                              ? listDiary.map<Widget>((e) {
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: ListTile(
-                                      leading: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            '${e['mood_emoji']}',
-                                            style: TextStyle(fontSize: 24),
-                                          ),
-                                        ],
-                                      ),
-                                      title: e['topic'] == null
-                                          ? Text('${e['mood_detail']}',
-                                              style: TextStyle(fontSize: 16))
-                                          : RichText(
-                                              overflow: TextOverflow.ellipsis,
-                                              text: TextSpan(
-                                                  text: '${e['topic']}',
-                                                  style: const TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 16)),
-                                            ),
-                                      subtitle: e['activity'] == null
-                                          ? null
-                                          : Text('${e['activity']}'),
-                                      trailing: Text(
-                                          '${e['date'].toString().substring(0, 10)}'),
-                                      tileColor: Color(0xfff1f3f4),
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15)),
-                                      onTap: () {
-                                        Navigator.push(
-                                                context,
-                                                PageTransition(
-                                                    child: DiaryDetail(
-                                                        id: e['_id']),
-                                                    type: PageTransitionType
-                                                        .rightToLeft))
-                                            .then((_) async {
-                                          await useFuncFindAllFav();
-                                          setState(() {});
-                                        });
-                                      },
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Column(
+                    children: listDiary != null
+                        ? listDiary.length != 0
+                            ? listDiary.map<Widget>((e) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ListTile(
+                                    leading: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          '${e['mood_emoji']}',
+                                          style: TextStyle(fontSize: 24),
+                                        ),
+                                      ],
                                     ),
-                                  );
-                                }).toList()
-                              : [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    // crossAxisAlignment:CrossAxisAlignment.center,
-                                    children: [
-                                      const SizedBox(height: 20),
-                                      Icon(
-                                        MdiIcons.bookOff,
-                                        size: 100,
-                                        color: Colors.grey[300],
-                                      ),
-                                      const SizedBox(height: 20),
-                                      const Text(
-                                        'Dont have favorite diary',
-                                        style: TextStyle(
-                                            fontSize: 20, color: Colors.grey),
-                                      )
-                                    ],
-                                  )
-                                ]
-                          : [
-                              const Center(
-                                child: CircularProgressIndicator(),
-                              )
-                            ],
-                    )
-                  ],
-                ),
+                                    title: e['topic'] == null
+                                        ? Text('${e['mood_detail']}',
+                                            style: TextStyle(fontSize: 16))
+                                        : RichText(
+                                            overflow: TextOverflow.ellipsis,
+                                            text: TextSpan(
+                                                text: '${e['topic']}',
+                                                style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 16)),
+                                          ),
+                                    subtitle: e['activity'] == null
+                                        ? null
+                                        : Text('${e['activity']}'),
+                                    trailing: Text(
+                                        '${e['date'].toString().substring(0, 10)}'),
+                                    tileColor: Color(0xfff1f3f4),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
+                                    onTap: () {
+                                      Navigator.push(
+                                              context,
+                                              PageTransition(
+                                                  child: DiaryDetail(
+                                                      id: e['_id']),
+                                                  type: PageTransitionType
+                                                      .rightToLeft))
+                                          .then((_) async {
+                                        await useFuncFindAllFav();
+                                        setState(() {});
+                                      });
+                                    },
+                                  ),
+                                );
+                              }).toList()
+                            : [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  // crossAxisAlignment:CrossAxisAlignment.center,
+                                  children: [
+                                    const SizedBox(height: 20),
+                                    Icon(
+                                      MdiIcons.bookOff,
+                                      size: 100,
+                                      color: Colors.grey[300],
+                                    ),
+                                    const SizedBox(height: 20),
+                                    const Text(
+                                      'Dont have favorite diary',
+                                      style: TextStyle(
+                                          fontSize: 20, color: Colors.grey),
+                                    )
+                                  ],
+                                )
+                              ]
+                        : [
+                            const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          ],
+                  )
+                ],
               ),
             ),
           )),

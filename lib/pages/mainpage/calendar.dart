@@ -133,6 +133,7 @@ class _CalendarPageState extends State<CalendarPage> {
         padding: const EdgeInsets.all(0.0),
         child: SafeArea(
           child: Scaffold(
+            backgroundColor: Color(0xffeff2f5),
               appBar: AppBar(
                 title: const Text(
                   'Calendar',
@@ -326,59 +327,65 @@ class _CalendarPageState extends State<CalendarPage> {
                                       Container(
                                         margin:
                                             EdgeInsets.fromLTRB(8, 0, 8, 10),
-                                        child: ListTile(
-                                          leading: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                '${diary2[i]['mood_emoji']}',
-                                                style: TextStyle(fontSize: 24),
-                                              ),
-                                            ],
-                                          ),
-                                          title: diary2[i]['topic'] == null
-                                              ? Text(
-                                                  '${diary2[i]['mood_detail']}',
-                                                  style:
-                                                      TextStyle(fontSize: 16))
-                                              : RichText(
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  text: TextSpan(
-                                                      text:
-                                                          '${diary2[i]['topic']}',
-                                                      style: const TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 16)),
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.all(Radius.circular(5))),
+                                          child: ListTile(
+                                            leading: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  '${diary2[i]['mood_emoji']}',
+                                                  style: TextStyle(fontSize: 24),
                                                 ),
-                                          subtitle: diary2[i]['activity'] ==
-                                                  null
-                                              ? null
-                                              : Text(
-                                                  '${diary2[i]['activity']}'),
-                                          // trailing: Text(
-                                          //     '${diary2[i]['date'].toString().substring(0, 10)}'),
-                                          tileColor: Color(0xfff1f3f4),
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          onTap: () async {
-                                            Navigator.push(
-                                                    context,
-                                                    PageTransition(
-                                                        child: DiaryDetail(
-                                                            id: diary2[i]
-                                                                ['_id']),
-                                                        type: PageTransitionType
-                                                            .rightToLeft))
-                                                .then((_) async {
-                                              await waitForFind();
-                                              _onDaySelected(
-                                                  selectedDay2!, focusDay2!);
-                                              setState(() {});
-                                            });
-                                          },
+                                              ],
+                                            ),
+                                            title: diary2[i]['topic'] == null
+                                                ? Text(
+                                                    '${diary2[i]['mood_detail']}',
+                                                    style:
+                                                        TextStyle(fontSize: 16))
+                                                : RichText(
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    text: TextSpan(
+                                                        text:
+                                                            '${diary2[i]['topic']}',
+                                                        style: const TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 16)),
+                                                  ),
+                                            subtitle: diary2[i]['activity'] ==
+                                                    null
+                                                ? null
+                                                : Text(
+                                                    '${diary2[i]['activity']}'),
+                                            // trailing: Text(
+                                            //     '${diary2[i]['date'].toString().substring(0, 10)}'),
+                                            tileColor: Color(0xfff1f3f4),
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            onTap: () async {
+                                              Navigator.push(
+                                                      context,
+                                                      PageTransition(
+                                                          child: DiaryDetail(
+                                                              id: diary2[i]
+                                                                  ['_id']),
+                                                          type: PageTransitionType
+                                                              .rightToLeft))
+                                                  .then((_) async {
+                                                await waitForFind();
+                                                _onDaySelected(
+                                                    selectedDay2!, focusDay2!);
+                                                setState(() {});
+                                              });
+                                            },
+                                          ),
                                         ),
                                       ),
                                     const SizedBox(

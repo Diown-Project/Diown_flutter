@@ -40,14 +40,13 @@ class _EventPageState extends State<EventPage> {
           appBar: AppBar(
             elevation: 0.0,
             title: const Text('Event',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Color.fromARGB(255, 0, 0, 0),
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold)),
-            backgroundColor: Colors.white,
+            style: TextStyle(
+              color: Colors.black
+            )
+            ),
+            backgroundColor: Colors.transparent,
             centerTitle: true,
-              leading: IconButton(
+            leading: IconButton(
               icon: const Icon(Icons.arrow_back_ios_new_rounded,
                   color: Colors.black),
               onPressed: () => Navigator.of(context).pop(),
@@ -56,35 +55,37 @@ class _EventPageState extends State<EventPage> {
           body: SingleChildScrollView(
             child: Column(
               children: [
-                Container(
+                Container(       
                   alignment: Alignment.topRight,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                      value: dropdownInit,
-                      onChanged: (String? newval) {
-                        setState(() {
-                          dropdownInit = newval!;
-                        });
-                      },
-                      items: <String>[
-                        'ongoing',
-                        'complete',
-                        'upcoming',
-                      ].map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          onTap: () {
-                            findEventToVar(value);
-                          },
-                          child: Text(
-                            value,
-                            style: TextStyle(color: Color(0xff6559ff)),
-                          ),
-                        );
-                      }).toList(),
-                    )),
+                    child: Container(
+                      child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                        value: dropdownInit,
+                        onChanged: (String? newval) {
+                          setState(() {
+                            dropdownInit = newval!;
+                          });
+                        },
+                        items: <String>[
+                          'ongoing',
+                          'complete',
+                          'upcoming',
+                        ].map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            onTap: () {
+                              findEventToVar(value);
+                            },
+                            child: Text(
+                              value,
+                              style: TextStyle(color: Color(0xff6559ff)),
+                            ),
+                          );
+                        }).toList(),
+                      )),
+                    ),
                   ),
                 ),
                 Column(

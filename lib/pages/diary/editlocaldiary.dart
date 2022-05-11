@@ -227,7 +227,7 @@ class _EditLocalDiaryState extends State<EditLocalDiary> {
             onTap: FocusScope.of(context).unfocus,
             child: Scaffold(
               appBar: AppBar(
-                title: const Text('edit diary'),
+                title: const Text('Edit Diary'),
                 centerTitle: true,
                 backgroundColor: Colors.transparent,
                 foregroundColor: Colors.black,
