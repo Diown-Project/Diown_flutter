@@ -14,7 +14,8 @@ void main() {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(MaterialApp(
-    theme: ThemeData(fontFamily: 'readex'),
+    theme: new ThemeData(
+        scaffoldBackgroundColor: const Color(0xFFEFEFEF), fontFamily: 'readex'),
     initialRoute: LoaddingPage.id,
     debugShowCheckedModeBanner: false,
     routes: {

@@ -26,6 +26,10 @@ class _EditActState extends State<EditAct> {
     var token = prefs.getString('token');
     activity = await findOnlyYouAct(token);
     base_activity = activity;
+    if (activity == null) {
+      activity = [];
+    }
+    print(activity);
     if (mounted) {
       setState(() {});
     }
@@ -50,8 +54,8 @@ class _EditActState extends State<EditAct> {
             backgroundColor: Colors.transparent,
             foregroundColor: Colors.black,
             leading: IconButton(
-              icon:
-                  const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black),
+              icon: const Icon(Icons.arrow_back_ios_new_rounded,
+                  color: Colors.black),
               onPressed: () => Navigator.of(context).pop(),
             ),
             actions: [
@@ -74,8 +78,8 @@ class _EditActState extends State<EditAct> {
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0),
-                              side: const BorderSide(
-                                  color: Color(0xff8a7efd))))),
+                              side:
+                                  const BorderSide(color: Color(0xff8a7efd))))),
                 ),
               )
             ],
@@ -164,55 +168,58 @@ class _EditActState extends State<EditAct> {
                                       ))
                                   .toList()
                               : [
-                                   Center(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        // crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          const SizedBox(height: 20),
-                                          Icon(
-                                            MdiIcons.humanEdit,
-                                            size: 100,
-                                            color: Colors.grey[300],
-                                          ),
-                                          const SizedBox(height: 20),
-                                          const Text(
-                                            'You don\'t have any custom activity.',
-                                            style: TextStyle(fontSize: 20, color: Colors.grey),
-                                            textAlign: TextAlign.center,
-                                          )
-                                        ],
-                                      ),
-                                    )
+                                  Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      // crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        const SizedBox(height: 20),
+                                        Icon(
+                                          MdiIcons.humanEdit,
+                                          size: 100,
+                                          color: Colors.grey[300],
+                                        ),
+                                        const SizedBox(height: 20),
+                                        const Text(
+                                          'You don\'t have any custom activity.',
+                                          style: TextStyle(
+                                              fontSize: 20, color: Colors.grey),
+                                          textAlign: TextAlign.center,
+                                        )
+                                      ],
+                                    ),
+                                  )
                                 ]
                           : [
                               Center(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        // crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          const SizedBox(height: 20),
-                                          Icon(
-                                            MdiIcons.humanEdit,
-                                            size: 100,
-                                            color: Colors.grey[300],
-                                          ),
-                                          const SizedBox(height: 20),
-                                          const Text(
-                                            'You don\'t have any custom activity.',
-                                            style: TextStyle(fontSize: 20, color: Colors.grey),
-                                            textAlign: TextAlign.center,
-                                          )
-                                        ],
-                                      ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  // crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const SizedBox(height: 20),
+                                    Icon(
+                                      MdiIcons.humanEdit,
+                                      size: 100,
+                                      color: Colors.grey[300],
+                                    ),
+                                    const SizedBox(height: 20),
+                                    const Text(
+                                      'You don\'t have any custom activity.',
+                                      style: TextStyle(
+                                          fontSize: 20, color: Colors.grey),
+                                      textAlign: TextAlign.center,
                                     )
+                                  ],
+                                ),
+                              )
                             ]
                       : [
                           Padding(
                             padding: const EdgeInsets.fromLTRB(0, 200, 0, 0),
                             child: Center(
-                                child: CircularProgressIndicator(),
-                              ),
+                              child: CircularProgressIndicator(),
+                            ),
                           )
                         ],
                 ),

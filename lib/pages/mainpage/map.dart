@@ -134,7 +134,9 @@ class _MapPageState extends State<MapPage> {
     } else {
       generalPutdown = putdownDiary[0].sublist(0, 2);
     }
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   Future<Uint8List> getMarker() async {
@@ -563,7 +565,7 @@ class _MapPageState extends State<MapPage> {
                                                                                 CrossAxisAlignment.start,
                                                                             children: [
                                                                               Text('Distance ∙ ${dis.toStringAsFixed(3)} km.'),
-                                                                              Text('Putdown ∙ '),
+                                                                              Text('Putdown ∙ ${dis.toStringAsFixed(3)}'),
                                                                               const SizedBox(height: 10),
                                                                               GestureDetector(
                                                                                 onTap: () {
