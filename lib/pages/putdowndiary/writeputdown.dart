@@ -162,193 +162,188 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
           centerTitle: true,
           title: const Text('New Diary'),
           leading: IconButton(
-            icon:
-                const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black),
+            icon: const Icon(Icons.arrow_back_ios_new_rounded,
+                color: Colors.black),
             onPressed: () => Navigator.of(context).pop(),
           ),
           actions: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 12, 7, 12),
-              child: OutlinedButton(
-                      onPressed: () async {
-                        CoolAlert.show(
-                            barrierDismissible: false,
-                            context: context,
-                            type: CoolAlertType.confirm,
-                            title: 'Please confirm',
-                            text: 'If you want to save this diary.',
-                            onConfirmBtnTap: () async {
+                padding: const EdgeInsets.fromLTRB(0, 12, 7, 12),
+                child: OutlinedButton(
+                    onPressed: () async {
+                      CoolAlert.show(
+                          barrierDismissible: false,
+                          context: context,
+                          type: CoolAlertType.confirm,
+                          title: 'Please confirm',
+                          text: 'If you want to save this diary.',
+                          onConfirmBtnTap: () async {
+                            CoolAlert.show(
+                                context: context,
+                                barrierDismissible: false,
+                                type: CoolAlertType.loading);
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            var token = prefs.getString('token');
+                            if (_imageByteList != null &&
+                                _imageNameList != null &&
+                                resultMood != null &&
+                                _imageByteList!.isNotEmpty &&
+                                _imageNameList!.isNotEmpty) {
+                              await _saveImage();
+                              var mood_emoji = resultMood!.substring(0, 2);
+                              var mood_detail = resultMood!.substring(3);
+                              await saveDiary(
+                                  token,
+                                  mood_emoji,
+                                  mood_detail,
+                                  resultAct,
+                                  _imageNameList,
+                                  topic,
+                                  write_detail,
+                                  widget.pin,
+                                  selectedValue,
+                                  widget.deal);
+                              var check = await checkAchievement(1);
+                              if (check['message'] == 'success') {
+                                AwesomeDialog(
+                                        context: context,
+                                        dismissOnTouchOutside: false,
+                                        dialogType: DialogType.SUCCES,
+                                        customHeader: Container(
+                                          height: 100,
+                                          child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(50),
+                                              child: Image.asset(
+                                                  'images/Place_Memory.png')),
+                                        ),
+                                        title: 'congratulations',
+                                        body: Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                15, 0, 10, 10),
+                                            child: Column(
+                                              children: const [
+                                                Text(
+                                                  'congratulations',
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    height: 1.5,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 10),
+                                                Text(
+                                                  'Congratulations to unlock this achievement (Place Memory).',
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ],
+                                            )),
+                                        btnOk: ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text('ok')))
+                                    .show();
+                              } else {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              }
+                            } else if (resultMood != null) {
+                              var mood_emoji = resultMood!.substring(0, 2);
+                              var mood_detail = resultMood!.substring(3);
+                              await saveDiary(
+                                  token,
+                                  mood_emoji,
+                                  mood_detail,
+                                  resultAct,
+                                  _imageNameList,
+                                  topic,
+                                  write_detail,
+                                  widget.pin,
+                                  selectedValue,
+                                  widget.deal);
+                              var check = await checkAchievement(1);
+                              if (check['message'] == 'success') {
+                                AwesomeDialog(
+                                        context: context,
+                                        dismissOnTouchOutside: false,
+                                        dialogType: DialogType.SUCCES,
+                                        customHeader: Container(
+                                          height: 100,
+                                          child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(50),
+                                              child: Image.asset(
+                                                  'images/Place_Memory.png')),
+                                        ),
+                                        title: 'congratulations',
+                                        body: Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                15, 0, 10, 10),
+                                            child: Column(
+                                              children: const [
+                                                Text(
+                                                  'congratulations',
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    height: 1.5,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 10),
+                                                Text(
+                                                  'Congratulations to unlock this achievement (Place Memory).',
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ],
+                                            )),
+                                        btnOk: ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text('ok')))
+                                    .show();
+                              } else {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              }
+                            } else {
                               CoolAlert.show(
                                   context: context,
+                                  type: CoolAlertType.error,
                                   barrierDismissible: false,
-                                  type: CoolAlertType.loading);
-                              SharedPreferences prefs =
-                                  await SharedPreferences.getInstance();
-                              var token = prefs.getString('token');
-                              if (_imageByteList != null &&
-                                  _imageNameList != null &&
-                                  resultMood != null &&
-                                  _imageByteList!.isNotEmpty &&
-                                  _imageNameList!.isNotEmpty) {
-                                await _saveImage();
-                                var mood_emoji = resultMood!.substring(0, 2);
-                                var mood_detail = resultMood!.substring(3);
-                                await saveDiary(
-                                    token,
-                                    mood_emoji,
-                                    mood_detail,
-                                    resultAct,
-                                    _imageNameList,
-                                    topic,
-                                    write_detail,
-                                    widget.pin,
-                                    selectedValue,
-                                    widget.deal);
-                                var check = await checkAchievement(1);
-                                if (check['message'] == 'success') {
-                                  AwesomeDialog(
-                                          context: context,
-                                          dismissOnTouchOutside: false,
-                                          dialogType: DialogType.SUCCES,
-                                          customHeader: Container(
-                                            height: 100,
-                                            child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                child: Image.asset(
-                                                    'images/Place_Memory.png')),
-                                          ),
-                                          title: 'congratulations',
-                                          body: Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      15, 0, 10, 10),
-                                              child: Column(
-                                                children: const [
-                                                  Text(
-                                                    'congratulations',
-                                                    style: TextStyle(
-                                                      fontSize: 20,
-                                                      height: 1.5,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 10),
-                                                  Text(
-                                                    'Congratulations to unlock this achievement (Place Memory).',
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ],
-                                              )),
-                                          btnOk: ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Text('ok')))
-                                      .show();
-                                } else {
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                }
-                              } else if (resultMood != null) {
-                                var mood_emoji = resultMood!.substring(0, 2);
-                                var mood_detail = resultMood!.substring(3);
-                                await saveDiary(
-                                    token,
-                                    mood_emoji,
-                                    mood_detail,
-                                    resultAct,
-                                    _imageNameList,
-                                    topic,
-                                    write_detail,
-                                    widget.pin,
-                                    selectedValue,
-                                    widget.deal);
-                                var check = await checkAchievement(1);
-                                if (check['message'] == 'success') {
-                                  AwesomeDialog(
-                                          context: context,
-                                          dismissOnTouchOutside: false,
-                                          dialogType: DialogType.SUCCES,
-                                          customHeader: Container(
-                                            height: 100,
-                                            child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                child: Image.asset(
-                                                    'images/Place_Memory.png')),
-                                          ),
-                                          title: 'congratulations',
-                                          body: Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      15, 0, 10, 10),
-                                              child: Column(
-                                                children: const [
-                                                  Text(
-                                                    'congratulations',
-                                                    style: TextStyle(
-                                                      fontSize: 20,
-                                                      height: 1.5,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 10),
-                                                  Text(
-                                                    'Congratulations to unlock this achievement (Place Memory).',
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ],
-                                              )),
-                                          btnOk: ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Text('ok')))
-                                      .show();
-                                } else {
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                }
-                              } else {
-                                CoolAlert.show(
-                                    context: context,
-                                    type: CoolAlertType.error,
-                                    barrierDismissible: false,
-                                    title: 'error Alert!',
-                                    text: 'You must to fill at less mood.',
-                                    onConfirmBtnTap: () {
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                    });
-                              }
-                            });
-                      },
-                      child: const Text('save',
-                          style: TextStyle(color: Colors.white)),
-                      style: OutlinedButton.styleFrom(
-                        minimumSize: Size(65, 30),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0)),
-                        backgroundColor: Color(0xff8a7efd),
-                        side: BorderSide.none,
-                      ))
-            )
+                                  title: 'error Alert!',
+                                  text: 'You must to fill at less mood.',
+                                  onConfirmBtnTap: () {
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  });
+                            }
+                          });
+                    },
+                    child: const Text('save',
+                        style: TextStyle(color: Colors.white)),
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: Size(65, 30),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0)),
+                      backgroundColor: Color(0xff8a7efd),
+                      side: BorderSide.none,
+                    )))
           ],
         ),
         body: Container(
@@ -368,7 +363,6 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                                   style: const TextStyle(
                                       fontSize: 15, color: Color(0xffafacac)))),
                           const Spacer(),
-                          
                         ],
                       ),
                       const SizedBox(
@@ -449,7 +443,8 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                                         builder: SwiperPagination.dots),
                                     layout: SwiperLayout.DEFAULT,
                                     itemCount: _imageByteList!.length,
-                                    itemBuilder: (BuildContext context, int index) {
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
                                       return Stack(children: [
                                         Center(
                                             child: Image.memory(
@@ -461,8 +456,10 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                                           child: IconButton(
                                               onPressed: () {
                                                 setState(() {
-                                                  _imageByteList?.removeAt(index);
-                                                  _imageNameList?.removeAt(index);
+                                                  _imageByteList
+                                                      ?.removeAt(index);
+                                                  _imageNameList
+                                                      ?.removeAt(index);
                                                   numPic = numPic - 1;
                                                 });
                                               },
@@ -496,7 +493,8 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                                   style: OutlinedButton.styleFrom(
                                     backgroundColor: Color(0xfff1f3f4),
                                     shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(50.0)),
+                                        borderRadius:
+                                            BorderRadius.circular(50.0)),
                                     side: BorderSide.none,
                                   ),
                                   onPressed: () {
@@ -508,7 +506,8 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                                   child: resultMood != null
                                       ? Text(
                                           resultMood!,
-                                          style: const TextStyle(color: Colors.black),
+                                          style: const TextStyle(
+                                              color: Colors.black),
                                         )
                                       : const Text('🤔 Select mood')),
                             ),
@@ -523,7 +522,8 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                                 style: OutlinedButton.styleFrom(
                                   backgroundColor: Color(0xfff1f3f4),
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50.0)),
+                                      borderRadius:
+                                          BorderRadius.circular(50.0)),
                                   side: BorderSide.none,
                                 ),
                                 onPressed: () {
@@ -535,7 +535,8 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                                 child: resultAct != null
                                     ? Text(
                                         resultAct!,
-                                        style: const TextStyle(color: Colors.black),
+                                        style: const TextStyle(
+                                            color: Colors.black),
                                       )
                                     : const Text('☕ Select Activity')),
                           ))
@@ -551,8 +552,8 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                               TextFormField(
                                 maxLength: 30,
                                 decoration: const InputDecoration(
-                                  contentPadding:
-                                      EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                                  contentPadding: EdgeInsets.fromLTRB(
+                                      20.0, 10.0, 20.0, 10.0),
                                   filled: true,
                                   fillColor: Color(0xfff1f3f4),
                                   hintText: 'Topic',
@@ -576,8 +577,8 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                                 return SizedBox(
                                   child: TextFormField(
                                     decoration: const InputDecoration(
-                                      contentPadding:
-                                          EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                                      contentPadding: EdgeInsets.fromLTRB(
+                                          20.0, 10.0, 20.0, 10.0),
                                       hintText: 'Tell your story here',
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide.none,
@@ -605,245 +606,55 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
               _buildBottomBar(),
             ],
           ),
-        ),      
+        ),
       ),
     );
   }
 
   _buildBottomBar() {
-    final isKeyboard = MediaQuery.of(context).viewInsets.bottom!= 0;
+    final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
     return Positioned(
       bottom: 0,
       left: 0,
-      child: isKeyboard ?
-        Column(
-          children: [
-            const Divider(
-              thickness: 5,
-              color: Colors.black,
-            ),
-            Container(
-              height: 60,
-              color: Colors.white,
-              width: MediaQuery.of(context).size.width,
-              child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          useRootNavigator: false,
-                          builder: (context) {
-                            return const MoodSelected();
-                          }).whenComplete(() {
-                        setState(() {
-                          if (MoodSelected.resultMood == '') {
-                          } else {
-                            isVisibleMood = true;
-                            resultMood = MoodSelected.resultMood;
-                            MoodSelected.resultMood = '';
-                          }
-                        });
-                      });
-                    },
-                    child: Container(
-                        width: 48,
-                        height: 48,
-                        decoration: const BoxDecoration(
-                            color: Color(0xff8a7efd), shape: BoxShape.circle),
-                        child: const Icon(
-                          MdiIcons.emoticonHappyOutline,
-                          color: Colors.white,
-                          size: 30,
-                        )),
-                  ),
-                  // const SizedBox(width: 50),
-                  GestureDetector(
-                    onTap: () {
-                      showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder: (context) {
-                            return const ActivityPage();
-                          }).whenComplete(() {
-                        setState(() {
-                          if (ActivityPage.resultAct == '') {
-                          } else {
-                            isVisibleActivity = true;
-                            resultAct = ActivityPage.resultAct;
-                            ActivityPage.resultAct = '';
-                          }
-                        });
-                      });
-                    },
-                    child: Container(
-                        width: 48,
-                        height: 48,
-                        decoration: const BoxDecoration(
-                            color: Color(0xff8a7efd), shape: BoxShape.circle),
-                        child: const Icon(
-                          MdiIcons.run,
-                          color: Colors.white,
-                          size: 30,
-                        )),
-                  ),
-                  // const SizedBox(width: 50),
-                  GestureDetector(
-                    onTap: () {
-                      showModalBottomSheet(
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(15),
-                                topRight: Radius.circular(15)),
-                          ),
-                          context: context,
-                          builder: (context) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                  color: Colors.transparent,
-                                  height: 220,
-                                  child: ListView(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(0.0),
-                                        child: ListTile(
-                                            title: const Text(
-                                              'Select to add images.',
-                                              style: TextStyle(fontSize: 20),
-                                            ),
-                                            trailing: IconButton(
-                                              icon: const Icon(
-                                                Icons.close_outlined,
-                                                color: Colors.black,
-                                              ),
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                            )),
-                                      ),
-                                      const Divider(
-                                        thickness: 0.8,
-                                      ),
-                                      ListTile(
-                                        leading: Container(
-                                          height: 40,
-                                          width: 40,
-                                          decoration: const BoxDecoration(
-                                              color: Color(0xff8a7efd),
-                                              shape: BoxShape.circle),
-                                          child: const Icon(
-                                            Icons.photo,
-                                            color: Colors.white,
-                                            size: 22,
-                                          ),
-                                        ),
-                                        title:
-                                            const Text('Pick images in gallery.'),
-                                        trailing: const Icon(
-                                            Icons.navigate_next_rounded),
-                                        onTap: () {
-                                          selectImage();
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                      ListTile(
-                                        leading: Container(
-                                          height: 40,
-                                          width: 40,
-                                          decoration: const BoxDecoration(
-                                              color: Color(0xff8a7efd),
-                                              shape: BoxShape.circle),
-                                          child: const Icon(
-                                            Icons.camera_alt,
-                                            color: Colors.white,
-                                            size: 22,
-                                          ),
-                                        ),
-                                        title: const Text('Take a picture.'),
-                                        trailing: const Icon(
-                                            Icons.navigate_next_rounded),
-                                        onTap: () {
-                                          cameraImage();
-                                          Navigator.pop(context);
-                                        },
-                                      )
-                                    ],
-                                  )),
-                            );
-                          });
-                    },
-                    child: Container(
-                        width: 48,
-                        height: 48,
-                        decoration: const BoxDecoration(
-                            color: Color(0xff8a7efd), shape: BoxShape.circle),
-                        child: const Icon(
-                          MdiIcons.imageOutline,
-                          color: Colors.white,
-                          size: 30,
-                        )),
-                  ),
-                ],
-              ),
-            ),
-            ),
-          ],
-        )
-      : Container(
-        height: 180 ,
-        width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(25), topRight: Radius.circular(25)),
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.grey,
-                  spreadRadius: -7,
-                  blurRadius: 20,
-                  offset: Offset(0, 5)),
-            ]),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(0.0),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                        40.0, 20.0, 0.0, 10.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            useRootNavigator: false,
-                            builder: (context) {
-                              return const MoodSelected();
-                            }).whenComplete(() {
-                          setState(() {
-                            if (MoodSelected.resultMood == '') {
-                            } else {
-                              isVisibleMood = isVisibleMood;
-                              resultMood = MoodSelected.resultMood;
-                              MoodSelected.resultMood = '';
-                            }
-                          });
-                        });
-                      },
-                      child: Row(
-                        children: [
-                          Container(
-                              width: 40,
-                              height: 40,
+      child: isKeyboard
+          ? Column(
+              children: [
+                const Divider(
+                  thickness: 5,
+                  color: Colors.black,
+                ),
+                Container(
+                  height: 60,
+                  color: Colors.white,
+                  width: MediaQuery.of(context).size.width,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                useRootNavigator: false,
+                                builder: (context) {
+                                  return const MoodSelected();
+                                }).whenComplete(() {
+                              setState(() {
+                                if (MoodSelected.resultMood == '') {
+                                } else {
+                                  isVisibleMood = true;
+                                  resultMood = MoodSelected.resultMood;
+                                  MoodSelected.resultMood = '';
+                                }
+                              });
+                            });
+                          },
+                          child: Container(
+                              width: 48,
+                              height: 48,
                               decoration: const BoxDecoration(
                                   color: Color(0xff8a7efd),
                                   shape: BoxShape.circle),
@@ -852,40 +663,30 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                                 color: Colors.white,
                                 size: 30,
                               )),
-                          SizedBox(width: 20),
-                          const Text('feeling',
-                              style: TextStyle(fontSize: 20))
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                        40.0, 0.0, 0.0, 10.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            builder: (context) {
-                              return const ActivityPage();
-                            }).whenComplete(() {
-                          setState(() {
-                            if (ActivityPage.resultAct == '') {
-                            } else {
-                              isVisibleActivity = true;
-                              resultAct = ActivityPage.resultAct;
-                              ActivityPage.resultAct = '';
-                            }
-                          });
-                        });
-                      },
-                      child: Row(
-                        children: [
-                          Container(
-                              width: 40,
-                              height: 40,
+                        ),
+                        // const SizedBox(width: 50),
+                        GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                builder: (context) {
+                                  return const ActivityPage();
+                                }).whenComplete(() {
+                              setState(() {
+                                if (ActivityPage.resultAct == '') {
+                                } else {
+                                  isVisibleActivity = true;
+                                  resultAct = ActivityPage.resultAct;
+                                  ActivityPage.resultAct = '';
+                                }
+                              });
+                            });
+                          },
+                          child: Container(
+                              width: 48,
+                              height: 48,
                               decoration: const BoxDecoration(
                                   color: Color(0xff8a7efd),
                                   shape: BoxShape.circle),
@@ -894,93 +695,99 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                                 color: Colors.white,
                                 size: 30,
                               )),
-                          SizedBox(width: 20),
-                          const Text('activities',
-                              style: TextStyle(fontSize: 20))
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                        40.0, 0.0, 0.0, 0.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet(
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(15),
-                                  topRight: Radius.circular(15)),
-                            ),
-                            context: context,
-                            builder: (context) {
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                    color: Colors.transparent,
-                                    height: 200,
-                                    child: ListView(
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.all(
-                                                  8.0),
-                                          child: ListTile(
-                                              title: const Text(
-                                                'Select to add images.',
-                                                style: TextStyle(
-                                                    fontSize: 20),
+                        ),
+                        // const SizedBox(width: 50),
+                        GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(15),
+                                      topRight: Radius.circular(15)),
+                                ),
+                                context: context,
+                                builder: (context) {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                        color: Colors.transparent,
+                                        height: 220,
+                                        child: ListView(
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(0.0),
+                                              child: ListTile(
+                                                  title: const Text(
+                                                    'Select to add images.',
+                                                    style:
+                                                        TextStyle(fontSize: 20),
+                                                  ),
+                                                  trailing: IconButton(
+                                                    icon: const Icon(
+                                                      Icons.close_outlined,
+                                                      color: Colors.black,
+                                                    ),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                  )),
+                                            ),
+                                            const Divider(
+                                              thickness: 0.8,
+                                            ),
+                                            ListTile(
+                                              leading: Container(
+                                                height: 40,
+                                                width: 40,
+                                                decoration: const BoxDecoration(
+                                                    color: Color(0xff8a7efd),
+                                                    shape: BoxShape.circle),
+                                                child: const Icon(
+                                                  Icons.photo,
+                                                  color: Colors.white,
+                                                  size: 22,
+                                                ),
                                               ),
-                                              trailing: IconButton(
-                                                icon: const Icon(Icons
-                                                    .highlight_remove_rounded),
-                                                onPressed: () {
-                                                  Navigator.pop(
-                                                      context);
-                                                },
-                                              )),
-                                        ),
-                                        const Divider(
-                                          thickness: 0.8,
-                                        ),
-                                        ListTile(
-                                          leading: const Icon(
-                                            Icons.photo,
-                                            color: Color(0xff8a7efd),
-                                          ),
-                                          title: const Text(
-                                              'Pick images in gallery.'),
-                                          trailing: const Icon(Icons
-                                              .navigate_next_rounded),
-                                          onTap: () {
-                                            selectImage();
-                                            Navigator.pop(context);
-                                          },
-                                        ),
-                                        ListTile(
-                                          leading: const Icon(
-                                            Icons.camera_alt,
-                                            color: Color(0xff8a7efd),
-                                          ),
-                                          title: const Text(
-                                              'Take a picture.'),
-                                          trailing: const Icon(Icons
-                                              .navigate_next_rounded),
-                                          onTap: () {
-                                            cameraImage();
-                                            Navigator.pop(context);
-                                          },
-                                        )
-                                      ],
-                                    )),
-                              );
-                            });
-                      },
-                      child: Row(
-                        children: [
-                          Container(
-                              width: 40,
-                              height: 40,
+                                              title: const Text(
+                                                  'Pick images in gallery.'),
+                                              trailing: const Icon(
+                                                  Icons.navigate_next_rounded),
+                                              onTap: () {
+                                                selectImage();
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                            ListTile(
+                                              leading: Container(
+                                                height: 40,
+                                                width: 40,
+                                                decoration: const BoxDecoration(
+                                                    color: Color(0xff8a7efd),
+                                                    shape: BoxShape.circle),
+                                                child: const Icon(
+                                                  Icons.camera_alt,
+                                                  color: Colors.white,
+                                                  size: 22,
+                                                ),
+                                              ),
+                                              title:
+                                                  const Text('Take a picture.'),
+                                              trailing: const Icon(
+                                                  Icons.navigate_next_rounded),
+                                              onTap: () {
+                                                cameraImage();
+                                                Navigator.pop(context);
+                                              },
+                                            )
+                                          ],
+                                        )),
+                                  );
+                                });
+                          },
+                          child: Container(
+                              width: 48,
+                              height: 48,
                               decoration: const BoxDecoration(
                                   color: Color(0xff8a7efd),
                                   shape: BoxShape.circle),
@@ -989,19 +796,218 @@ class _WritePutdownDiaryState extends State<WritePutdownDiary> {
                                 color: Colors.white,
                                 size: 30,
                               )),
-                          SizedBox(width: 20),
-                          const Text('picture',
-                              style: TextStyle(fontSize: 20))
-                        ],
-                      ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            )
+          : Container(
+              height: 180,
+              width: MediaQuery.of(context).size.width,
+              decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(25),
+                      topRight: Radius.circular(25)),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey,
+                        spreadRadius: -7,
+                        blurRadius: 20,
+                        offset: Offset(0, 5)),
+                  ]),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(0.0),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(40.0, 20.0, 0.0, 10.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  useRootNavigator: false,
+                                  builder: (context) {
+                                    return const MoodSelected();
+                                  }).whenComplete(() {
+                                setState(() {
+                                  if (MoodSelected.resultMood == '') {
+                                  } else {
+                                    isVisibleMood = true;
+                                    resultMood = MoodSelected.resultMood;
+                                    MoodSelected.resultMood = '';
+                                  }
+                                });
+                              });
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: const BoxDecoration(
+                                        color: Color(0xff8a7efd),
+                                        shape: BoxShape.circle),
+                                    child: const Icon(
+                                      MdiIcons.emoticonHappyOutline,
+                                      color: Colors.white,
+                                      size: 30,
+                                    )),
+                                SizedBox(width: 20),
+                                const Text('feeling',
+                                    style: TextStyle(fontSize: 20))
+                              ],
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(40.0, 0.0, 0.0, 10.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  builder: (context) {
+                                    return const ActivityPage();
+                                  }).whenComplete(() {
+                                setState(() {
+                                  if (ActivityPage.resultAct == '') {
+                                  } else {
+                                    isVisibleActivity = true;
+                                    resultAct = ActivityPage.resultAct;
+                                    ActivityPage.resultAct = '';
+                                  }
+                                });
+                              });
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: const BoxDecoration(
+                                        color: Color(0xff8a7efd),
+                                        shape: BoxShape.circle),
+                                    child: const Icon(
+                                      MdiIcons.run,
+                                      color: Colors.white,
+                                      size: 30,
+                                    )),
+                                SizedBox(width: 20),
+                                const Text('activities',
+                                    style: TextStyle(fontSize: 20))
+                              ],
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(40.0, 0.0, 0.0, 0.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(15),
+                                        topRight: Radius.circular(15)),
+                                  ),
+                                  context: context,
+                                  builder: (context) {
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                          color: Colors.transparent,
+                                          height: 200,
+                                          child: ListView(
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: ListTile(
+                                                    title: const Text(
+                                                      'Select to add images.',
+                                                      style: TextStyle(
+                                                          fontSize: 20),
+                                                    ),
+                                                    trailing: IconButton(
+                                                      icon: const Icon(Icons
+                                                          .highlight_remove_rounded),
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                    )),
+                                              ),
+                                              const Divider(
+                                                thickness: 0.8,
+                                              ),
+                                              ListTile(
+                                                leading: const Icon(
+                                                  Icons.photo,
+                                                  color: Color(0xff8a7efd),
+                                                ),
+                                                title: const Text(
+                                                    'Pick images in gallery.'),
+                                                trailing: const Icon(Icons
+                                                    .navigate_next_rounded),
+                                                onTap: () {
+                                                  selectImage();
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                              ListTile(
+                                                leading: const Icon(
+                                                  Icons.camera_alt,
+                                                  color: Color(0xff8a7efd),
+                                                ),
+                                                title: const Text(
+                                                    'Take a picture.'),
+                                                trailing: const Icon(Icons
+                                                    .navigate_next_rounded),
+                                                onTap: () {
+                                                  cameraImage();
+                                                  Navigator.pop(context);
+                                                },
+                                              )
+                                            ],
+                                          )),
+                                    );
+                                  });
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: const BoxDecoration(
+                                        color: Color(0xff8a7efd),
+                                        shape: BoxShape.circle),
+                                    child: const Icon(
+                                      MdiIcons.imageOutline,
+                                      color: Colors.white,
+                                      size: 30,
+                                    )),
+                                SizedBox(width: 20),
+                                const Text('picture',
+                                    style: TextStyle(fontSize: 20))
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   )
                 ],
               ),
-            )
-          ],
-        ),
-      ),
+            ),
     );
   }
 }
