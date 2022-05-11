@@ -1508,41 +1508,37 @@ class _MapPageState extends State<MapPage> {
                                                                       title: const Text(
                                                                           'Create new pin'),
                                                                       content:
-                                                                          Column(
-                                                                            children: [
-                                                                              TextField(
+                                                                          TextField(
                                                                         keyboardType:
-                                                                                TextInputType.emailAddress,
+                                                                            TextInputType.emailAddress,
                                                                         cursorColor:
-                                                                                const Color(0xff8a7efd),
+                                                                            const Color(0xff8a7efd),
                                                                         decoration:
-                                                                                const InputDecoration(
-                                                                              filled:
-                                                                                  true,
-                                                                              fillColor:
-                                                                                  Color(0xfff1f3f4),
-                                                                              hintStyle: TextStyle(
-                                                                                  color: Color(0xffc5d2e1),
-                                                                                  fontWeight: FontWeight.w200),
-                                                                              focusedBorder:
-                                                                                  UnderlineInputBorder(borderSide: BorderSide.none),
-                                                                              enabledBorder:
-                                                                                  UnderlineInputBorder(borderSide: BorderSide.none),
-                                                                              // prefixIcon: Icon(
-                                                                              //   Icons.email_outlined,
-                                                                              // ),
+                                                                            const InputDecoration(
+                                                                          filled:
+                                                                              true,
+                                                                          fillColor:
+                                                                              Color(0xfff1f3f4),
+                                                                          hintStyle: TextStyle(
+                                                                              color: Color(0xffc5d2e1),
+                                                                              fontWeight: FontWeight.w200),
+                                                                          focusedBorder:
+                                                                              UnderlineInputBorder(borderSide: BorderSide.none),
+                                                                          enabledBorder:
+                                                                              UnderlineInputBorder(borderSide: BorderSide.none),
+                                                                          // prefixIcon: Icon(
+                                                                          //   Icons.email_outlined,
+                                                                          // ),
                                                                         ),
                                                                         onChanged:
-                                                                                (value) {
-                                                                              setState(
-                                                                                  () {
-                                                                                textInput =
-                                                                                    value;
-                                                                              });
+                                                                            (value) {
+                                                                          setState(
+                                                                              () {
+                                                                            textInput =
+                                                                                value;
+                                                                          });
                                                                         },
                                                                       ),
-                                                                            ],
-                                                                          ),
                                                                       actions: [
                                                                         TextButton(
                                                                             onPressed:
