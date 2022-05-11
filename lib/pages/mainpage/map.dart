@@ -450,8 +450,8 @@ class _MapPageState extends State<MapPage> {
                                         children: [
                                           Text(
                                               'Distance ∙ ${dis.toStringAsFixed(3)} km.'),
-                                          Text('Putdown ∙ '),
-                                          const SizedBox(height: 5),
+                                         
+                                          const SizedBox(height: 20),
                                           GestureDetector(
                                             onTap: () {
                                               Future.delayed(
@@ -554,7 +554,7 @@ class _MapPageState extends State<MapPage> {
                                                                         .done) {
                                                                   return SingleChildScrollView(
                                                                     child: Container(
-                                                                        height: 607,
+                                                                        height: 807,
                                                                         color: Color(0xfff5f5f5),
                                                                         child: Padding(
                                                                           padding:
@@ -981,8 +981,8 @@ class _MapPageState extends State<MapPage> {
                                             children: [
                                               Text(
                                                   'Distance ∙ ${dis.toStringAsFixed(3)} km.'),
-                                              Text('Putdown ∙ '),
-                                              const SizedBox(height: 5),
+                                              
+                                              const SizedBox(height: 20),
                                               GestureDetector(
                                                 onTap: () {
                                                   Future.delayed(
@@ -1087,7 +1087,7 @@ class _MapPageState extends State<MapPage> {
                                                                       return SingleChildScrollView(
                                                                         child: Container(
                                                                             width: double.infinity,
-                                                                            height: 607,
+                                                                            height: 807,
                                                                             color: Color(0xfff5f5f5),
                                                                             child: Padding(
                                                                               padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -1095,8 +1095,8 @@ class _MapPageState extends State<MapPage> {
                                                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                                                 children: [
                                                                                   Text('Distance ∙ ${dis.toStringAsFixed(3)} km.'),
-                                                                                  Text('Putdown ∙ '),
-                                                                                  const SizedBox(height: 10),
+                                                                                  
+                                                                                  const SizedBox(height: 20),
                                                                                   GestureDetector(
                                                                                     onTap: () {
                                                                                       if (dis > 0.050) {
@@ -1508,37 +1508,41 @@ class _MapPageState extends State<MapPage> {
                                                                       title: const Text(
                                                                           'Create new pin'),
                                                                       content:
-                                                                          TextField(
+                                                                          Column(
+                                                                            children: [
+                                                                              TextField(
                                                                         keyboardType:
-                                                                            TextInputType.emailAddress,
+                                                                                TextInputType.emailAddress,
                                                                         cursorColor:
-                                                                            const Color(0xff8a7efd),
+                                                                                const Color(0xff8a7efd),
                                                                         decoration:
-                                                                            const InputDecoration(
-                                                                          filled:
-                                                                              true,
-                                                                          fillColor:
-                                                                              Color(0xfff1f3f4),
-                                                                          hintStyle: TextStyle(
-                                                                              color: Color(0xffc5d2e1),
-                                                                              fontWeight: FontWeight.w200),
-                                                                          focusedBorder:
-                                                                              UnderlineInputBorder(borderSide: BorderSide.none),
-                                                                          enabledBorder:
-                                                                              UnderlineInputBorder(borderSide: BorderSide.none),
-                                                                          // prefixIcon: Icon(
-                                                                          //   Icons.email_outlined,
-                                                                          // ),
+                                                                                const InputDecoration(
+                                                                              filled:
+                                                                                  true,
+                                                                              fillColor:
+                                                                                  Color(0xfff1f3f4),
+                                                                              hintStyle: TextStyle(
+                                                                                  color: Color(0xffc5d2e1),
+                                                                                  fontWeight: FontWeight.w200),
+                                                                              focusedBorder:
+                                                                                  UnderlineInputBorder(borderSide: BorderSide.none),
+                                                                              enabledBorder:
+                                                                                  UnderlineInputBorder(borderSide: BorderSide.none),
+                                                                              // prefixIcon: Icon(
+                                                                              //   Icons.email_outlined,
+                                                                              // ),
                                                                         ),
                                                                         onChanged:
-                                                                            (value) {
-                                                                          setState(
-                                                                              () {
-                                                                            textInput =
-                                                                                value;
-                                                                          });
+                                                                                (value) {
+                                                                              setState(
+                                                                                  () {
+                                                                                textInput =
+                                                                                    value;
+                                                                              });
                                                                         },
                                                                       ),
+                                                                            ],
+                                                                          ),
                                                                       actions: [
                                                                         TextButton(
                                                                             onPressed:

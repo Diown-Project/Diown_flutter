@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OwnerPin extends StatefulWidget {
@@ -31,15 +32,24 @@ class _OwnerPinState extends State<OwnerPin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: ownMarker != null
+        ? ownMarker.length == 0 ? true : false 
+        : false,
         appBar: AppBar(
           title: const Text('Your own pin.'),
           centerTitle: true,
           elevation: 0,
           backgroundColor: Colors.transparent,
           foregroundColor: Colors.black,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new_rounded,
+                color: Colors.black),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
         ),
         body: ownMarker != null
-            ? SingleChildScrollView(
+            ? ownMarker.length != 0
+              ? SingleChildScrollView(
                 child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -92,6 +102,26 @@ class _OwnerPinState extends State<OwnerPin> {
                       .toList(),
                 ),
               ))
+              : Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    // crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 20),
+                      Icon(
+                        MdiIcons.mapMarkerRemove,
+                        size: 100,
+                        color: Colors.grey[300],
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'You don\'t have any pin yet.',
+                        style: TextStyle(fontSize: 20, color: Colors.grey),
+                        textAlign: TextAlign.center,
+                      )
+                    ],
+                  ),
+                )
             : Center(
                 child: CircularProgressIndicator(),
               ));
