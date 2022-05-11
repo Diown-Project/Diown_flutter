@@ -41,6 +41,7 @@ class _SupportPageState extends State<SupportPage> {
           bottom: const TabBar(
             labelColor: Colors.black,
             // labelStyle: TextStyle(color: Colors.pink),
+            indicatorColor: Color(0xffC7B7FF),
             tabs: <Widget>[
               Tab(
                 text: "FAQs",

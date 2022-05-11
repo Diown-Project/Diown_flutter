@@ -3,6 +3,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:diown/pages/screens/visitorprofile.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -57,7 +58,9 @@ class _FollowingPageState extends State<FollowingPage> {
                     },
                     child: const Text('Ok')))
             .show();
-      } else {}
+      } else {
+        
+      }
     }
     if (mounted) {
       setState(() {});
@@ -76,65 +79,95 @@ class _FollowingPageState extends State<FollowingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: following != null
+        ? following.length == 0 ? true : false 
+        : false,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         foregroundColor: Colors.black,
         centerTitle: true,
         title: const Text('My Following'),
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new_rounded,
+                color: Colors.black),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
       ),
-      body: SingleChildScrollView(
-          child: following != null
-              ? Column(
-                  children: following
-                      .map<Widget>(
-                        (e) => ListTile(
-                          onTap: () {
-                            Navigator.push(
-                                    context,
-                                    PageTransition(
-                                        child: VisitorProfile(
-                                          user_id: e['user_detail'][0]['_id'],
-                                        ),
-                                        type: PageTransitionType.rightToLeft))
-                                .then((_) async {
-                              await moveResultToFollow();
-                              setState(() {});
-                            });
-                          },
-                          leading: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            backgroundImage: NetworkImage(
-                                'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
-                          ),
-                          title: Text(
-                            e['user_detail'][0]['username'],
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          subtitle: const Text('One of your follower.'),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              TextButton(
-                                  onPressed: () async {
-                                    var c = await deleteFollowing(
-                                        e['user_detail'][0]['_id']);
-                                    following.removeWhere((element) =>
-                                        element['user_detail'][0]['_id'] ==
-                                        e['user_detail'][0]['_id']);
-                                    setState(() {});
-                                  },
-                                  child: const Text(
-                                    'unfollow',
-                                    style: TextStyle(color: Colors.red),
-                                  ))
-                            ],
-                          ),
+      body: following != null
+          ? following.length != 0
+            ? SingleChildScrollView(
+              child: Column(
+                children: following
+                    .map<Widget>(
+                      (e) => ListTile(
+                        onTap: () {
+                          Navigator.push(
+                                  context,
+                                  PageTransition(
+                                      child: VisitorProfile(
+                                        user_id: e['user_detail'][0]['_id'],
+                                      ),
+                                      type: PageTransitionType.rightToLeft))
+                              .then((_) async {
+                            await moveResultToFollow();
+                            setState(() {});
+                          });
+                        },
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          backgroundImage: NetworkImage(
+                              'https://storage.googleapis.com/noseason/${e['user_detail'][0]['profile_image']}'),
                         ),
-                      )
-                      .toList(),
-                )
-              : Center(child: CircularProgressIndicator())),
+                        title: Text(
+                          e['user_detail'][0]['username'],
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        subtitle: const Text('One of your follower.'),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextButton(
+                                onPressed: () async {
+                                  var c = await deleteFollowing(
+                                      e['user_detail'][0]['_id']);
+                                  following.removeWhere((element) =>
+                                      element['user_detail'][0]['_id'] ==
+                                      e['user_detail'][0]['_id']);
+                                  setState(() {});
+                                },
+                                child: const Text(
+                                  'unfollow',
+                                  style: TextStyle(color: Colors.red),
+                                ))
+                          ],
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+            )
+            : Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 20),
+                  Icon(
+                    MdiIcons.account,
+                    size: 100,
+                    color: Colors.grey[300],
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'You are not following anyone yet.',
+                    style: TextStyle(fontSize: 20, color: Colors.grey),
+                    textAlign: TextAlign.center,
+                  )
+                ],
+              ),
+            )
+          : Center(child: CircularProgressIndicator()),
     );
   }
 }

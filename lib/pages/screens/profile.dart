@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ink_widget/ink_widget.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
@@ -186,7 +187,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   : Container(),
                               Padding(
                                 padding:
-                                    const EdgeInsets.fromLTRB(18, 5, 15, 0),
+                                    const EdgeInsets.fromLTRB(18, 10, 15, 0),
                                 child: GestureDetector(
                                   onTap: () async {
                                     Navigator.push(
@@ -201,7 +202,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     });
                                   },
                                   child: Container(
-                                    height: 40,
+                                    height: 35,
                                     decoration: BoxDecoration(
                                         border:
                                             Border.all(color: Colors.black54),
@@ -255,7 +256,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   },
                   body: TabBarView(children: [
                     allPutdown != null
-                        ? Container(
+                        ? allPutdown.length != 0
+                          ? Container(
                             margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
                             child: ListView.builder(
                               itemCount: allPutdown.length,
@@ -335,6 +337,24 @@ class _ProfilePageState extends State<ProfilePage> {
                                 );
                               },
                             ))
+                            : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          // crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 20),
+                            Icon(
+                              MdiIcons.bookMarker,
+                              size: 100,
+                              color: Colors.grey[300],
+                            ),
+                            const SizedBox(height: 20),
+                            const Text(
+                              'Go put down your first diary',
+                              style:
+                                  TextStyle(fontSize: 20, color: Colors.grey),
+                            )
+                          ],
+                        )
                         : Container(
                             child: const Center(
                               child: CircularProgressIndicator(),

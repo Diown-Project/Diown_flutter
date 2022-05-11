@@ -59,8 +59,11 @@ class _HomePageState extends State<HomePage> {
                               ),
                             )),
                         const SizedBox(height: 15),
+                        latest.length != 0
+                        ?
                         Column(
-                          children: latest.map<Widget>((e) {
+                          children: 
+                          latest.map<Widget>((e) {
                             return Padding(
                               padding: const EdgeInsets.fromLTRB(10, 0, 10, 5),
                               child: Container(
@@ -120,6 +123,24 @@ class _HomePageState extends State<HomePage> {
                               ),
                             );
                           }).toList(),
+                        )
+                        : Column(
+                          // mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 20),
+                            Icon(
+                              MdiIcons.bookMarker,
+                              size: 100,
+                              color: Colors.grey[300],
+                            ),
+                            const SizedBox(height: 20),
+                            const Text(
+                              'Don\'t have putdown diary',
+                              style:
+                                  TextStyle(fontSize: 20, color: Colors.grey),
+                            )
+                          ],
                         ),
                         SizedBox(
                           height: 30,

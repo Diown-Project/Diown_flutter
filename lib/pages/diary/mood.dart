@@ -45,6 +45,11 @@ class _MoodSelectedState extends State<MoodSelected> {
                 'Feeling',
                 style: TextStyle(fontSize: 24),
               ),
+              leading: IconButton(
+                icon:
+                    const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
               centerTitle: true,
             ),
             body: Container(

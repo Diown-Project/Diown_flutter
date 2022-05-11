@@ -248,6 +248,7 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isKeyboard = MediaQuery.of(context).viewInsets.bottom!= 0;
     return SafeArea(
       child: GestureDetector(
         onTap: FocusScope.of(context).unfocus,
@@ -358,7 +359,7 @@ class _MapPageState extends State<MapPage> {
                     Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(10.0),
                           child: Material(
                             elevation: 3,
                             shadowColor: Colors.black,

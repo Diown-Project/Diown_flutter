@@ -28,7 +28,7 @@ class _ContactScreenState extends State<ContactScreen> {
                 const Center(
                   child: Image(
                     image: AssetImage('images/logo_support.png'),
-                    width: 240,
+                    width: 200,
                   ),
                 ),
                 const SizedBox(
@@ -106,8 +106,8 @@ class _ContactScreenState extends State<ContactScreen> {
                         const SizedBox(
                           height: 25,
                         ),
-                        ElevatedButton(
-                            onPressed: () async {
+                        GestureDetector(
+                            onTap: () async {
                               setState(() {
                                 if (_formkey.currentState!.validate()) {
                                   _formkey.currentState!.save();
@@ -143,25 +143,18 @@ class _ContactScreenState extends State<ContactScreen> {
                                     });
                               }
                             },
-                            child: const Text(
-                              'Send',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            style: ButtonStyle(
-                                minimumSize: MaterialStateProperty.all<Size>(
-                                    const Size(304, 65)),
-                                foregroundColor: MaterialStateProperty.all<Color>(
-                                    Colors.black),
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        const Color.fromRGBO(229, 221, 255, 1)),
-                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(80.0),
-                                        side: const BorderSide(
-                                            color:
-                                                Color.fromRGBO(229, 221, 255, 1)))))),
+                            child: Container(
+                                    width: double.infinity,
+                                    height: 40,
+                                    decoration: const BoxDecoration(color: Color(0xff8b82ff), borderRadius: BorderRadius.all(Radius.circular(5))),
+                                    child: const Center(
+                                      child: Text('Send',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                          )),
+                                    )),
+                                                ),
                       ],
                     )),
                 const SizedBox(
