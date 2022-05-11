@@ -25,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Color(0xffeff2f5),
         body: FutureBuilder(
           future: findLatest(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -68,7 +69,7 @@ class _HomePageState extends State<HomePage> {
                               padding: const EdgeInsets.fromLTRB(10, 0, 10, 5),
                               child: Container(
                                 decoration: const BoxDecoration(
-                                    color: Color(0xfff1f3f4),
+                                    color: Colors.white,
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(5))),
                                 child: ListTile(

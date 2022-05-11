@@ -1505,6 +1505,7 @@ class _MapPageState extends State<MapPage> {
                                                             builder:
                                                                 (context) =>
                                                                     AlertDialog(
+                                                     
                                                                       title: const Text(
                                                                           'Create new pin'),
                                                                       content:

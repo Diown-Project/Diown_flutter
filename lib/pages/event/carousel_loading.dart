@@ -226,7 +226,7 @@ class _CarouselLoadingState extends State<CarouselLoading> {
                                                         const Divider(thickness: 0.8),
                                                         const SizedBox(height: 10),
                                                         const Text(
-                                                          'What To Expect',
+                                                          'What to expect',
                                                           style: TextStyle(
                                                             fontSize: 18,
                                                             fontWeight: FontWeight.bold),
@@ -325,7 +325,7 @@ class _CarouselLoadingState extends State<CarouselLoading> {
                               child: Container(
                                   margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
                                   decoration: const BoxDecoration(
-                                      color: Color(0xfff1f3f4),
+                                      color: Colors.white,
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(15))),
                                   child: Column(

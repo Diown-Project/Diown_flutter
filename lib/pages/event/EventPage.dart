@@ -36,6 +36,7 @@ class _EventPageState extends State<EventPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Color(0xffeff2f5),
           appBar: AppBar(
             elevation: 0.0,
             title: const Text('Event',
@@ -46,12 +47,11 @@ class _EventPageState extends State<EventPage> {
                     fontWeight: FontWeight.bold)),
             backgroundColor: Colors.white,
             centerTitle: true,
-            leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: Colors.black,
-                ),
-                onPressed: () => Navigator.of(context).pop()),
+              leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_new_rounded,
+                  color: Colors.black),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
           ),
           body: SingleChildScrollView(
             child: Column(
@@ -96,7 +96,7 @@ class _EventPageState extends State<EventPage> {
                                 child: Container(
                                   margin: EdgeInsets.fromLTRB(10, 5, 10, 10),
                                   decoration: const BoxDecoration(
-                                      color: Color(0xfff1f3f4),
+                                      color: Colors.white,
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(15))),
                                   child: Row(
@@ -177,7 +177,7 @@ class _EventPageState extends State<EventPage> {
                                 child: Container(
                                   margin: EdgeInsets.fromLTRB(10, 5, 10, 10),
                                   decoration: const BoxDecoration(
-                                      color: Color(0xfff1f3f4),
+                                      color: Colors.white,
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(15))),
                                   child: Row(
