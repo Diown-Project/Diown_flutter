@@ -37,6 +37,103 @@ class _OwnerPinState extends State<OwnerPin> {
           elevation: 0,
           backgroundColor: Colors.transparent,
           foregroundColor: Colors.black,
+<<<<<<< Updated upstream
+=======
+          actions: [
+            IconButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title: const Text('Add new pin location name'),
+                            content: TextField(
+                              onChanged: (value) {
+                                setState(() {
+                                  textInput = value;
+                                });
+                              },
+                            ),
+                            actions: [
+                              TextButton(
+                                  onPressed: () async {
+                                    CoolAlert.show(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        type: CoolAlertType.loading);
+                                    SharedPreferences prefs =
+                                        await SharedPreferences.getInstance();
+                                    var token = prefs.getString('token');
+                                    var checkDelay = await checkDelayPin(token);
+                                    if (checkDelay['message'] ==
+                                            'add success' ||
+                                        checkDelay['message'] == 'success') {
+                                      var e = await addUserMarker(
+                                          token,
+                                          textInput,
+                                          widget.newlocation.latitude as double,
+                                          widget.newlocation.longitude
+                                              as double);
+                                      if (e['message'] == 'success') {
+                                        CoolAlert.show(
+                                            barrierDismissible: false,
+                                            context: context,
+                                            type: CoolAlertType.success,
+                                            title: 'Add pin was success.',
+                                            onConfirmBtnTap: () {
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                            });
+                                      } else if (e['message'] ==
+                                          'already have') {
+                                        CoolAlert.show(
+                                            barrierDismissible: false,
+                                            context: context,
+                                            type: CoolAlertType.warning,
+                                            title:
+                                                'Your pin location already have.',
+                                            onConfirmBtnTap: () {
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                            });
+                                      } else {
+                                        CoolAlert.show(
+                                            barrierDismissible: false,
+                                            context: context,
+                                            type: CoolAlertType.error,
+                                            title: 'Something wrong.',
+                                            onConfirmBtnTap: () {
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                            });
+                                      }
+                                    } else {
+                                      CoolAlert.show(
+                                          context: context,
+                                          type: CoolAlertType.error,
+                                          title:
+                                              'You cannot add Pin right now.',
+                                          text:
+                                              'Because you need to wait for cooldown 1 day after add pin to add another one.',
+                                          onConfirmBtnTap: () {
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                          });
+                                    }
+                                  },
+                                  child: const Text('Submit'))
+                            ],
+                          )).then((_) {
+                    findOwn();
+                    setState(() {});
+                  });
+                },
+                icon: Icon(Icons.add_location_alt))
+          ],
+>>>>>>> Stashed changes
         ),
         body: ownMarker != null
             ? SingleChildScrollView(

@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:http/http.dart' as http;
 
+import 'diarylistevent.dart';
+
 class CarouselLoading extends StatefulWidget {
   const CarouselLoading({Key? key}) : super(key: key);
 
@@ -105,64 +107,220 @@ class _CarouselLoadingState extends State<CarouselLoading> {
                           itemBuilder: (context, index, realIndex) {
                             return GestureDetector(
                               onTap: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                          scrollable: true,
-                                          title: Center(
-                                            child: Text(_event[index]['topic']),
-                                          ),
-                                          content: Column(
-                                            children: [
-                                              Image.network(
-                                                  'https://storage.googleapis.com/noseason/${_event[index]['imageLocation']}'),
-                                              SizedBox(
-                                                height: 5,
+                                showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  context: context,
+                                  builder: (context) {
+                                    return makeDismissible(
+                                      child: DraggableScrollableSheet(
+                                        initialChildSize: 1,
+                                        builder:(_, controller) => Container(
+                                          color: Colors.white,
+                                          child: Scaffold(
+                                            extendBodyBehindAppBar: true,
+                                            backgroundColor: Colors.white,
+                                            // appBar: AppBar(
+                                            //   backgroundColor:Colors.white,
+                                            //   elevation: 0,
+                                            //   leading: IconButton(
+                                            //     icon: Container(
+                                            //       width: 45,
+                                            //       height: 45,
+                                            //       decoration: const BoxDecoration(
+                                            //           color: Color(
+                                            //               0xffe5e5e6),
+                                            //           shape: BoxShape
+                                            //               .circle),
+                                            //       child:
+                                            //           Center(
+                                            //         child: Icon(Icons.arrow_back_ios_new_rounded,
+                                            //         color: Colors.black)
+                                            //       ),
+                                            //     ),
+                                            //     onPressed: () => Navigator.of(context).pop(),
+                                            //   ),
+                                            // ),
+                                            body: Column(
+                                              children: [
+                                                ClipRRect(
+                                                child: Image.network(
+                                                  'https://storage.googleapis.com/noseason/${_event[index]['imageLocation']}',
+                                                  fit: BoxFit.cover,
+                                                  height: 300,
+                                                  width: double.infinity,
+                                                )),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(10.0),
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(
+                                                          DateFormat('EEE. MMM d / yyyy')
+                                                                  .format(DateTime.parse(
+                                                                      _event[index][
+                                                                          'start_date'])) +
+                                                              ' - ' +
+                                                              DateFormat(
+                                                                      'EEE. MMM d / yyyy')
+                                                                  .format(DateTime.parse(
+                                                                      _event[index]
+                                                                          ['end_date'])),
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          _event[index]['topic'],
+                                                          style: const TextStyle(
+                                                              fontSize: 18,
+                                                              fontWeight: FontWeight.bold),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Icon(
+                                                              MdiIcons.mapMarker,
+                                                              color: Colors.black54,
+                                                            ),
+                                                            Text(
+                                                              _event[index]['marker_id'],
+                                                              style: TextStyle(
+                                                                  color: Colors.black54),
+                                                            )
+                                                          ],
+                                                        ),
+                                                        const SizedBox(height: 10),
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            Navigator.push(
+                                                            context,
+                                                            PageTransition(
+                                                                child: DiaryListInEvent(
+                                                                  id: _event[index]['_id'],
+                                                                ),
+                                                                type:
+                                                                    PageTransitionType.rightToLeft));
+                                                          },
+                                                          child: Container(
+                                                            width: double.infinity,
+                                                            height: 40,
+                                                            decoration: const BoxDecoration(color: Color(0xff8b82ff), borderRadius: BorderRadius.all(Radius.circular(5))),
+                                                            child: const Center(
+                                                              child: Text('Diary in event',
+                                                                  style: TextStyle(
+                                                                    color: Colors.white,
+                                                                    fontSize: 16,
+                                                                  )),
+                                                            )),
+                                                        ),
+                                                        const SizedBox(height: 10),
+                                                        const Divider(thickness: 0.8),
+                                                        const SizedBox(height: 10),
+                                                        const Text(
+                                                          'What To Expect',
+                                                          style: TextStyle(
+                                                            fontSize: 18,
+                                                            fontWeight: FontWeight.bold),
+                                                        ),
+                                                        const SizedBox(height: 10),
+                                                        Text(
+                                                          _event[index]['detail'],
+                                                          style: TextStyle(fontSize: 15),
+                                                        ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            floatingActionButton: Padding(
+                                              padding: const EdgeInsets.only(
+                                                top: 70
                                               ),
-                                              Text(
-                                                DateFormat('EEE. MMM d / yyyy')
-                                                        .format(DateTime.parse(
-                                                            _event[index][
-                                                                'start_date'])) +
-                                                    ' - ' +
-                                                    DateFormat(
-                                                            'EEE. MMM d / yyyy')
-                                                        .format(DateTime.parse(
-                                                            _event[index]
-                                                                ['end_date'])),
-                                                style: TextStyle(
-                                                  fontSize: 14,
+                                              child: FloatingActionButton(
+                                                mini: true,
+                                                onPressed: () => Navigator.of(context).pop(),
+                                                elevation: 0,
+                                                backgroundColor: Colors.black87,
+                                                child: const Icon(Icons.arrow_back_ios_new_rounded,
+                                                color: Colors.white,
+                                                size: 20,
                                                 ),
                                               ),
-                                              Row(
-                                                children: [
-                                                  Icon(
-                                                    MdiIcons.mapMarker,
-                                                    color: Colors.black54,
-                                                  ),
-                                                  Text(
-                                                    _event[index]['marker_id'],
-                                                    style: TextStyle(
-                                                        color: Colors.black54),
-                                                  )
-                                                ],
-                                              ),
-                                              Text(
-                                                _event[index]['detail'],
-                                                style: TextStyle(fontSize: 15),
-                                              ),
-                                              ElevatedButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                          minimumSize:
-                                                              Size(280, 30)),
-                                                  child: Text('ok'))
-                                            ],
+                                            ),
+                                            floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
                                           ),
-                                        ));
+                                        )
+                                      ),
+                                    );
+                                  }
+                                );
+                                // showDialog(
+                                //     context: context,
+                                //     builder: (context) => AlertDialog(
+                                //           scrollable: true,
+                                //           title: Center(
+                                //             child: Text(_event[index]['topic']),
+                                //           ),
+                                //           content: Column(
+                                //             children: [
+                                //               Image.network(
+                                //                   'https://storage.googleapis.com/noseason/${_event[index]['imageLocation']}'),
+                                //               SizedBox(
+                                //                 height: 5,
+                                //               ),
+                                //               Text(
+                                //                 DateFormat('EEE. MMM d / yyyy')
+                                //                         .format(DateTime.parse(
+                                //                             _event[index][
+                                //                                 'start_date'])) +
+                                //                     ' - ' +
+                                //                     DateFormat(
+                                //                             'EEE. MMM d / yyyy')
+                                //                         .format(DateTime.parse(
+                                //                             _event[index]
+                                //                                 ['end_date'])),
+                                //                 style: TextStyle(
+                                //                   fontSize: 14,
+                                //                 ),
+                                //               ),
+                                //               Row(
+                                //                 children: [
+                                //                   Icon(
+                                //                     MdiIcons.mapMarker,
+                                //                     color: Colors.black54,
+                                //                   ),
+                                //                   Text(
+                                //                     _event[index]['marker_id'],
+                                //                     style: TextStyle(
+                                //                         color: Colors.black54),
+                                //                   )
+                                //                 ],
+                                //               ),
+                                //               Text(
+                                //                 _event[index]['detail'],
+                                //                 style: TextStyle(fontSize: 15),
+                                //               ),
+                                //               ElevatedButton(
+                                //                   onPressed: () {
+                                //                     Navigator.pop(context);
+                                //                   },
+                                //                   style:
+                                //                       ElevatedButton.styleFrom(
+                                //                           minimumSize:
+                                //                               Size(280, 30)),
+                                //                   child: Text('ok'))
+                                //             ],
+                                //           ),
+                                //         ));
                               },
                               child: Container(
                                   margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -344,6 +502,12 @@ class _CarouselLoadingState extends State<CarouselLoading> {
             dotHeight: 10,
             activeDotColor: Colors.black54,
             dotColor: Colors.black12),
+      );
+   Widget makeDismissible({required Widget child}) => GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => Navigator.of(context).pop(),
+        child: GestureDetector(
+            onTap: FocusScope.of(context).unfocus, child: child),
       );
 }
 

@@ -74,9 +74,9 @@ class _FavPageState extends State<FavPage> {
             onRefresh: onRefresh,
             onLoading: onLoading,
             controller: _refreshController,
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: SingleChildScrollView(
                 child: Column(
                   children: [
                     CupertinoSearchTextField(
@@ -86,42 +86,47 @@ class _FavPageState extends State<FavPage> {
                         setState(() {});
                       },
                     ),
-                    Row(
-                      children: [
-                        Container(
-                            alignment: Alignment.topLeft,
-                            child: const Text(
-                              'Sort by Date.',
-                              style: TextStyle(fontSize: 18),
-                            )),
-                        const Spacer(),
-                        IconButton(
-                            onPressed: listDiary != null
-                                ? () {
-                                    if (listDiary == null &&
-                                        listDiary.length == 0 &&
-                                        listDiary.length == 1) {
-                                    } else if (justSort == false) {
-                                      setState(() {
-                                        listDiary.sort((a, b) {
-                                          return a['date']!
-                                              .compareTo(b['date']!) as int;
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Container(
+                              
+                              child: const Text(
+                                'Sort by Date.',
+                                style: TextStyle(fontSize: 18),
+                              )),
+                          const Spacer(),
+                          IconButton(
+                            padding: EdgeInsets.zero,
+                            constraints: BoxConstraints(),
+                              onPressed: listDiary != null
+                                  ? () {
+                                      if (listDiary == null &&
+                                          listDiary.length == 0 &&
+                                          listDiary.length == 1) {
+                                      } else if (justSort == false) {
+                                        setState(() {
+                                          listDiary.sort((a, b) {
+                                            return a['date']!
+                                                .compareTo(b['date']!) as int;
+                                          });
+                                          justSort = true;
                                         });
-                                        justSort = true;
-                                      });
-                                    } else {
-                                      setState(() {
-                                        listDiary.sort((b, a) {
-                                          return a['date']!
-                                              .compareTo(b['date']!) as int;
+                                      } else {
+                                        setState(() {
+                                          listDiary.sort((b, a) {
+                                            return a['date']!
+                                                .compareTo(b['date']!) as int;
+                                          });
+                                          justSort = false;
                                         });
-                                        justSort = false;
-                                      });
+                                      }
                                     }
-                                  }
-                                : () {},
-                            icon: const Icon(Icons.sort)),
-                      ],
+                                  : () {},
+                              icon: const Icon(Icons.sort)),
+                        ],
+                      ),
                     ),
                     const SizedBox(
                       height: 5,
@@ -182,8 +187,7 @@ class _FavPageState extends State<FavPage> {
                               : [
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                    // crossAxisAlignment:CrossAxisAlignment.center,
                                     children: [
                                       const SizedBox(height: 20),
                                       Icon(

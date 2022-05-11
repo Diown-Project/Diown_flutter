@@ -54,6 +54,11 @@ class _ActivityPageState extends State<ActivityPage> {
                       BorderRadius.vertical(top: Radius.circular(10))),
               backgroundColor: Colors.white,
               foregroundColor: Colors.black,
+              leading: IconButton(
+                icon:
+                    const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
               actions: [
                 Padding(
                   padding: const EdgeInsets.all(12.0),
@@ -70,14 +75,14 @@ class _ActivityPageState extends State<ActivityPage> {
                         foregroundColor:
                             MaterialStateProperty.all<Color>(Colors.white),
                         backgroundColor: MaterialStateProperty.all<Color>(
-                            const Color.fromRGBO(148, 92, 254, 1)),
+                            const Color(0xff8a7efd)),
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderRadius: BorderRadius.circular(5.0),
                                     side: const BorderSide(
                                         color:
-                                            Color.fromRGBO(148, 92, 254, 1))))),
+                                            Color(0xff8a7efd))))),
                   ),
                 )
               ],

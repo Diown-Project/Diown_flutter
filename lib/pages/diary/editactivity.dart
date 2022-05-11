@@ -5,6 +5,7 @@ import 'package:diown/pages/auth/signin.dart';
 import 'package:diown/pages/diary/addactivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -48,6 +49,11 @@ class _EditActState extends State<EditAct> {
             elevation: 0,
             backgroundColor: Colors.transparent,
             foregroundColor: Colors.black,
+            leading: IconButton(
+              icon:
+                  const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
             actions: [
               Padding(
                 padding: const EdgeInsets.all(12.0),
@@ -59,17 +65,17 @@ class _EditActState extends State<EditAct> {
                             child: const AddActivity(),
                             type: PageTransitionType.rightToLeft));
                   },
-                  child: const Text('add'),
+                  child: const Text('Add'),
                   style: ButtonStyle(
                       foregroundColor:
                           MaterialStateProperty.all<Color>(Colors.white),
                       backgroundColor: MaterialStateProperty.all<Color>(
-                          const Color.fromRGBO(148, 92, 254, 1)),
+                          const Color(0xff8a7efd)),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(80.0),
+                              borderRadius: BorderRadius.circular(5.0),
                               side: const BorderSide(
-                                  color: Color.fromRGBO(148, 92, 254, 1))))),
+                                  color: Color(0xff8a7efd))))),
                 ),
               )
             ],
@@ -158,19 +164,56 @@ class _EditActState extends State<EditAct> {
                                       ))
                                   .toList()
                               : [
-                                  const Center(
-                                      child: Text(
-                                          'You don\'t have any custom activity.'))
+                                   Center(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        // crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          const SizedBox(height: 20),
+                                          Icon(
+                                            MdiIcons.humanEdit,
+                                            size: 100,
+                                            color: Colors.grey[300],
+                                          ),
+                                          const SizedBox(height: 20),
+                                          const Text(
+                                            'You don\'t have any custom activity.',
+                                            style: TextStyle(fontSize: 20, color: Colors.grey),
+                                            textAlign: TextAlign.center,
+                                          )
+                                        ],
+                                      ),
+                                    )
                                 ]
                           : [
-                              const Center(
-                                  child: Text(
-                                      'You don\'t have any custom activity.'))
+                              Center(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        // crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          const SizedBox(height: 20),
+                                          Icon(
+                                            MdiIcons.humanEdit,
+                                            size: 100,
+                                            color: Colors.grey[300],
+                                          ),
+                                          const SizedBox(height: 20),
+                                          const Text(
+                                            'You don\'t have any custom activity.',
+                                            style: TextStyle(fontSize: 20, color: Colors.grey),
+                                            textAlign: TextAlign.center,
+                                          )
+                                        ],
+                                      ),
+                                    )
                             ]
                       : [
-                          const Center(
-                              child:
-                                  Text('You don\'t have any custom activity.'))
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 200, 0, 0),
+                            child: Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                          )
                         ],
                 ),
               ],
