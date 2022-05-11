@@ -274,9 +274,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     .rightToLeft))
                                         .then((_) async {
                                       await findUser();
-                                      if (mounted) {
-                                        setState(() {});
-                                      }
+                                      setState(() {});
                                     });
                                   },
                                   leading: Text(
